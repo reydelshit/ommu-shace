@@ -9,7 +9,6 @@ interface AuthContextType extends SessionType {
   logout: () => Promise<void>;
 }
 
-// Create context with a default value to avoid null errors
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {

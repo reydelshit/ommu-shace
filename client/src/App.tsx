@@ -1,10 +1,15 @@
 import { AuthProvider } from '@/context/AuthProvider';
-import { Link, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
-import RegisterForm from './components/RegisterForm';
-import Dashboard from './pages/Dashboard';
-import Login from './pages/Login';
-import { useSession } from './hooks/useSession';
+// import RegisterForm from './components/RegisterForm';
+import { Toaster } from 'sonner';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import Dashboard from './pages/(authenticated)/Dashboard';
+import LandingPage from './pages/LandingPage';
+import EventFormContainer from './components/EventFormContainer';
+
+// import Login from './pages/Login';
 
 export default function App() {
   return (
@@ -12,57 +17,42 @@ export default function App() {
       <Router>
         <MainComponent />
       </Router>
+      <Toaster />
     </AuthProvider>
   );
 }
 
 const MainComponent = () => {
-  const { user, logout } = useSession();
-
   return (
-    <>
-      <nav>
-        <ul>
-          <li>
-            <a href="/">Home</a>
-          </li>
-          <li>
-            <a href="/login">Login</a>
-          </li>
-          <li>
-            <a href="/register">Register</a>
-          </li>
-          <li>
-            <a href="/dashboard">Dashboard</a>
-          </li>
-          <li>
-            {user ? (
-              <button onClick={logout}>Logout</button>
-            ) : (
-              <Link to="/login">Login</Link>
-            )}
-          </li>
-        </ul>
-      </nav>
+    <div className="bg-[#AA917F] flex w-dvw flex-col items-center ">
+      <div className="w-full flex max-w-[1100px] flex-col items-start justify-start relative h-full">
+        <Header />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          {/* <Route path="/login" element={<Login />} /> */}
+          {/* <Route path="/register" element={<RegisterForm />} /> */}
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <h1>Home</h1>
-              <p>Welcome to the home page.</p>
-            </div>
-          }
-        />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<RegisterForm />} />
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/dashboard/create/event"
+              element={<EventFormContainer />}
+            />
+          </Route>
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Route>
-      </Routes>
-    </>
+          <Route
+            path="/*"
+            element={
+              <div className="flex w-full justify-center items-center h-full">
+                <h1 className="text-4xl">404 - Not Found</h1>
+              </div>
+            }
+          />
+        </Routes>
+
+        <Footer />
+      </div>
+    </div>
   );
 };

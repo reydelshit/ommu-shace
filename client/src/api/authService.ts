@@ -1,10 +1,23 @@
 import axiosInstance from './axiosInstance';
 
 // Register API function
-export const registerUser = async (email: string, password: string) => {
+export const registerUser = async (
+  username: string,
+  fullname: string,
+  email: string,
+  password: string,
+  phoneNumber: string,
+  address: string,
+  birthday: string,
+) => {
   const response = await axiosInstance.post('/auth/register', {
+    username,
+    fullname,
     email,
     password,
+    phoneNumber,
+    address,
+    birthday,
   });
   return response.data;
 };

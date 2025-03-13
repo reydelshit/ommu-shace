@@ -1,9 +1,14 @@
-import axiosInstance from "@/api/axiosInstance";
+import axiosInstance from '@/api/axiosInstance';
 
 interface User {
   id: string;
   email: string;
   createdAt: string;
+  username: string;
+  fullname: string;
+  phoneNumber: string;
+  address: string;
+  birthday: string;
 }
 
 interface SessionData {
@@ -13,7 +18,7 @@ interface SessionData {
 
 export const getSession = async (): Promise<SessionData> => {
   try {
-    const { data } = await axiosInstance.get<{ user: User }>("/users/me");
+    const { data } = await axiosInstance.get<{ user: User }>('/users/me');
     return { user: data.user, session: true };
   } catch (error) {
     return { user: null, session: false };
