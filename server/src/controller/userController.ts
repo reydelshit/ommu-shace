@@ -1,9 +1,23 @@
 import { Request, Response } from 'express';
-import { createUser, getUserByEmail } from '../services/userService';
+import {
+  createUser,
+  getUserByEmail,
+  getUserByUsername,
+} from '../services/userService';
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { email, password } = req.body;
+    const {
+      username,
+      fullname,
+      email,
+      password,
+      phoneNumber,
+      address,
+      birthday,
+    } = req.body;
+
+    console.log(req.body);
 
     if (!email || !password) {
       res
@@ -12,19 +26,43 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const userExists = await getUserByEmail(email);
-    if (userExists) {
+    // Check email and username availability
+    const emailExist = await getUserByEmail(email);
+    const userExists2 = await getUserByUsername(username);
+
+    if (emailExist) {
+      console.error('Email already in use.');
       res
         .status(400)
         .json({ success: false, message: 'Email already in use.' });
       return;
     }
 
-    const user = await createUser(email, password);
+    if (userExists2) {
+      console.error('Username already in use.');
+      res
+        .status(400)
+        .json({ success: false, message: 'Username already in use.' });
+      return;
+    }
+
+    console.log('Creating user...');
+    const user = await createUser(
+      username,
+      fullname,
+      email,
+      password,
+      phoneNumber,
+      address,
+      birthday,
+    );
+    console.log('User created:', user);
+
     res
       .status(201)
       .json({ success: true, message: 'User registered successfully.', user });
   } catch (error: any) {
-    res.status(400).json({ success: false, message: error.message });
+    console.error('Error in register function:', error);
+    res.status(500).json({ success: false, message: error.message });
   }
 };

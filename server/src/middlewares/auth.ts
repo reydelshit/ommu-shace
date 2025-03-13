@@ -38,6 +38,11 @@ export const authenticateToken = async (
         select: {
           id: true,
           email: true,
+          username: true,
+          fullname: true,
+          phoneNumber: true,
+          address: true,
+          birthday: true,
           createdAt: true,
         },
       });
@@ -48,7 +53,7 @@ export const authenticateToken = async (
           .json({ success: false, message: 'User not found' });
       }
 
-      (req as any).user = user; // Store full user data in request
+      (req as any).user = user;
       next();
     } catch (error) {
       return res

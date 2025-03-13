@@ -24,33 +24,32 @@ export default function App() {
 
 const MainComponent = () => {
   return (
-    <div className="bg-[#AA917F] flex w-dvw flex-col items-center ">
-      <div className="w-full flex max-w-[1100px] flex-col items-start justify-start relative h-full">
+    <div className="bg-brown-text min-h-screen w-full flex flex-col items-center">
+      <div className="w-full max-w-[1100px] flex flex-col items-start justify-between min-h-screen relative">
         <Header />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          {/* <Route path="/login" element={<Login />} /> */}
-          {/* <Route path="/register" element={<RegisterForm />} /> */}
+        <main className="w-full flex-grow">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
 
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route
+                path="/dashboard/create/event"
+                element={<EventFormContainer />}
+              />
+            </Route>
+
             <Route
-              path="/dashboard/create/event"
-              element={<EventFormContainer />}
+              path="/*"
+              element={
+                <div className="flex w-full justify-center items-center h-full">
+                  <h1 className="text-4xl">404 - Not Found</h1>
+                </div>
+              }
             />
-          </Route>
-
-          <Route
-            path="/*"
-            element={
-              <div className="flex w-full justify-center items-center h-full">
-                <h1 className="text-4xl">404 - Not Found</h1>
-              </div>
-            }
-          />
-        </Routes>
-
+          </Routes>
+        </main>
         <Footer />
       </div>
     </div>

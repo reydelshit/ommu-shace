@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
+import eventRoutes from './routes/eventRoutes';
 
 dotenv.config();
 
@@ -21,9 +23,11 @@ app.use(
 app.options('*', cors({ origin: 'http://localhost:5173', credentials: true }));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/event', eventRoutes);
 
 export default app;

@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="flex justify-between items-center p-4 bg-transparent border-t-2 border-black text-white absolute bottom-0 w-full">
+    <footer className="flex justify-between items-center p-4 bg-transparent border-t-2 border-black text-white absolute bottom-0   w-full">
       <div className="flex gap-2">
         <h1 className="font-semibold text-black">ommu</h1>
         <ul className="flex gap-4 ">

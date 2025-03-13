@@ -77,7 +77,7 @@ const FormContainer = ({
         },
         onError: (error: any) => {
           console.error('Login failed:', error);
-          setError(error.message);
+          setError(error.response.data.message);
         },
       },
     );

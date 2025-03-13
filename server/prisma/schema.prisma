@@ -8,8 +8,32 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  password String
-  createdAt DateTime @default(now())
+  id          String   @id @default(uuid())
+  fullname    String
+  username    String   @unique
+  email       String   @unique
+  phoneNumber String
+  password    String
+  address     String
+  role        String   @default("user")
+  birthday    String
+  createdAt   DateTime @default(now())
+}
+
+model Event {
+  id             String   @id @default(uuid())
+  eventName      String
+  description    String   @db.Text
+  tickets        String   @default("free")
+  isNeedApproval String
+  capacity       Int
+  location       String
+  markedLocation String
+  startDate      String
+  endDate        String
+  tags           String
+  bannerPath     String
+  visibility     String
+  userId         String
+  createdAt      DateTime @default(now())
 }

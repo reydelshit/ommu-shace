@@ -22,7 +22,7 @@ export const generateRefreshToken = (userId: string) => {
 
 export const loginUser = async (email: string, password: string) => {
   const user = await getUserByEmail(email);
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!user || !(password === user.password)) {
     throw new Error('Invalid email or password');
   }
 

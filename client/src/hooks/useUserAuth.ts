@@ -33,7 +33,6 @@ export const useRegisterUser = () => {
   });
 };
 
-// Hook for user login
 export const useLoginUser = () => {
   return useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>

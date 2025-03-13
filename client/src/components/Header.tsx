@@ -7,6 +7,7 @@ import { useSession } from '@/hooks/useSession';
 //   PopoverContent,
 //   PopoverTrigger,
 // } from '@/components/ui/popover';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -23,13 +24,19 @@ const Header = () => {
   const { user, logout, session } = useSession();
 
   return (
-    <header className="flex w-full justify-between items-center h-20 ">
+    <header className="flex w-full justify-between items-center h-24 sticky top-0 z-50  px-4 bg-brown-text">
       <Link to={session ? '/dashboard' : '/'}>
-        <img className="w-20" src={OmmuLogo} alt="ommu_logo" />
+        <img className="w-20 " src={OmmuLogo} alt="ommu_logo" />
       </Link>
 
       <div className="flex gap-4 items-center h-full">
-        <Button className="cursor-pointer">Become a Patron</Button>
+        <Button
+          className={`cursor-pointer ${
+            session ? 'bg-yellow-text text-black' : ''
+          }`}
+        >
+          {session ? 'For Creators' : 'Become a Patron'}
+        </Button>
 
         {session && (
           <DropdownMenu>
@@ -44,6 +51,11 @@ const Header = () => {
               <DropdownMenuLabel>{user?.username}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link to="/dashboard">Dashboard</Link>
+              </DropdownMenuItem>
+
               <DropdownMenuItem className="cursor-pointer" onClick={logout}>
                 Log out
                 <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
