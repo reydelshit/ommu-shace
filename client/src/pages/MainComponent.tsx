@@ -11,7 +11,7 @@ const MainComponent = () => {
   const path = useLocation().pathname;
 
   return (
-    <div className="bg-brown-text min-h-screen w-full flex flex-col items-center">
+    <div className="bg-brown-text w-full flex flex-col items-center ">
       <div className="w-full max-w-[1100px] flex flex-col items-start justify-between min-h-screen relative">
         <Header />
 

@@ -14,6 +14,21 @@ type EventsResponse = {
   nextCursor?: string;
 };
 
+export type AttendeeType = {
+  id: string;
+  eventId: string;
+  status: string;
+  userId: string;
+  createdAt: string;
+};
+
+export type EventsWithAttendees = EventType & {
+  attendees: AttendeeType[];
+  user: {
+    fullname: string;
+  };
+};
+
 export const useCreateEvent = () => {
   return useMutation({
     mutationFn: (formData: FormData) => createEventServiceFrontEnd(formData),
@@ -38,7 +53,11 @@ export const useGetAllEvents = () => {
 };
 
 export const useGetSpecificEvent = (eventId: string, userId: string) => {
-  return useQuery({
+  return useQuery<{
+    event: EventsWithAttendees;
+    isUserAttending: boolean;
+    isEventFull: boolean;
+  }>({
     queryKey: ['events', eventId, userId],
     queryFn: () => getSpecificEventService(eventId, userId),
     enabled: !!eventId && !!userId,
@@ -52,13 +71,7 @@ export const useGetSpecificEvent = (eventId: string, userId: string) => {
 
 export const useUpdateEvent = () => {
   return useMutation({
-    mutationFn: ({
-      formData,
-      eventId,
-    }: {
-      formData: FormData;
-      eventId: string;
-    }) => updateEventServiceFrontEnd(formData, eventId),
+    mutationFn: ({ formData, eventId }: { formData: FormData; eventId: string }) => updateEventServiceFrontEnd(formData, eventId),
   });
 };
 
@@ -70,13 +83,7 @@ export const useDeleteEvent = () => {
 
 export const useAttendEvent = () => {
   return useMutation({
-    mutationFn: async ({
-      eventId,
-      userId,
-    }: {
-      eventId: string;
-      userId: string;
-    }) => {
+    mutationFn: async ({ eventId, userId }: { eventId: string; userId: string }) => {
       const { data } = await attendEventService(eventId, userId);
       return data;
     },

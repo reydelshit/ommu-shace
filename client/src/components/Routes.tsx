@@ -1,12 +1,12 @@
-import React from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 import EventFormContainer from '@/components/EventFormContainer';
-import LandingPage from '@/pages/LandingPage';
 import Dashboard from '@/pages/(authenticated)/Dashboard';
+import Profile from '@/pages/(authenticated)/Profile';
 import ViewEvent from '@/pages/(authenticated)/ViewEvent';
+import LandingPage from '@/pages/LandingPage';
 
 const RoutesContainer = () => {
   return (
@@ -19,6 +19,8 @@ const RoutesContainer = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/create/event" element={<EventFormContainer />} />
           <Route path="/event/:eventId" element={<ViewEvent />} />
+
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         <Route

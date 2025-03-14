@@ -104,7 +104,10 @@ export const eventController = {
       const { userId } = req.query;
       const event = await prisma.event.findUnique({
         where: { id: eventId },
-        include: { user: { select: { fullname: true } }, attendees: true },
+        include: {
+          user: { select: { fullname: true } },
+          attendees: true,
+        },
       });
 
       if (!event) {

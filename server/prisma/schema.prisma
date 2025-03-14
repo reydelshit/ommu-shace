@@ -42,11 +42,19 @@ model Event {
   createdAt      DateTime         @default(now())
 }
 
+enum AttendanceStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CHECKED_IN
+}
+
 model EventAttendees {
-  id        String   @id @default(uuid())
+  id        String           @id @default(uuid())
   eventId   String
   userId    String
-  createdAt DateTime @default(now())
-  event     Event    @relation(fields: [eventId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  status    AttendanceStatus @default(PENDING)
+  createdAt DateTime         @default(now())
+  event     Event            @relation(fields: [eventId], references: [id])
+  user      User             @relation(fields: [userId], references: [id])
 }

@@ -1,12 +1,14 @@
 // import RegisterForm from './components/RegisterForm';
 
-import { CirclePlus, Minimize, TicketPercent, User, Users } from 'lucide-react';
+import { CirclePlus, Home, Minimize, TicketPercent, User, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSession } from '@/hooks/useSession';
 const Sidebar = () => {
   const [showOptions, setShowOptions] = useState(false);
+  const { session } = useSession();
 
   return (
     <div className="flex-shrink-0 flex flex-col border-yellow-500 items-center justify-start bg-[#F3F3F3] p-4 rounded-3xl w-[80px] h-[450px] gap-10 text-center z-50 sticky top-48 left-0 shadow-lg">
@@ -49,19 +51,27 @@ const Sidebar = () => {
         </div>
       )}
 
-      <div className="text-center flex flex-col items-center cursor-pointer">
-        <User />
-        <span className="block text-[10px]">Profile</span>
-      </div>
+      <Link to={session ? '/dashboard' : '/'}>
+        <div className="text-center flex flex-col items-center cursor-pointer">
+          <Home />
+          {/* <span className="block text-[10px]">Home</span> */}
+        </div>
+      </Link>
+
+      <Link to={'/profile'}>
+        <div className="text-center flex flex-col items-center cursor-pointer">
+          <User />
+        </div>
+      </Link>
 
       <div className="text-center flex flex-col items-center cursor-pointer">
         <TicketPercent />
-        <span className="block text-[10px]">Your Events</span>
+        {/* <span className="block text-[10px]">Your Events</span> */}
       </div>
 
       <div className="text-center flex flex-col items-center cursor-pointer">
         <Users />
-        <span className="block text-[10px]">Community</span>
+        {/* <span className="block text-[10px]">Community</span> */}
       </div>
     </div>
   );

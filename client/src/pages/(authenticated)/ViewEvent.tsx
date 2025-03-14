@@ -1,15 +1,21 @@
+import { randomColor } from '@/components/tabs/events/EventCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { useAttendEvent, useGetSpecificEvent } from '@/hooks/useEvent';
 import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
+import { formatDate } from '@/utils/formatDate';
+import { useQueryClient } from '@tanstack/react-query';
+import { User2Icon } from 'lucide-react';
+import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
   const { user } = useSession();
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useGetSpecificEvent(eventId ?? '', user?.id ?? '');
 
@@ -30,7 +36,8 @@ const ViewEvent = () => {
         onSuccess: async (data) => {
           console.log('Attend event success:', data);
 
-          // await queryClient.invalidateQueries({ queryKey: ['attend'] });
+          await queryClient.invalidateQueries({ queryKey: ['events', eventId, user?.id] });
+          await queryClient.invalidateQueries({ queryKey: ['attendees', eventId] });
 
           // navigate('/dashboard');
 
@@ -68,43 +75,76 @@ const ViewEvent = () => {
   const tagList = eventData.tags.split(',');
   const matchedBadges = tagList.map((tag: string) => badges.find((badge) => badge.name === tag)).filter(Boolean);
 
+  const userAttendance = eventData.attendees.find((attendee) => attendee.userId === user?.id);
+  const userAttendanceStatus = userAttendance ? userAttendance.status : null;
+
   return (
-    <div className="w-full flex flex-col items-center min-h-[1000px]">
-      <div className="w-[80%] mx-auto bg-white rounded-lg overflow-hidden shadow-lg mt-[2rem]">
+    <div className="w-full flex flex-col items-center min-h-screen pb-12">
+      <div className="w-[80%] mx-auto bg-white rounded-lg overflow-hidden shadow-lg my-8 flex flex-col">
         {/* Banner as cover photo */}
         <div className="w-full h-48 bg-gray-200 relative">
-          <img
-            src={`${import.meta.env.VITE_BACKEND_URL}${eventData?.bannerPath}`}
-            alt={eventData?.eventName}
-            className="w-full h-full object-cover"
-          />
+          {eventData?.bannerPath && eventData?.bannerPath !== 'null' ? (
+            <img
+              src={`${import.meta.env.VITE_BACKEND_URL}${eventData.bannerPath}`}
+              alt={eventData?.eventName}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className={`w-full h-full ${randomColor}`}></div>
+          )}
         </div>
 
-        <div className="p-6">
+        <div className="p-6 flex-1">
           {/* Event Header */}
-          <div className="flex items-start mb-6">
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-900">{eventData?.eventName}</h1>
-              <p className="text-sm text-gray-600 mt-1">Hosted by {eventData?.user.fullname}</p>
+          <div className="flex justify-between items-start">
+            <div className="flex items-start mb-6">
+              <div className="flex-1">
+                <h1 className="text-2xl font-bold text-gray-900">{eventData?.eventName}</h1>
+                <p className="text-sm text-gray-600 mt-1">Hosted by {eventData?.user.fullname}</p>
+              </div>
             </div>
+
+            <p className="text-sm font-medium mb-4 flex items-center gap-2">
+              <User2Icon className="h-4 w-4" /> {eventData?.attendees.filter((attend) => attend.status === 'APPROVED').length} / {eventData?.capacity}{' '}
+              attendees
+            </p>
           </div>
 
           {/* Event Details */}
           <div className="grid grid-cols-1 gap-4 mb-6">
-            <div className="flex items-center">
-              <div className="bg-gray-100 p-2 rounded-lg mr-3">
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  ></path>
-                </svg>
+            <div className="flex w-full items-center justify-between">
+              <div className="flex items-center w-full">
+                <div className="bg-gray-100 p-2 rounded-lg mr-3">
+                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-medium">{formatDate(eventData?.startDate)}</p>
+                  <p className="text-sm text-gray-600">Event start</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium">{eventData?.startDate}</p>
-                <p className="text-sm text-gray-600">{eventData?.endDate}</p>
+
+              <div className="flex items-center w-full">
+                <div className="bg-gray-100 p-2 rounded-lg mr-3">
+                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-medium">{formatDate(eventData?.endDate)}</p>
+                  <p className="text-sm text-gray-600">Event ends</p>
+                </div>
               </div>
             </div>
 
@@ -125,33 +165,53 @@ const ViewEvent = () => {
                 <p className="text-sm text-gray-600">{eventData?.markedLocation}</p>
               </div>
             </div>
+
+            <div className="mt-1 h-[300px] rounded-lg overflow-hidden border relative z-0">
+              <MapContainer
+                center={[Number(eventData?.markedLocation.split(',')[0]), Number(eventData?.markedLocation.split(',')[1])]}
+                zoom={16}
+                scrollWheelZoom={false}
+                dragging={false}
+                touchZoom={false}
+                doubleClickZoom={false}
+                boxZoom={false}
+                keyboard={false}
+                style={{ height: '100%', width: '100%' }}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[Number(eventData?.markedLocation.split(',')[0]), Number(eventData?.markedLocation.split(',')[1])]} />
+              </MapContainer>
+            </div>
           </div>
 
           {/* Status Indicators */}
-
-          <div className="flex flex-wrap gap-2 my-2">
-            {matchedBadges.map((badge: { name: string; image: string }, index: number) => (
-              <Badge variant={'outline'} key={index} className="cursor-pointer p-1 rounded-full">
-                <HoverCard>
-                  <HoverCardTrigger className="flex gap-2 items-center">
-                    <img src={badge?.image} alt={badge?.name} className="w-6 h-w-6" />
-
-                    {badge?.name}
-                  </HoverCardTrigger>
-                  <HoverCardContent className="bg-transparent border-none shadow-none text-xs">{badge?.name}</HoverCardContent>
-                </HoverCard>
-              </Badge>
-            ))}
+          <div className="flex flex-wrap gap-2 my-4">
+            {matchedBadges.map(
+              (badge, index) =>
+                badge && (
+                  <Badge variant={'outline'} key={index} className="cursor-pointer p-1 rounded-full">
+                    <HoverCard>
+                      <HoverCardTrigger className="flex gap-2 items-center">
+                        <img src={badge.image} alt={badge.name} className="w-6 h-6" />
+                        {badge.name}
+                      </HoverCardTrigger>
+                      <HoverCardContent className="bg-transparent border-none shadow-none text-xs">{badge.name}</HoverCardContent>
+                    </HoverCard>
+                  </Badge>
+                ),
+            )}
           </div>
 
           {/* Event Description */}
           <div className="mb-6 max-w-[550px]">
-            <p className="text-gray-700  break-words whitespace-pre-wrap w-full">{eventData?.description}</p>
+            <p className="text-gray-700 break-words whitespace-pre-wrap w-full">{eventData?.description}</p>
           </div>
 
           {/* Attendees */}
           <div className="mb-6">
-            <p className="text-sm font-medium mb-2">10 Going</p>
             <div className="flex -space-x-2">
               {attendees.map((attendee, index) => (
                 <div key={index} className="inline-block">
@@ -165,12 +225,30 @@ const ViewEvent = () => {
 
           <Button
             onClick={handleAttendEvent}
-            disabled={isUserAttending || isEventFull || isUserCreator}
-            className={`px-6 py-2 bg-red-400 hover:bg-red-500 text-white rounded-full font-medium transition duration-200  btn ${
-              isUserAttending || isEventFull ? 'btn-disabled' : 'btn-primary'
-            }`}
+            disabled={isEventFull || isUserCreator}
+            className={`px-6 cursor-pointer py-2 ${
+              userAttendanceStatus === 'APPROVED'
+                ? 'bg-green-400 hover:bg-green-500'
+                : userAttendanceStatus === 'PENDING'
+                ? 'bg-yellow-400 hover:bg-yellow-500'
+                : userAttendanceStatus === 'REJECTED'
+                ? 'bg-red-400 hover:bg-red-500'
+                : ''
+            } text-white rounded-full font-medium transition duration-200 btn ${isUserAttending || isEventFull ? 'btn-disabled' : 'btn-primary'}`}
           >
-            {isUserAttending ? 'You are attending' : isEventFull ? 'Event is full' : isUserCreator ? 'You are the creator' : 'Attend Event'}
+            {isUserAttending
+              ? userAttendanceStatus === 'APPROVED'
+                ? 'View Ticket'
+                : userAttendanceStatus === 'PENDING'
+                ? 'Pending Approval'
+                : userAttendanceStatus === 'REJECTED'
+                ? 'Rejected'
+                : 'Unknown Status'
+              : isEventFull
+              ? 'Event is full'
+              : isUserCreator
+              ? 'You are the host'
+              : 'Attend Event'}
           </Button>
         </div>
       </div>

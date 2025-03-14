@@ -2,12 +2,6 @@ import { Button } from '@/components/ui/button';
 import OmmuLogo from '@/assets/LOGO.png';
 import { useSession } from '@/hooks/useSession';
 
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from '@/components/ui/popover';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -30,13 +24,7 @@ const Header = () => {
       </Link>
 
       <div className="flex gap-4 items-center h-full">
-        <Button
-          className={`cursor-pointer ${
-            session ? 'bg-yellow-text text-black' : ''
-          }`}
-        >
-          {session ? 'For Creators' : 'Become a Patron'}
-        </Button>
+        <Button className={`cursor-pointer ${session ? 'bg-yellow-text text-black' : ''}`}>{session ? 'For Creators' : 'Become a Patron'}</Button>
 
         {session && (
           <DropdownMenu>
@@ -50,7 +38,9 @@ const Header = () => {
             <DropdownMenuContent>
               <DropdownMenuLabel>{user?.username}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to="/profile">Profile</Link>
+              </DropdownMenuItem>
 
               <DropdownMenuItem>
                 <Link to="/dashboard">Dashboard</Link>
