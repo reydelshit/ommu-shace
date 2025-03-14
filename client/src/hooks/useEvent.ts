@@ -39,7 +39,7 @@ export const useGetSpecificEvent = (eventId: string) => {
   return useQuery<EventType>({
     queryKey: ['events', eventId],
     queryFn: () => getSpecificEventService(eventId),
-    enabled: !!eventId, // Only run if eventId exists
+    enabled: !!eventId,
   });
 };
 

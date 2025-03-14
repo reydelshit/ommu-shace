@@ -3,6 +3,7 @@ import {
   createEventService,
   deleteEventService,
   getAllEventsService,
+  getSpecificEventService,
   // getSpecificEventService,
   getUserById,
   updateEventService,
@@ -68,7 +69,7 @@ export const createEventController = async (
       startDate,
       endDate,
       tags,
-      bannerPath, // Save uploaded file path
+      bannerPath,
       visibility,
       userId,
     );
@@ -98,19 +99,23 @@ export const getAllEventsController = async (
   }
 };
 
-// export const getSpecificEventController = async (
-//   req: Request,
-//   res: Response,
-// ): Promise<void> => {
-//   try {
-//     const { eventId } = req.params;
-//     const event = await getSpecificEventService(eventId);
-//     res.status(200).json({ success: true, event });
-//   } catch (error: any) {
-//     console.error('Error in getSpecificEventController:', error);
-//     res.status(500).json({ success: false, message: error.message });
-//   }
-// };
+export const getSpecificEventController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { eventId } = req.params;
+    console.log('eventId:', eventId);
+
+    const event = await getSpecificEventService(eventId);
+
+    console.log('event:', event);
+    res.status(200).json({ success: true, event });
+  } catch (error: any) {
+    console.error('Error in getSpecificEventController:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
 
 export const updateEventController = async (
   req: Request,

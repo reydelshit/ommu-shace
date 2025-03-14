@@ -35,8 +35,8 @@ export const getAllEventsService = async (
   return data;
 };
 export const getSpecificEventService = async (eventId: string) => {
-  const { data } = await axiosInstance.post(`/events/${eventId}`);
-  return data;
+  const { data } = await axiosInstance.post(`/event/${eventId}`);
+  return data.event;
 };
 
 export const updateEventServiceFrontEnd = async (

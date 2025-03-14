@@ -51,16 +51,16 @@ export const getAllEventsService = async (cursor?: string, pageSize = 2) => {
   console.log(
     'Returning events:',
     events.map((e) => e.id),
-  ); // Show event IDs
+  );
 
   const nextCursor = events.length > 0 ? events[events.length - 1].id : null; // Get last event's ID
 
   return { events, nextCursor };
 };
 
-// export const getSpecificEventService = async (eventId: string) => {
-//   return prisma.event.findUnique({ where: { id: eventId } });
-// };
+export const getSpecificEventService = async (eventId: string) => {
+  return prisma.event.findUnique({ where: { id: eventId } });
+};
 
 export const updateEventService = async (
   eventId: string,

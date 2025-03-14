@@ -4,6 +4,7 @@ import {
   createEventController,
   deleteEventController,
   getAllEventsController,
+  getSpecificEventController,
   // getSpecificEventController,
   updateEventController,
 } from '../controller/eventController';
@@ -11,9 +12,9 @@ import {
 const router = express.Router();
 
 router.post('/', getAllEventsController);
-// router.post('/:id', getSpecificEventController);
+router.post('/:eventId', getSpecificEventController);
 router.post('/create', upload.single('banner'), createEventController);
-router.put('/edit/:id', upload.single('banner'), updateEventController);
+router.put('/edit/:eventId ', upload.single('banner'), updateEventController);
 router.delete('/delete/:id', deleteEventController);
 
 export default router;
