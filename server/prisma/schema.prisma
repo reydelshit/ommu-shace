@@ -8,23 +8,25 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(uuid())
+  id          String           @id @default(uuid())
   fullname    String
-  username    String   @unique
-  email       String   @unique
+  username    String           @unique
+  email       String           @unique
   phoneNumber String
   password    String
   address     String
-  role        String   @default("user")
+  role        String           @default("user")
   birthday    String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime         @default(now())
+  events      Event[]
+  attendances EventAttendees[]
 }
 
 model Event {
-  id             String   @id @default(uuid())
+  id             String           @id @default(uuid())
   eventName      String
-  description    String   @db.Text
-  tickets        String   @default("free")
+  description    String           @db.Text
+  tickets        String           @default("free")
   isNeedApproval String
   capacity       Int
   location       String
@@ -35,5 +37,16 @@ model Event {
   bannerPath     String
   visibility     String
   userId         String
-  createdAt      DateTime @default(now())
+  user           User             @relation(fields: [userId], references: [id])
+  attendees      EventAttendees[]
+  createdAt      DateTime         @default(now())
+}
+
+model EventAttendees {
+  id        String   @id @default(uuid())
+  eventId   String
+  userId    String
+  createdAt DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }

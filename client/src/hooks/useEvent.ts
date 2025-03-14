@@ -1,11 +1,12 @@
 import axiosInstance from '@/api/axiosInstance';
 import {
+  attendEventService,
   createEventServiceFrontEnd,
   deleteEventService,
-  EventType,
   getSpecificEventService,
   updateEventServiceFrontEnd,
-} from '@/api/eventServiceFrontend';
+} from '@/api/serviceEvent';
+import { EventType } from '@/types/events';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 
 type EventsResponse = {
@@ -35,11 +36,17 @@ export const useGetAllEvents = () => {
     staleTime: 0,
   });
 };
-export const useGetSpecificEvent = (eventId: string) => {
-  return useQuery<EventType>({
-    queryKey: ['events', eventId],
-    queryFn: () => getSpecificEventService(eventId),
-    enabled: !!eventId,
+
+export const useGetSpecificEvent = (eventId: string, userId: string) => {
+  return useQuery({
+    queryKey: ['events', eventId, userId],
+    queryFn: () => getSpecificEventService(eventId, userId),
+    enabled: !!eventId && !!userId,
+    select: (data) => ({
+      event: data.event,
+      isUserAttending: data.isUserAttending,
+      isEventFull: data.isEventFull,
+    }),
   });
 };
 
@@ -58,5 +65,20 @@ export const useUpdateEvent = () => {
 export const useDeleteEvent = () => {
   return useMutation({
     mutationFn: (eventId: string) => deleteEventService(eventId),
+  });
+};
+
+export const useAttendEvent = () => {
+  return useMutation({
+    mutationFn: async ({
+      eventId,
+      userId,
+    }: {
+      eventId: string;
+      userId: string;
+    }) => {
+      const { data } = await attendEventService(eventId, userId);
+      return data;
+    },
   });
 };

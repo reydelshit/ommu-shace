@@ -1,195 +1,183 @@
+import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
-import {
-  createEventService,
-  deleteEventService,
-  getAllEventsService,
-  getSpecificEventService,
-  // getSpecificEventService,
-  getUserById,
-  updateEventService,
-} from '../services/eventService';
 
-export const createEventController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
-    const {
-      eventName,
-      description,
-      tickets,
-      isNeedApproval,
-      capacity,
-      location,
-      markedLocation,
-      startDate,
-      endDate,
-      tags,
-      visibility,
-      userId,
-    } = req.body;
+const prisma = new PrismaClient();
 
-    if (
-      !eventName ||
-      !description ||
-      !tickets ||
-      !capacity ||
-      !location ||
-      !startDate ||
-      !endDate ||
-      !tags ||
-      !visibility ||
-      !userId
-    ) {
-      res.status(400).json({
-        success: false,
-        message: 'All fields are required, including an image.',
+export const eventController = {
+  createEvent: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const {
+        eventName,
+        description,
+        tickets,
+        isNeedApproval,
+        capacity,
+        location,
+        markedLocation,
+        startDate,
+        endDate,
+        tags,
+        visibility,
+        userId,
+      } = req.body;
+
+      if (
+        !eventName ||
+        !description ||
+        !tickets ||
+        !capacity ||
+        !location ||
+        !startDate ||
+        !endDate ||
+        !tags ||
+        !visibility ||
+        !userId
+      ) {
+        res
+          .status(400)
+          .json({ success: false, message: 'All fields are required.' });
+        return;
+      }
+
+      const bannerPath = `/uploads/${req?.file?.filename}`;
+
+      const userExists = await prisma.event.findUnique({
+        where: { id: userId },
       });
-      return;
-    }
+      if (userExists) {
+        res
+          .status(400)
+          .json({ success: false, message: 'User already exists' });
+        return;
+      }
 
-    // Save banner path
-    const bannerPath = `/uploads/${req?.file?.filename}`;
-
-    const isUserExist = await getUserById(userId);
-
-    if (isUserExist) {
-      res.status(400).json({ success: false, message: 'User already exists' });
-      return;
-    }
-
-    const user = await createEventService(
-      eventName,
-      description,
-      tickets,
-      isNeedApproval,
-      capacity,
-      location,
-      markedLocation,
-      startDate,
-      endDate,
-      tags,
-      bannerPath,
-      visibility,
-      userId,
-    );
-
-    res
-      .status(201)
-      .json({ success: true, message: 'Event created successfully.', user });
-  } catch (error: any) {
-    console.error('Error in createEventController:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-export const getAllEventsController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
-    const { cursor, pageSize = 2 } = req.body; // Extract cursor & pageSize
-
-    const { events, nextCursor } = await getAllEventsService(cursor, pageSize);
-
-    res.status(200).json({ success: true, events, nextCursor }); // Return cursor
-  } catch (error: any) {
-    console.error('Error in getAllEventsController:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-export const getSpecificEventController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
-    const { eventId } = req.params;
-    console.log('eventId:', eventId);
-
-    const event = await getSpecificEventService(eventId);
-
-    console.log('event:', event);
-    res.status(200).json({ success: true, event });
-  } catch (error: any) {
-    console.error('Error in getSpecificEventController:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-export const updateEventController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
-    const { eventId } = req.params;
-    const {
-      eventName,
-      description,
-      tickets,
-      isNeedApproval,
-      capacity,
-      location,
-      markedLocation,
-      startDate,
-      endDate,
-      tags,
-      visibility,
-      userId,
-    } = req.body;
-
-    if (
-      !eventName ||
-      !description ||
-      !tickets ||
-      !capacity ||
-      !location ||
-      !startDate ||
-      !endDate ||
-      !tags ||
-      !visibility ||
-      !userId
-    ) {
-      res.status(400).json({
-        success: false,
-        message: 'All fields are required.',
+      const event = await prisma.event.create({
+        data: {
+          eventName,
+          description,
+          tickets,
+          isNeedApproval,
+          capacity: Number(capacity),
+          location,
+          markedLocation,
+          startDate,
+          endDate,
+          tags,
+          bannerPath,
+          visibility,
+          userId,
+        },
       });
-      return;
+
+      res
+        .status(201)
+        .json({ success: true, message: 'Event created successfully.', event });
+    } catch (error: any) {
+      console.error('Error in createEvent:', error);
+      res.status(500).json({ success: false, message: error.message });
     }
+  },
 
-    const event = await updateEventService(
-      eventId,
-      eventName,
-      description,
-      tickets,
-      isNeedApproval,
-      capacity,
-      location,
-      markedLocation,
-      startDate,
-      endDate,
-      tags,
-      visibility,
-      userId,
-    );
+  getAllEvents: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { cursor, pageSize = 2 } = req.body;
+      const events = await prisma.event.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: pageSize,
+        ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+      });
 
-    res.status(200).json({ success: true, event });
-  } catch (error: any) {
-    console.error('Error in updateEventController:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+      res.status(200).json({
+        success: true,
+        events,
+        nextCursor: events.length > 0 ? events[events.length - 1].id : null,
+      });
+    } catch (error: any) {
+      console.error('Error in getAllEvents:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
 
-export const deleteEventController = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  try {
-    const { eventId } = req.params;
-    const event = await deleteEventService(eventId);
-    res.status(200).json({ success: true, event });
-  } catch (error: any) {
-    console.error('Error in deleteEventController:', error);
-    res.status(500).json({ success: false, message: error.message });
-  }
+  getSpecificEvent: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { eventId } = req.params;
+      const { userId } = req.query;
+      const event = await prisma.event.findUnique({
+        where: { id: eventId },
+        include: { user: { select: { fullname: true } }, attendees: true },
+      });
+
+      if (!event) {
+        res.status(404).json({ success: false, message: 'Event not found' });
+        return;
+      }
+
+      res.status(200).json({
+        success: true,
+        event,
+        isUserAttending: event.attendees.some(
+          (attendee) => attendee.userId === userId,
+        ),
+        isEventFull: event.attendees.length >= event.capacity,
+      });
+    } catch (error: any) {
+      console.error('Error in getSpecificEvent:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  updateEvent: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { eventId } = req.params;
+      const updateData = req.body;
+
+      const event = await prisma.event.update({
+        where: { id: eventId },
+        data: { ...updateData },
+      });
+
+      res.status(200).json({ success: true, event });
+    } catch (error: any) {
+      console.error('Error in updateEvent:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  deleteEvent: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { eventId } = req.params;
+      await prisma.event.delete({ where: { id: eventId } });
+      res
+        .status(200)
+        .json({ success: true, message: 'Event deleted successfully' });
+    } catch (error: any) {
+      console.error('Error in deleteEvent:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  attendEvent: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { eventId } = req.params;
+      const { userId } = req.body;
+
+      const event = await prisma.event.findUnique({
+        where: { id: eventId },
+        include: { attendees: true },
+      });
+      if (!event) throw new Error('Event not found');
+      if (event.attendees.some((a) => a.userId === userId))
+        throw new Error('Already attending this event');
+      if (event.attendees.length >= event.capacity)
+        throw new Error('Event is full');
+
+      await prisma.eventAttendees.create({ data: { eventId, userId } });
+      res
+        .status(200)
+        .json({ success: true, message: 'Successfully joined the event!' });
+    } catch (error: any) {
+      console.error('Error in attendEvent:', error);
+      res.status(400).json({ success: false, message: error.message });
+    }
+  },
 };

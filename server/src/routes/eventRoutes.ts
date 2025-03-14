@@ -1,20 +1,21 @@
 import express from 'express';
 import upload from '../middlewares/upload';
-import {
-  createEventController,
-  deleteEventController,
-  getAllEventsController,
-  getSpecificEventController,
-  // getSpecificEventController,
-  updateEventController,
-} from '../controller/eventController';
+import { eventController } from '../controller/eventController';
 
 const router = express.Router();
 
-router.post('/', getAllEventsController);
-router.post('/:eventId', getSpecificEventController);
-router.post('/create', upload.single('banner'), createEventController);
-router.put('/edit/:eventId ', upload.single('banner'), updateEventController);
-router.delete('/delete/:id', deleteEventController);
+router.post('/', eventController.getAllEvents);
+router.get('/:eventId', eventController.getSpecificEvent);
+router.post('/create', upload.single('banner'), eventController.createEvent);
+router.put(
+  '/edit/:eventId ',
+  upload.single('banner'),
+  eventController.updateEvent,
+);
+router.delete('/delete/:id', eventController.deleteEvent);
+
+// attendEvent
+
+router.post('/:eventId/attend', eventController.attendEvent);
 
 export default router;

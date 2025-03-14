@@ -1,12 +1,12 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 import {
   Select,
@@ -16,6 +16,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useCreateEvent } from '@/hooks/useEvent';
+import { useSession } from '@/hooks/useSession';
+import { useUserLocation } from '@/hooks/useUserLocation';
 import { badges } from '@/lib/badges';
 import type { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -30,10 +33,7 @@ import {
 import { FormEvent, useEffect, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
-import { useSession } from '@/hooks/useSession';
 import { toast } from 'sonner';
-import { useCreateEvent } from '@/hooks/useEvent';
-import { useUserLocation } from '@/hooks/useUserLocation';
 
 function LocationPicker({
   onLocationSelect,

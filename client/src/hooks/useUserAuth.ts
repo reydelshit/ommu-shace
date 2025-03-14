@@ -1,5 +1,5 @@
+import { loginUser, registerUser } from '@/api/serviceAuth';
 import { useMutation } from '@tanstack/react-query';
-import { registerUser, loginUser } from '../api/authService';
 
 // Hook for user registration
 export const useRegisterUser = () => {
