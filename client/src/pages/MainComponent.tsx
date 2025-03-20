@@ -12,7 +12,7 @@ const MainComponent = () => {
 
   return (
     <div className="bg-brown-text w-full flex flex-col items-center ">
-      <div className="w-full max-w-[1100px] flex flex-col items-start justify-between min-h-screen relative">
+      <div className="w-full max-w-[1500px] flex flex-col items-start justify-between min-h-screen relative">
         <Header />
 
         <div className="flex-1 flex flex-row w-full mt-8">

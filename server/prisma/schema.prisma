@@ -8,18 +8,25 @@ datasource db {
 }
 
 model User {
-  id          String           @id @default(uuid())
-  fullname    String
-  username    String           @unique
-  email       String           @unique
-  phoneNumber String
-  password    String
-  address     String
-  role        String           @default("user")
-  birthday    String
-  createdAt   DateTime         @default(now())
-  events      Event[]
-  attendances EventAttendees[]
+  id             String           @id @default(uuid())
+  fullname       String
+  username       String           @unique
+  email          String           @unique
+  phoneNumber    String
+  profilePicture String?
+  coverPicture   String?
+  bio            String           @default("")
+  interests      String           @default("")
+  verifiedDate   String?
+  verifiedBy     String?
+  verifiedStatus String?
+  password       String
+  address        String
+  role           String           @default("user")
+  birthday       String
+  createdAt      DateTime         @default(now())
+  events         Event[]
+  attendances    EventAttendees[]
 }
 
 model Event {

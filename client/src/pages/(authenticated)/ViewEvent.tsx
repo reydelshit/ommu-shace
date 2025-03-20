@@ -1,22 +1,22 @@
 import { randomColor } from '@/components/tabs/events/EventCard';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAttendEvent, useGetSpecificEvent } from '@/hooks/useEvent';
 import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { formatDate } from '@/utils/formatDate';
 import { useQueryClient } from '@tanstack/react-query';
-import { User2Icon } from 'lucide-react';
+import { QrCode, User2Icon } from 'lucide-react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
+
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
   const { user } = useSession();
   const queryClient = useQueryClient();
-
   const { data, isLoading, isError } = useGetSpecificEvent(eventId ?? '', user?.id ?? '');
 
   const eventData = data?.event ?? null;
@@ -79,10 +79,10 @@ const ViewEvent = () => {
   const userAttendanceStatus = userAttendance ? userAttendance.status : null;
 
   return (
-    <div className="w-full flex flex-col items-center min-h-screen pb-12">
-      <div className="w-[80%] mx-auto bg-white rounded-lg overflow-hidden shadow-lg my-8 flex flex-col">
+    <div className="w-full flex flex-col items-center min-h-screen pb-12 relative">
+      <div className="w-[95%] mx-auto bg-white rounded-lg overflow-hidden shadow-lg my-8 flex flex-col">
         {/* Banner as cover photo */}
-        <div className="w-full h-48 bg-gray-200 relative">
+        <div className="w-full h-80 bg-gray-200 relative">
           {eventData?.bannerPath && eventData?.bannerPath !== 'null' ? (
             <img
               src={`${import.meta.env.VITE_BACKEND_URL}${eventData.bannerPath}`}
@@ -192,21 +192,22 @@ const ViewEvent = () => {
             {matchedBadges.map(
               (badge, index) =>
                 badge && (
-                  <Badge variant={'outline'} key={index} className="cursor-pointer p-1 rounded-full">
-                    <HoverCard>
-                      <HoverCardTrigger className="flex gap-2 items-center">
+                  <TooltipProvider key={index}>
+                    <Tooltip>
+                      <TooltipTrigger>
                         <img src={badge.image} alt={badge.name} className="w-6 h-6" />
-                        {badge.name}
-                      </HoverCardTrigger>
-                      <HoverCardContent className="bg-transparent border-none shadow-none text-xs">{badge.name}</HoverCardContent>
-                    </HoverCard>
-                  </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{badge.name}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 ),
             )}
           </div>
 
           {/* Event Description */}
-          <div className="mb-6 max-w-[550px]">
+          <div className="mb-6 max-w-[800px]">
             <p className="text-gray-700 break-words whitespace-pre-wrap w-full">{eventData?.description}</p>
           </div>
 
@@ -223,8 +224,76 @@ const ViewEvent = () => {
             <p className="text-xs text-gray-600 mt-2">Liz Sanchez, Khim Castle and 8 others</p>
           </div>
 
-          <Button
-            onClick={handleAttendEvent}
+          {userAttendanceStatus === 'APPROVED' ? (
+            // Use Dialog for "APPROVED" users
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="px-6 cursor-pointer py-2 bg-green-400 hover:bg-green-500 text-white rounded-full font-medium transition duration-200">
+                  {' '}
+                  View Ticket{' '}
+                </Button>
+              </DialogTrigger>
+
+              <DialogContent className="w-[820px] bg-black/40 backdrop-blur-xl border border-white/10 p-0 rounded-3xl overflow-hidden">
+                <DialogHeader>
+                  <DialogTitle className="sr-only">Event Ticket</DialogTitle>
+                  <DialogDescription className="w-full h-full">
+                    <div className="relative z-20 p-6 h-[420px] flex flex-col">
+                      <div className="flex-1">
+                        <h2 className="text-[#00FF00] text-2xl font-bold mb-2">{eventData.eventName}</h2>
+
+                        <div className="flex items-center text-white/80 mb-4">
+                          <span>{eventData.location}</span>
+                        </div>
+
+                        {/* QR Code */}
+                        <div className="mt-4 flex justify-center">
+                          <div className="w-32 h-32 bg-[#00FF00]/10 backdrop-blur-md rounded-lg flex items-center justify-center">
+                            <QrCode className="w-24 h-24 text-[#00FF00]" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-[#00FF00] text-center font-medium">{formatDate(eventData.startDate)}</p>
+
+                      {/* Share button */}
+                      <Button className="w-full mt-4 py-3 bg-[#00FF00]/20 text-[#00FF00] rounded-lg backdrop-blur-sm hover:bg-[#00FF00]/30 transition-colors">
+                        Share
+                      </Button>
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          ) : (
+            // Use normal button for others
+            <Button
+              onClick={!isUserAttending ? handleAttendEvent : undefined}
+              disabled={isEventFull || isUserCreator}
+              className={`px-6 cursor-pointer py-2 ${
+                userAttendanceStatus === 'PENDING'
+                  ? 'bg-yellow-400 hover:bg-yellow-500'
+                  : userAttendanceStatus === 'REJECTED'
+                  ? 'bg-red-400 hover:bg-red-500'
+                  : 'btn-primary'
+              } text-white rounded-full font-medium transition duration-200 btn ${isUserAttending || isEventFull ? 'btn-disabled' : 'btn-primary'}`}
+            >
+              {isUserAttending
+                ? userAttendanceStatus === 'PENDING'
+                  ? 'Pending Approval'
+                  : userAttendanceStatus === 'REJECTED'
+                  ? 'Rejected'
+                  : 'Unknown Status'
+                : isEventFull
+                ? 'Event is full'
+                : isUserCreator
+                ? 'You are the host'
+                : 'Attend Event'}
+            </Button>
+          )}
+
+          {/* <Button
+            onClick={isUserAttending ? (userAttendanceStatus === 'APPROVED' ? () => setShowTicket(!showTicket) : undefined) : handleAttendEvent}
             disabled={isEventFull || isUserCreator}
             className={`px-6 cursor-pointer py-2 ${
               userAttendanceStatus === 'APPROVED'
@@ -249,7 +318,7 @@ const ViewEvent = () => {
               : isUserCreator
               ? 'You are the host'
               : 'Attend Event'}
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

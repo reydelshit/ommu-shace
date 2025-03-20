@@ -23,7 +23,7 @@ const Header = () => {
         <img className="w-20 " src={OmmuLogo} alt="ommu_logo" />
       </Link>
 
-      <div className="flex gap-4 items-center h-full">
+      <div className="flex gap-4 items-center h-full z-10 ">
         <Button className={`cursor-pointer ${session ? 'bg-yellow-text text-black' : ''}`}>{session ? 'For Creators' : 'Become a Patron'}</Button>
 
         {session && (

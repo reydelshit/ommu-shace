@@ -64,10 +64,12 @@ const Sidebar = () => {
         </div>
       </Link>
 
-      <div className="text-center flex flex-col items-center cursor-pointer">
-        <TicketPercent />
-        {/* <span className="block text-[10px]">Your Events</span> */}
-      </div>
+      <Link to={'/your-event'}>
+        <div className="text-center flex flex-col items-center cursor-pointer">
+          <TicketPercent />
+          {/* <span className="block text-[10px]">Your Events</span> */}
+        </div>
+      </Link>
 
       <div className="text-center flex flex-col items-center cursor-pointer">
         <Users />

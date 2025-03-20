@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import EventCard from './events/EventCard';
 
-const EventCardList = () => {
+const EventCardList = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetAllEvents();
   const { ref, inView } = useInView();
   const DEFAULT_CENTER = useUserLocation();
@@ -27,10 +27,12 @@ const EventCardList = () => {
   if (!DEFAULT_CENTER) return <p>Getting user location...</p>;
 
   return (
-    <div className="z-0 ">
-      <div>
+    <div className="z-0 my-4">
+      <div className={`${GRID_LAYOUT} gap-8 full grid mb-10`}>
         {events.map((event) => (
-          <EventCard DEFAULT_CENTER={DEFAULT_CENTER} key={event.id} event={event} />
+          <div key={event.id} className="h-full">
+            <EventCard DEFAULT_CENTER={DEFAULT_CENTER} event={event} />
+          </div>
         ))}
 
         <div ref={ref} className="text-center p-4">

@@ -18,7 +18,7 @@ export const randomColors = [
 
 export const randomColor = randomColors[Math.floor(Math.random() * randomColors.length)];
 
-const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; event: EventType }) => {
+const YourEventsViewCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; event: EventType }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -49,7 +49,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
   };
 
   return (
-    <Link className="h-full" to={`/event/${event.id}`}>
+    <Link className="h-full" to={`/your-event/${event.id}`}>
       <div className="rounded-xl h-full overflow-hidden shadow-md -z-20 cursor-pointer hover:shadow-lg hover:scale-105 transition-transform">
         <div
           className={`p-4 shadow-2xl text-white relative h-52 ${event.bannerPath && event.bannerPath !== 'null' ? 'bg-brown-text' : randomColor}`}
@@ -141,4 +141,4 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
     </Link>
   );
 };
-export default EventCard;
+export default YourEventsViewCard;

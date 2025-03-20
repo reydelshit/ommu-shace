@@ -1,20 +1,10 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateEvent } from '@/hooks/useEvent';
 import { useSession } from '@/hooks/useSession';
@@ -22,24 +12,13 @@ import { useUserLocation } from '@/hooks/useUserLocation';
 import { badges } from '@/lib/badges';
 import type { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import {
-  EarthLock,
-  Globe,
-  ImagePlus,
-  ShieldCheck,
-  Ticket,
-  Users,
-} from 'lucide-react';
+import { EarthLock, Globe, ImagePlus, ShieldCheck, Ticket, Users } from 'lucide-react';
 import { FormEvent, useEffect, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-function LocationPicker({
-  onLocationSelect,
-}: {
-  onLocationSelect: (lat: number, lng: number) => void;
-}) {
+function LocationPicker({ onLocationSelect }: { onLocationSelect: (lat: number, lng: number) => void }) {
   const map = useMapEvents({
     click(e) {
       onLocationSelect(e.latlng.lat, e.latlng.lng);
@@ -163,9 +142,7 @@ function EventFormContainer() {
     });
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -175,11 +152,7 @@ function EventFormContainer() {
   return (
     <div className="w-full  mx-auto h-[1500px]">
       <div className="flex items-center mb-8 text-yellow-text">
-        <Button
-          onClick={() => navigate(-1)}
-          variant="ghost"
-          className="mr-2 cursor-pointer"
-        >
+        <Button onClick={() => navigate(-1)} variant="ghost" className="mr-2 cursor-pointer">
           ←
         </Button>
         <h1 className="text-2xl font-bold">Create your first event!</h1>
@@ -193,11 +166,7 @@ function EventFormContainer() {
               className="absolute inset-0 flex items-center justify-center w-full h-full cursor-pointer bg-black/10 hover:bg-black/20 transition"
             >
               {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Uploaded Preview"
-                  className="object-cover w-full h-full"
-                />
+                <img src={imagePreview} alt="Uploaded Preview" className="object-cover w-full h-full" />
               ) : (
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
                   <ImagePlus className="w-8 h-8 mb-3 text-gray-400" />
@@ -205,13 +174,7 @@ function EventFormContainer() {
                 </div>
               )}
             </Label>
-            <Input
-              id="image-upload"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
-            />
+            <Input id="image-upload" type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
           </div>
 
           <div className="space-y-4 w-full">
@@ -251,55 +214,30 @@ function EventFormContainer() {
             <div className="flex gap-2 justify-between">
               <div className="w-full">
                 <Label>Start Date</Label>
-                <Input
-                  name="start_date"
-                  className="mt-1"
-                  value={formData.start_date}
-                  onChange={handleInputChange}
-                  type="datetime-local"
-                />
+                <Input name="start_date" className="mt-1" value={formData.start_date} onChange={handleInputChange} type="datetime-local" />
               </div>
 
               <div className="w-full">
                 <Label>End Date</Label>
-                <Input
-                  name="end_date"
-                  className="mt-1"
-                  value={formData.end_date}
-                  onChange={handleInputChange}
-                  type="datetime-local"
-                />
+                <Input name="end_date" className="mt-1" value={formData.end_date} onChange={handleInputChange} type="datetime-local" />
               </div>
             </div>
 
             <div>
               <Label>Location</Label>
-              <Input
-                name="location"
-                className="mt-1"
-                value={formData.location}
-                onChange={handleInputChange}
-                placeholder="Enter location"
-              />
+              <Input name="location" className="mt-1" value={formData.location} onChange={handleInputChange} placeholder="Enter location" />
 
               {formData.location && (
                 <>
                   <Label className="mt-2">Can you mark where is it?</Label>
                   <div className="mt-1 h-[300px] rounded-lg overflow-hidden border relative z-0">
-                    <MapContainer
-                      center={DEFAULT_CENTER || [0, 0]}
-                      zoom={16}
-                      scrollWheelZoom={true}
-                      style={{ height: '100%', width: '100%' }}
-                    >
+                    <MapContainer center={DEFAULT_CENTER || [0, 0]} zoom={16} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
                       <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                       />
                       <LocationPicker onLocationSelect={handleLocationSelect} />
-                      {selectedLocation && (
-                        <Marker position={selectedLocation} />
-                      )}
+                      {selectedLocation && <Marker position={selectedLocation} />}
                     </MapContainer>
                   </div>
                 </>
@@ -326,13 +264,7 @@ function EventFormContainer() {
                 <div className="space-y-2 mt-1">
                   <div className="flex items-center space-x-2">
                     <Ticket className="h-4 w-4" />
-                    <Input
-                      name="tickets"
-                      placeholder="Tickets (To develop)"
-                      value={formData.tickets}
-                      onChange={handleInputChange}
-                      disabled
-                    />
+                    <Input name="tickets" placeholder="Tickets (To develop)" value={formData.tickets} onChange={handleInputChange} disabled />
                   </div>
                   <div className="flex items-center space-x-2">
                     <ShieldCheck className="h-4 w-4" />
@@ -349,30 +281,14 @@ function EventFormContainer() {
                         }
                         className="hidden"
                       />
-                      <div
-                        className={`w-4 h-4 border ${
-                          formData.approval
-                            ? 'bg-blue-500 border-black'
-                            : 'bg-gray-300 border-gray-400'
-                        }`}
-                      ></div>
-                      <span className="text-sm">
-                        {formData.approval
-                          ? 'Approval is required'
-                          : 'Required for approval?'}
-                      </span>
+                      <div className={`w-4 h-4 border ${formData.approval ? 'bg-blue-500 border-black' : 'bg-gray-300 border-gray-400'}`}></div>
+                      <span className="text-sm">{formData.approval ? 'Approval is required' : 'Required for approval?'}</span>
                     </label>
                   </div>
 
                   <div className="flex items-center space-x-2">
                     <Users className="h-4 w-4" />
-                    <Input
-                      type="number"
-                      name="capacity"
-                      placeholder="Capacity"
-                      value={formData.capacity}
-                      onChange={handleInputChange}
-                    />
+                    <Input type="number" name="capacity" placeholder="Capacity" value={formData.capacity} onChange={handleInputChange} />
                   </div>
                 </div>
               </div>
@@ -383,28 +299,22 @@ function EventFormContainer() {
                   {badges.map((badge, index) => (
                     <Badge
                       key={index}
-                      variant={
-                        selectedBadges.includes(badge.name)
-                          ? 'default'
-                          : 'outline'
-                      }
+                      variant={selectedBadges.includes(badge.name) ? 'default' : 'outline'}
                       className="cursor-pointer p-1 rounded-full"
                       onClick={() => {
-                        setSelectedBadges((prev) =>
-                          prev.includes(badge.name)
-                            ? prev.filter((b) => b !== badge.name)
-                            : [...prev, badge.name],
-                        );
+                        setSelectedBadges((prev) => (prev.includes(badge.name) ? prev.filter((b) => b !== badge.name) : [...prev, badge.name]));
                       }}
                     >
-                      <HoverCard>
-                        <HoverCardTrigger>
-                          <img src={badge.image} alt={badge.name} />{' '}
-                        </HoverCardTrigger>
-                        <HoverCardContent className="bg-transparent border-none  shadow-none text-xs">
-                          {badge.name}
-                        </HoverCardContent>
-                      </HoverCard>
+                      <TooltipProvider key={index}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <img src={badge.image} alt={badge.name} className="w-6 h-6" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{badge.name}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </Badge>
                   ))}
                 </div>
