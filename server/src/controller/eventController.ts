@@ -80,11 +80,50 @@ export const eventController = {
 
   getAllEvents: async (req: Request, res: Response): Promise<void> => {
     try {
+      const events = await prisma.event.findMany({
+        orderBy: { createdAt: 'desc' },
+        include: {
+          user: true,
+          attendees: {
+            include: {
+              user: {
+                select: { id: true, fullname: true, profilePicture: true },
+              },
+            },
+          },
+        },
+      });
+
+      res.status(200).json({
+        success: true,
+        events, // Return all events
+      });
+    } catch (error: any) {
+      console.error('Error in getAllEvents:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  getAllEventsPagination: async (
+    req: Request,
+    res: Response,
+  ): Promise<void> => {
+    try {
       const { cursor, pageSize = 2 } = req.body;
       const events = await prisma.event.findMany({
         orderBy: { createdAt: 'desc' },
         take: pageSize,
         ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+        include: {
+          user: { select: { fullname: true } },
+          attendees: {
+            include: {
+              user: {
+                select: { id: true, fullname: true, profilePicture: true },
+              },
+            },
+          },
+        },
       });
 
       res.status(200).json({

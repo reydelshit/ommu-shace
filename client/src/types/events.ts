@@ -14,3 +14,34 @@ export type EventType = {
   visibility: string;
   userId: string;
 };
+
+export type UserType = {
+  fullname: string;
+};
+
+export type AttendeeType = {
+  id: string;
+  eventId: string;
+  status: string;
+  userId: string;
+  createdAt: string;
+};
+
+export type BaseEvent = EventType & {
+  attendees: AttendeeType[];
+  user: UserType;
+};
+
+// Pagination Response for Events
+export type EventsResponse = {
+  events: EventType[];
+  nextCursor?: string;
+};
+
+// Event with Attendees & User Details
+export type EventsWithAttendees = BaseEvent;
+
+// Combined Response Type with Pagination & Attendees
+export type EventResponseAll = EventsResponse & {
+  eventsWithAttendees: BaseEvent[];
+};

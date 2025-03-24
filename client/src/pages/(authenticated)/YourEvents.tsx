@@ -1,6 +1,6 @@
 import { useGetAllEvents } from '@/hooks/useEvent';
 import { useUserLocation } from '@/hooks/useUserLocation';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import YourEventsViewCard from './components/YourEventsViewCard';
 import GridLayoutSelector from './components/GridLayoutSelector';
@@ -19,7 +19,7 @@ const YourEvents = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
       console.log('Fetching next page...');
       fetchNextPage();
     }
-  }, [inView, hasNextPage, fetchNextPage]);
+  }, [inView, hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   const events =
     data?.pages.flatMap((page, index) => {
@@ -31,21 +31,22 @@ const YourEvents = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
 
   if (!DEFAULT_CENTER) return <p>Getting user location...</p>;
 
+  const userEvents = useMemo(() => {
+    if (!user?.id) return [];
+    return (events || []).filter((event) => event.userId === user?.id);
+  }, [events, user?.id]);
+
   return (
     <div className="z-0 my-4">
       <div className="w-[90%] mx-auto">
         <GridLayoutSelector />
 
         <div className={`${GRID_LAYOUT} gap-8 full grid mb-10`}>
-          {events
-            .filter((yourEvent) => {
-              return yourEvent.userId === user?.id;
-            })
-            .map((event) => (
-              <div key={event.id} className="h-full">
-                <YourEventsViewCard DEFAULT_CENTER={DEFAULT_CENTER} event={event} />
-              </div>
-            ))}
+          {userEvents.map((event) => (
+            <div key={event.id} className="h-full">
+              <YourEventsViewCard DEFAULT_CENTER={DEFAULT_CENTER} event={event} />
+            </div>
+          ))}
 
           <div ref={ref} className="text-center p-4">
             {isFetchingNextPage ? 'Loading more events...' : hasNextPage ? 'Scroll down to load more' : 'No more events'}

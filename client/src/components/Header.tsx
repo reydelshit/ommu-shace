@@ -36,7 +36,7 @@ const Header = () => {
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>{user?.username}</DropdownMenuLabel>
+              <DropdownMenuLabel>{user?.fullname}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link to="/profile">Profile</Link>

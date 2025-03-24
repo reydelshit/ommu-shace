@@ -6,28 +6,8 @@ import {
   getSpecificEventService,
   updateEventServiceFrontEnd,
 } from '@/api/serviceEvent';
-import { EventType } from '@/types/events';
+import { EventResponseAll, EventsWithAttendees } from '@/types/events';
 import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
-
-type EventsResponse = {
-  events: EventType[];
-  nextCursor?: string;
-};
-
-export type AttendeeType = {
-  id: string;
-  eventId: string;
-  status: string;
-  userId: string;
-  createdAt: string;
-};
-
-export type EventsWithAttendees = EventType & {
-  attendees: AttendeeType[];
-  user: {
-    fullname: string;
-  };
-};
 
 export const useCreateEvent = () => {
   return useMutation({
@@ -35,12 +15,23 @@ export const useCreateEvent = () => {
   });
 };
 
+export const useGetAllEventsWithoutPagination = () => {
+  return useQuery<EventResponseAll>({
+    queryKey: ['events'],
+    queryFn: async () => {
+      console.log('Fetching all events...');
+      const { data } = await axiosInstance.post<EventResponseAll>('/event');
+      return data;
+    },
+    staleTime: 0,
+  });
+};
 export const useGetAllEvents = () => {
-  return useInfiniteQuery<EventsResponse>({
+  return useInfiniteQuery<EventResponseAll>({
     queryKey: ['events'],
     queryFn: async ({ pageParam = null }) => {
       console.log('Fetching events with cursor:', pageParam);
-      const { data } = await axiosInstance.post<EventsResponse>('/event', {
+      const { data } = await axiosInstance.post<EventResponseAll>('/event/pagination', {
         cursor: pageParam,
         pageSize: 2,
       });
