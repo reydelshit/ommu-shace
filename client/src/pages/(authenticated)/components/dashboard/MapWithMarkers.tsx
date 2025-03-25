@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Button } from '@/components/ui/button';
+import { useGetAllEventsWithoutPagination } from '@/hooks/useEvent';
+import { useSession } from '@/hooks/useSession';
+import { useUserLocation } from '@/hooks/useUserLocation';
+import { EventsWithAttendees } from '@/types/events';
+import { DefaultProfile } from '@/utils/defaultImages';
+import { formatDate } from '@/utils/formatDate';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useGetAllEventsWithoutPagination } from '@/hooks/useEvent';
-import { useUserLocation } from '@/hooks/useUserLocation';
-import { useSession } from '@/hooks/useSession';
-import { DefaultProfile } from '@/utils/defaultImages';
+import { Calendar, MapPin, User2Icon } from 'lucide-react';
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
 import { Link } from 'react-router-dom';
 
 // Custom icons
@@ -48,7 +51,7 @@ const MapWithMarkers = () => {
   const { user } = useSession();
   const DEFAULT_CENTER = useUserLocation();
   const { data } = useGetAllEventsWithoutPagination();
-  const events = data?.events || [];
+  const events: EventsWithAttendees[] = data?.events || [];
 
   const centerPosition =
     DEFAULT_CENTER && DEFAULT_CENTER.length === 2 ? { lat: DEFAULT_CENTER[0], lon: DEFAULT_CENTER[1] } : { lat: 6.5, lon: 125.3 };
@@ -72,9 +75,55 @@ const MapWithMarkers = () => {
         return (
           <Marker key={event.id} position={[lat, lon]} icon={eventIcon('blue')}>
             <Popup>
-              <strong>{event.eventName}</strong>
-              <br />
-              {event.markedLocation}
+              <div className="w-full overflow-hidden">
+                {/* Event Banner */}
+                {event.bannerPath && (
+                  <div className="h-40 bg-gray-100 rounded-2xl overflow-hidden">
+                    <img src={`${import.meta.env.VITE_BACKEND_URL}${event.bannerPath}`} alt="Event Banner" className="w-full h-full object-cover" />
+                  </div>
+                )}
+
+                {/* Event Content */}
+                <div className="p-4 space-y-4">
+                  {/* Event Title and Description */}
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900 mb-2 truncate">{event.eventName}</h2>
+                    <p className="text-gray-600 text-sm line-clamp-2 break-words">{event.description}</p>
+                  </div>
+
+                  {/* Event Details */}
+                  <div className="space-y-2">
+                    <div className="flex items-center text-gray-700 text-sm">
+                      <MapPin size={16} className="mr-2 text-gray-500" />
+                      <span className="truncate text-xs">{event.location}</span>
+                    </div>
+
+                    <div className="flex items-center text-gray-700 text-sm">
+                      <Calendar size={16} className="mr-2 text-gray-500" />
+                      <span className="text-xs">
+                        {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="border-t border-gray-200 my-3"></div>
+
+                  {/* Attendees and Action */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center text-gray-600 text-sm">
+                      <User2Icon className="h-4 w-4 mr-2 text-gray-500" />
+                      <span>
+                        {event?.attendees.filter((attend) => attend.status === 'APPROVED').length} / {event?.capacity} attendees
+                      </span>
+                    </div>
+
+                    <Link to={`/event/${event.id}`}>
+                      <Button className="px-4 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer">View Event</Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </Popup>
           </Marker>
         );

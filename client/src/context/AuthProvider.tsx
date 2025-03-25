@@ -27,6 +27,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error('Logout failed:', error);
     }
     queryClient.invalidateQueries({ queryKey: ['session'] });
+
+    localStorage.removeItem('userLocation');
   };
 
   if (isLoading) return <p>Loading session...</p>;

@@ -17,6 +17,8 @@ export type EventType = {
 
 export type UserType = {
   fullname: string;
+  profilePicture: string;
+  email: string;
 };
 
 export type AttendeeType = {

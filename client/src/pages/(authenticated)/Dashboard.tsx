@@ -26,7 +26,7 @@ const Dashboard = () => {
                 Campaign
               </TabsTrigger>
             </TabsList>
-            <TabsContent className="w-full p-4 mt-[2rem]" value="events">
+            <TabsContent className="w-full p-4 mt-[1rem]" value="events">
               <div className="flex items-center justify-between my-4">
                 <Button onClick={() => setShowMapEvents(true)} className=" text-white font-bold py-2 px-4 rounded cursor-pointer">
                   Closest Events

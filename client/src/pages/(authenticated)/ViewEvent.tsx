@@ -10,11 +10,12 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { DefaultProfile } from '@/utils/defaultImages';
 import { getAttendanceButtonColor } from '@/utils/getAttendanceButtonColor';
 import { randomColor } from '@/utils/randomColor';
-import { QRCodeShare } from './components/QRCodeShare';
 import { useState } from 'react';
+import { QRCodeShare } from './components/QRCodeShare';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -100,7 +101,23 @@ const ViewEvent = () => {
             <div className="flex items-start mb-6">
               <div className="flex-1">
                 <h1 className="text-2xl font-bold text-gray-900">{eventData?.eventName}</h1>
-                <p className="text-sm text-gray-600 mt-1">Hosted by {eventData?.user.fullname}</p>
+                <p className="text-sm text-gray-600 mt-1 ">
+                  Hosted by{' '}
+                  <span className="flex items-center gap-2 ml-2">
+                    <Avatar className=" h-6 w-6  object-cover  bg-white border-white cursor-pointer">
+                      <AvatarImage
+                        src={
+                          eventData?.user.profilePicture && eventData?.user.profilePicture.trim() !== ''
+                            ? `${import.meta.env.VITE_BACKEND_URL}${eventData?.user.profilePicture}`
+                            : DefaultProfile
+                        }
+                        alt="profile"
+                        className="object-cover"
+                      />
+                    </Avatar>
+                    {eventData?.user.fullname}
+                  </span>
+                </p>
               </div>
             </div>
 

@@ -5,6 +5,8 @@ import { randomColor } from '@/utils/randomColor';
 import { LatLngTuple } from 'leaflet';
 import { Calendar, MapPin, User2Icon, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DefaultProfile } from '@/utils/defaultImages';
 
 const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; event: BaseEvent }) => {
   const formatDate = (dateString: string) => {
@@ -50,7 +52,22 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
         >
           <div className="relative z-0">
             <h2 className="text-xl font-bold mb-3">{event.eventName}</h2>
-            <p className="bg-green-400 w-fit my-2 rounded-2xl p-2 text-xs">{event.user.fullname}</p>
+
+            <div className="flex items-center gap-2">
+              <Avatar className=" h-8 w-8  object-cover  bg-white border-white cursor-pointer">
+                <AvatarImage
+                  src={
+                    event?.user.profilePicture && event?.user.profilePicture.trim() !== ''
+                      ? `${import.meta.env.VITE_BACKEND_URL}${event?.user.profilePicture}`
+                      : DefaultProfile
+                  }
+                  alt="profile"
+                  className="object-cover"
+                />
+              </Avatar>
+
+              <p className="bg-green-400 w-fit my-2 rounded-2xl p-2 text-xs">{event.user.fullname}</p>
+            </div>
 
             <div className="flex items-center gap-2">
               <button className="bg-white text-black px-3 py-1 rounded-md text-sm font-medium">Join</button>
