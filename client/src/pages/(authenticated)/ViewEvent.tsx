@@ -16,6 +16,7 @@ import { getAttendanceButtonColor } from '@/utils/getAttendanceButtonColor';
 import { randomColor } from '@/utils/randomColor';
 import { useState } from 'react';
 import { QRCodeShare } from './components/QRCodeShare';
+import BackButton from '@/components/BackButton';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -77,6 +78,7 @@ const ViewEvent = () => {
 
   return (
     <div className="w-full flex flex-col items-center min-h-screen pb-12 relative">
+      <BackButton />
       <div className="w-[95%] mx-auto bg-white rounded-lg overflow-hidden shadow-lg my-8 flex flex-col">
         <div className="w-full h-80 bg-gray-200 relative">
           {eventData?.bannerPath && eventData?.bannerPath !== 'null' ? (

@@ -20,6 +20,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { toast } from 'sonner';
+import BackButton from '@/components/BackButton';
 
 const ManageEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -65,21 +66,9 @@ const ManageEvent = () => {
   };
 
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-[90%] self-center border-4 border-teal-600 items-center mb-[5rem] min-h-screen relative bg-white p-4 border-none rounded-3xl">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <Button
-            onClick={() => {
-              navigation(-1);
-            }}
-            variant="ghost"
-            size="icon"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </Button>
-        </div>
-
+    <div className="w-full flex justify-center flex-col items-center">
+      <BackButton />
+      <div className="w-[95%] my-4  self-center border-4 border-teal-600 items-center mb-[5rem] min-h-screen relative bg-white p-8 border-none rounded-3xl">
         <div className="flex w-full items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">{eventData.eventName}</h1>
 

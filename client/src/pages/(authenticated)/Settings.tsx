@@ -5,6 +5,7 @@ import { useProfileUpdate } from '@/hooks/useProfile';
 import { useSession } from '@/hooks/useSession';
 import { Camera } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 
 interface UserFormData {
@@ -270,7 +271,9 @@ function Settings() {
           </div>
 
           <div className="flex justify-end space-x-4">
-            <Button variant="outline">Cancel</Button>
+            <Link to="/profile">
+              <Button variant="secondary">Cancel</Button>
+            </Link>
             <Button onClick={handleSaveChanges}> {updateProfileMutation.isPending ? 'Updating...' : 'Save Changes'}</Button>
           </div>
         </div>
