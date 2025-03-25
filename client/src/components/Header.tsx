@@ -14,7 +14,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useLoginModalStore } from '@/store/useLoginModalStore';
 import { Link } from 'react-router-dom';
-import DefaultProfile from '@/assets/defaultProfile.png';
+import { DefaultProfile } from '@/utils/defaultImages';
+
 const Header = () => {
   const { user, logout, session } = useSession();
   const { setShowLoginModal } = useLoginModalStore();
