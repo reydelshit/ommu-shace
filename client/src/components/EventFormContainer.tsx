@@ -111,6 +111,8 @@ function EventFormContainer() {
           description: 'You can now view your event in the dashboard.',
         });
 
+        const eventID = data.data.event.id || data.data.event?.id;
+
         // clear all fields after successful submission
         setFormData({
           eventName: '',
@@ -128,7 +130,7 @@ function EventFormContainer() {
         setSelectedFile(null);
         setImagePreview(null);
 
-        navigate('/dashboard');
+        navigate(`/manage-event/${eventID}`);
       },
 
       onError: (error: any) => {
@@ -313,7 +315,8 @@ function EventFormContainer() {
                       key={index}
                       variant={selectedBadges.includes(badge.name) ? 'default' : 'outline'}
                       className="cursor-pointer p-1 rounded-full"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.preventDefault();
                         setSelectedBadges((prev) => (prev.includes(badge.name) ? prev.filter((b) => b !== badge.name) : [...prev, badge.name]));
                       }}
                     >
@@ -334,6 +337,7 @@ function EventFormContainer() {
             </div>
           </div>
 
+          {errorCreateEvent && <div className="text-red-500">{errorCreateEvent}</div>}
           <div className="pt-4 flex justify-end items-center">
             <Button type="submit">Submit Event</Button>
           </div>
