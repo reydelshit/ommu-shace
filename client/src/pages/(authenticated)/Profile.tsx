@@ -11,6 +11,7 @@ import { Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ProfileJoinedEvents from './components/profile/ProfileJoinedEvents';
 import ProfileYourCreatedEvents from './components/profile/ProfileYourCreatedEvents';
+import { join } from 'path';
 
 export default function Profile() {
   const { data } = useGetAllEventsWithoutPagination();
@@ -98,7 +99,13 @@ export default function Profile() {
 
         <Separator />
 
-        <ProfileJoinedEvents joinedEvents={joinedEvents} />
+        {joinedEvents.length > 0 ? (
+          <ProfileJoinedEvents joinedEvents={joinedEvents} />
+        ) : (
+          <div className="flex items-center justify-center h-40">
+            <p className="text-gray-500">No joined events yet</p>
+          </div>
+        )}
       </div>
 
       <div className="px-4 mt-4 w-full">
@@ -106,7 +113,13 @@ export default function Profile() {
 
         <Separator />
 
-        <ProfileYourCreatedEvents yourCreatedEvents={yourCreatedEvents} />
+        {yourCreatedEvents.length > 0 ? (
+          <ProfileYourCreatedEvents yourCreatedEvents={yourCreatedEvents} />
+        ) : (
+          <div className="flex items-center justify-center h-40">
+            <p className="text-gray-500">No created events yet</p>
+          </div>
+        )}
       </div>
     </div>
   );
