@@ -29,7 +29,7 @@ const GridLayoutSelector = () => {
     <div className="flex justify-end mb-4">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="flex items-center gap-2 bg-white px-4 py-2">
+          <Button variant="outline" className="flex items-center gap-2 bg-white px-4 py-2 cursor-pointer">
             {getLayoutIcon(layout)}
             <span className="text-sm font-medium">{layout} Grid</span>
           </Button>

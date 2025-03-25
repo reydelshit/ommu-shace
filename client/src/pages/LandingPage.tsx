@@ -1,9 +1,9 @@
 import ANT from '@/assets/ANT.png';
 import FormContainer from '@/components/FormContainer';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useLoginModalStore } from '@/store/useLoginModalStore';
 const LandingPage = () => {
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { showLoginModal, setShowLoginModal } = useLoginModalStore();
   return (
     <div className="w-full min-h-[700px] text-center flex flex-col items-center justify-center relative py-20">
       <img

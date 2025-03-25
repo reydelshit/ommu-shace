@@ -25,6 +25,11 @@ export type AttendeeType = {
   status: string;
   userId: string;
   createdAt: string;
+  user?: {
+    fullname: string;
+    profilePicture: string;
+    id: string;
+  };
 };
 
 export type BaseEvent = EventType & {

@@ -228,19 +228,13 @@ function Settings() {
 
           <div className="space-y-2">
             <Label>Bio</Label>
-            <textarea name="bio" value={formData.bio} onChange={handleInputChange} className="w-full p-2 rounded-md bg-gray-100 min-h-[100px]" />
-          </div>
-
-          {/* <div className="space-y-2">
-            <Label>Interests</Label>
-            <Input
-              name="interests"
-              value={formData.interests}
+            <textarea
+              name="bio"
+              value={formData.bio}
               onChange={handleInputChange}
-              className="bg-gray-100"
-              placeholder="Separate interests with commas"
+              className="w-full p-2 rounded-md bg-gray-100 min-h-[100px] text-sm"
             />
-          </div> */}
+          </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">

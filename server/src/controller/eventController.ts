@@ -148,7 +148,13 @@ export const eventController = {
         where: { id: eventId },
         include: {
           user: { select: { fullname: true } },
-          attendees: true,
+          attendees: {
+            include: {
+              user: {
+                select: { id: true, fullname: true, profilePicture: true },
+              },
+            },
+          },
         },
       });
 
