@@ -11,7 +11,7 @@ import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { ChevronLeft, MapPin, Search, Users } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { DefaultProfile } from '@/utils/defaultImages';
 import { getAttendanceButtonColor } from '@/utils/getAttendanceButtonColor';
@@ -82,9 +82,12 @@ const ManageEvent = () => {
 
         <div className="flex w-full items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">{eventData.eventName}</h1>
-          <Button variant="default" size="sm" className="rounded-full">
-            Event Page →
-          </Button>
+
+          <Link to={`/event/${eventId}`}>
+            <Button variant={'default'} size="sm">
+              See what others see
+            </Button>
+          </Link>
         </div>
 
         {/* Navigation */}

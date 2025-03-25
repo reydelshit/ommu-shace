@@ -5,22 +5,23 @@ import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { formatDate } from '@/utils/formatDate';
 import { useQueryClient } from '@tanstack/react-query';
-import { QrCode, User2Icon } from 'lucide-react';
+import { User2Icon } from 'lucide-react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { randomColor } from '@/utils/randomColor';
 import { DefaultProfile } from '@/utils/defaultImages';
 import { getAttendanceButtonColor } from '@/utils/getAttendanceButtonColor';
+import { randomColor } from '@/utils/randomColor';
+import { QRCodeShare } from './components/QRCodeShare';
+import { useState } from 'react';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
   const { user } = useSession();
   const queryClient = useQueryClient();
   const { data, isLoading, isError } = useGetSpecificEvent(eventId ?? '', user?.id ?? '');
-
+  const [showQRCode, setShowQRCode] = useState(false);
   const eventData = data?.event ?? null;
   const isUserAttending = data?.isUserAttending ?? false;
   const isEventFull = data?.isEventFull ?? false;
@@ -244,46 +245,14 @@ const ViewEvent = () => {
           </div>
 
           {userAttendanceStatus === 'APPROVED' ? (
-            // Use Dialog for "APPROVED" users
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="px-6 cursor-pointer py-2 bg-green-400 hover:bg-green-500 text-white rounded-full font-medium transition duration-200">
-                  {' '}
-                  View Ticket{' '}
-                </Button>
-              </DialogTrigger>
-
-              <DialogContent className="w-[820px] bg-black/40 backdrop-blur-xl border border-white/10 p-0 rounded-3xl overflow-hidden">
-                <DialogHeader>
-                  <DialogTitle className="sr-only">Event Ticket</DialogTitle>
-                  <DialogDescription className="w-full h-full">
-                    <div className="relative z-20 p-6 h-[420px] flex flex-col">
-                      <div className="flex-1">
-                        <h2 className="text-[#00FF00] text-2xl font-bold mb-2">{eventData.eventName}</h2>
-
-                        <div className="flex items-center text-white/80 mb-4">
-                          <span>{eventData.location}</span>
-                        </div>
-
-                        {/* QR Code */}
-                        <div className="mt-4 flex justify-center">
-                          <div className="w-32 h-32 bg-[#00FF00]/10 backdrop-blur-md rounded-lg flex items-center justify-center">
-                            <QrCode className="w-24 h-24 text-[#00FF00]" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <p className="text-[#00FF00] text-center font-medium">{formatDate(eventData.startDate)}</p>
-
-                      {/* Share button */}
-                      <Button className="w-full mt-4 py-3 bg-[#00FF00]/20 text-[#00FF00] rounded-lg backdrop-blur-sm hover:bg-[#00FF00]/30 transition-colors">
-                        Share
-                      </Button>
-                    </div>
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+            <Button
+              onClick={() => setShowQRCode(true)}
+              className={`px-6 cursor-pointer py-2 text-white rounded-full font-medium transition duration-200  ${getAttendanceButtonColor(
+                userAttendanceStatus ?? '',
+              )} `}
+            >
+              View Ticket
+            </Button>
           ) : (
             <Button
               onClick={!isUserAttending ? handleAttendEvent : undefined}
@@ -309,36 +278,10 @@ const ViewEvent = () => {
                 : 'Attend Event'}
             </Button>
           )}
-
-          {/* <Button
-            onClick={isUserAttending ? (userAttendanceStatus === 'APPROVED' ? () => setShowTicket(!showTicket) : undefined) : handleAttendEvent}
-            disabled={isEventFull || isUserCreator}
-            className={`px-6 cursor-pointer py-2 ${
-              userAttendanceStatus === 'APPROVED'
-                ? 'bg-green-400 hover:bg-green-500'
-                : userAttendanceStatus === 'PENDING'
-                ? 'bg-yellow-400 hover:bg-yellow-500'
-                : userAttendanceStatus === 'REJECTED'
-                ? 'bg-red-400 hover:bg-red-500'
-                : ''
-            } text-white rounded-full font-medium transition duration-200 btn ${isUserAttending || isEventFull ? 'btn-disabled' : 'btn-primary'}`}
-          >
-            {isUserAttending
-              ? userAttendanceStatus === 'APPROVED'
-                ? 'View Ticket'
-                : userAttendanceStatus === 'PENDING'
-                ? 'Pending Approval'
-                : userAttendanceStatus === 'REJECTED'
-                ? 'Rejected'
-                : 'Unknown Status'
-              : isEventFull
-              ? 'Event is full'
-              : isUserCreator
-              ? 'You are the host'
-              : 'Attend Event'}
-          </Button> */}
         </div>
       </div>
+
+      {showQRCode && <QRCodeShare setShowQRCode={setShowQRCode} event={eventData} />}
     </div>
   );
 };

@@ -3,9 +3,11 @@ import { useUserLocation } from '@/hooks/useUserLocation';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import EventCard from './events/EventCard';
+import { useSession } from '@/hooks/useSession';
 
-const EventCardList = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
+const EventCardList = ({ showYourEvents, GRID_LAYOUT }: { showYourEvents: boolean; GRID_LAYOUT: string }) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useGetAllEvents();
+  const { user } = useSession();
   const { ref, inView } = useInView();
   const DEFAULT_CENTER = useUserLocation();
 
@@ -34,11 +36,13 @@ const EventCardList = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
   return (
     <div className="z-0 my-4">
       <div className={`${GRID_LAYOUT} gap-8 full grid mb-10`}>
-        {events.map((event) => (
-          <div key={event.id} className="h-full">
-            <EventCard DEFAULT_CENTER={DEFAULT_CENTER} event={event} />
-          </div>
-        ))}
+        {events
+          .filter((event) => !showYourEvents || user?.id === event.userId)
+          .map((event) => (
+            <div key={event.id} className="h-full">
+              <EventCard DEFAULT_CENTER={DEFAULT_CENTER} event={event} />
+            </div>
+          ))}
 
         {events.length === 0 && <p>No events found</p>}
 
