@@ -6,9 +6,11 @@ import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import RoutesContainer from '@/components/Routes';
 import Sidebar from '@/components/Sidebar';
+import { useSession } from '@/hooks/useSession';
 
 const MainComponent = () => {
   const path = useLocation().pathname;
+  const { session } = useSession();
 
   return (
     <div className="bg-brown-text w-full flex flex-col items-center ">
@@ -16,7 +18,7 @@ const MainComponent = () => {
         <Header />
 
         <div className="flex-1 flex flex-row w-full mt-8">
-          {path !== '/' && <Sidebar />}
+          {path !== '/' && session && <Sidebar />}
 
           <main className={`flex-1 ${path !== '/' ? 'ml-6' : ''}`}>
             <RoutesContainer />

@@ -49,7 +49,7 @@ const YourEvents = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
         <div className={`${GRID_LAYOUT} gap-8 full grid mb-10`}>
           {userEvents.map((event) => (
             <div key={event.id} className="h-full">
-              <YourEventsViewCard DEFAULT_CENTER={DEFAULT_CENTER} event={event} />
+              <YourEventsViewCard event={event} />
             </div>
           ))}
 

@@ -50,7 +50,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
         >
           <div className="relative z-0">
             <h2 className="text-xl font-bold mb-3">{event.eventName}</h2>
-            <p>{event.user.fullname}</p>
+            <p className="bg-green-400 w-fit my-2 rounded-2xl p-2 text-xs">{event.user.fullname}</p>
 
             <div className="flex items-center gap-2">
               <button className="bg-white text-black px-3 py-1 rounded-md text-sm font-medium">Join</button>
@@ -68,15 +68,15 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
           </div>
         </div>
 
-        <div className="bg-white h-full p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex gap-3">
+        <div className="bg-white w-full h-full p-4">
+          <div className="flex justify-between w-full items-center ">
+            <div className="flex gap-3 w-full">
               {/* Calendar icon */}
               <div className="w-10 h-10 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
-                <Calendar size={20} className="text-gray-600" />
+                <Calendar className="w-[24px] h-[24px] text-gray-600" />
               </div>
 
-              <div>
+              <div className="w-full">
                 <h3 className="font-medium">Details</h3>
                 <div className="text-xs text-gray-500">
                   {formatDate(event.startDate)} - {formatDate(event.endDate).split(',')[1]}
@@ -85,7 +85,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
               </div>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex flex-col items-end">
               <p className="text-xs font-medium mb-4 flex items-center gap-2">
                 <User2Icon className="h-4 w-4" /> {event?.attendees.filter((attend) => attend.status === 'APPROVED').length} / {event?.capacity}{' '}
                 attendees

@@ -87,7 +87,12 @@ export const eventController = {
           attendees: {
             include: {
               user: {
-                select: { id: true, fullname: true, profilePicture: true },
+                select: {
+                  id: true,
+                  fullname: true,
+                  profilePicture: true,
+                  email: true,
+                },
               },
             },
           },
@@ -120,7 +125,12 @@ export const eventController = {
             attendees: {
               include: {
                 user: {
-                  select: { id: true, fullname: true, profilePicture: true },
+                  select: {
+                    id: true,
+                    fullname: true,
+                    profilePicture: true,
+                    email: true,
+                  },
                 },
               },
             },
@@ -151,7 +161,12 @@ export const eventController = {
           attendees: {
             include: {
               user: {
-                select: { id: true, fullname: true, profilePicture: true },
+                select: {
+                  id: true,
+                  fullname: true,
+                  profilePicture: true,
+                  email: true,
+                },
               },
             },
           },
@@ -216,19 +231,66 @@ export const eventController = {
         where: { id: eventId },
         include: { attendees: true },
       });
-      if (!event) throw new Error('Event not found');
-      if (event.attendees.some((a) => a.userId === userId))
-        throw new Error('Already attending this event');
-      if (event.attendees.length >= event.capacity)
-        throw new Error('Event is full');
+
+      if (!event) {
+        res.status(404).json({ success: false, message: 'Event not found' });
+        return;
+      }
+
+      if (event.attendees.some((a) => a.userId === userId)) {
+        res
+          .status(400)
+          .json({ success: false, message: 'Already attending this event' });
+        return;
+      }
+
+      if (event.attendees.length >= event.capacity) {
+        res.status(400).json({ success: false, message: 'Event is full' });
+        return;
+      }
 
       await prisma.eventAttendees.create({ data: { eventId, userId } });
+
       res
         .status(200)
         .json({ success: true, message: 'Successfully joined the event!' });
     } catch (error: any) {
       console.error('Error in attendEvent:', error);
-      res.status(400).json({ success: false, message: error.message });
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  updateAttendeeStatus: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { attendanceId } = req.params;
+      const { status } = req.body;
+
+      if (!status) {
+        res.status(400).json({ success: false, message: 'Status is required' });
+        return;
+      }
+
+      const attendee = await prisma.eventAttendees.findUnique({
+        where: { id: attendanceId },
+      });
+      if (!attendee) {
+        res.status(404).json({ success: false, message: 'Attendee not found' });
+        return;
+      }
+
+      const updatedAttendee = await prisma.eventAttendees.update({
+        where: { id: attendee.id },
+        data: { status },
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Attendee status updated!',
+        status: updatedAttendee.status,
+      });
+    } catch (error: any) {
+      console.error('Error in updateAttendeeStatus:', error);
+      res.status(500).json({ success: false, message: error.message });
     }
   },
 };

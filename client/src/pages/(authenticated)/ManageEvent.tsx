@@ -1,47 +1,35 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useGetSpecificEvent } from '@/hooks/useEvent';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useGetSpecificEvent, useUpdateAttendanceStatus } from '@/hooks/useEvent';
 import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
-import { useQueryClient } from '@tanstack/react-query';
-import { ChevronLeft, MapPin, Search, UserCheck, Users } from 'lucide-react';
+import { ChevronLeft, MapPin, Search, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
+import { DefaultProfile } from '@/utils/defaultImages';
+import { getAttendanceButtonColor } from '@/utils/getAttendanceButtonColor';
+import { randomColor } from '@/utils/randomColor';
+import { useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import { randomColor } from '@/utils/randomColor';
+import { toast } from 'sonner';
 
-const mockGuests = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', status: 'Not Checked In' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', status: 'Checked In' },
-  { id: 3, name: 'Mike Johnson', email: 'mike@example.com', status: 'Not Checked In' },
-  // Add more mock guests as needed
-];
-
-const YourEventsView = () => {
+const ManageEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
   const { user } = useSession();
-  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useGetSpecificEvent(eventId ?? '', user?.id ?? '');
+  const updateAttendanceMutation = useUpdateAttendanceStatus();
+  const queryClient = useQueryClient();
   const navigation = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGuests, setSelectedGuests] = useState<number[]>([]);
-
-  const filteredGuests = mockGuests.filter(
-    (guest) => guest.name.toLowerCase().includes(searchTerm.toLowerCase()) || guest.email.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  const toggleGuestSelection = (guestId: number) => {
-    setSelectedGuests((prev) => (prev.includes(guestId) ? prev.filter((id) => id !== guestId) : [...prev, guestId]));
-  };
 
   const eventData = data?.event ?? null;
 
@@ -57,6 +45,24 @@ const YourEventsView = () => {
 
   const tagList = eventData.tags.split(',');
   const matchedBadges = tagList.map((tag: string) => badges.find((badge) => badge.name === tag)).filter(Boolean);
+
+  const updateAttendanceStatus = (attendanceId: string, status: string) => {
+    console.log('Updating attendance status:', attendanceId, status);
+
+    updateAttendanceMutation.mutate(
+      { attendanceId, status },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['events', eventId, user?.id] });
+
+          toast('Attendance status updated successfully');
+        },
+        onError: (error) => {
+          console.error('Error updating attendance status:', error);
+        },
+      },
+    );
+  };
 
   return (
     <div className="w-full flex justify-center">
@@ -223,12 +229,8 @@ const YourEventsView = () => {
                 <div className="flex items-center space-x-2">
                   <Users className="h-5 w-5" />
                   <h2 className="text-xl font-semibold">Guest List</h2>
-                  <Badge variant="secondary">{mockGuests.length}</Badge>
+                  <Badge variant="secondary">{eventData.attendees.length}</Badge>
                 </div>
-                <Button variant="default" size="sm" disabled={selectedGuests.length === 0}>
-                  <UserCheck className="mr-2 h-4 w-4" />
-                  Check In Selected
-                </Button>
               </div>
 
               <div className="relative">
@@ -239,23 +241,44 @@ const YourEventsView = () => {
               <div className="bg-gray-50 rounded-lg">
                 <ScrollArea className="h-[400px] w-full">
                   <div className="p-4 space-y-2">
-                    {filteredGuests.map((guest) => (
-                      <div key={guest.id} className="flex items-center space-x-4 p-3 hover:bg-white rounded-lg transition-colors">
-                        <Checkbox checked={selectedGuests.includes(guest.id)} onCheckedChange={() => toggleGuestSelection(guest.id)} />
+                    {eventData.attendees.map((attendance) => (
+                      <div key={attendance.id} className="flex items-center space-x-4 p-3 hover:bg-white rounded-lg transition-colors">
                         <Avatar>
-                          <AvatarImage src={`https://avatar.vercel.sh/${guest.email}`} />
+                          <AvatarImage
+                            src={
+                              user?.profilePicture && user.profilePicture.trim() !== ''
+                                ? `${import.meta.env.VITE_BACKEND_URL}${user.profilePicture}`
+                                : DefaultProfile
+                            }
+                          />
                           <AvatarFallback>
-                            {guest.name
+                            {attendance.user?.fullname
                               .split(' ')
                               .map((n) => n[0])
                               .join('')}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
-                          <div className="font-medium">{guest.name}</div>
-                          <div className="text-sm text-gray-500">{guest.email}</div>
+                          <div className="font-medium">{attendance.user?.fullname}</div>
+                          <div className="text-sm text-gray-500">{attendance.user?.email}</div>
                         </div>
-                        <Badge variant={guest.status === 'Checked In' ? 'default' : 'secondary'}>{guest.status}</Badge>
+                        <Badge
+                          className={`${getAttendanceButtonColor(attendance.status ?? '')}`}
+                          variant={attendance.status === 'CHECKED_IN' ? 'default' : 'secondary'}
+                        >
+                          {attendance.status}
+                        </Badge>
+                        <Select onValueChange={(value) => updateAttendanceStatus(attendance.id, value)}>
+                          <SelectTrigger className="w-[150px]">
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="PENDING">Pending</SelectItem>
+                            <SelectItem value="APPROVED">Approved</SelectItem>
+                            <SelectItem value="REJECTED">Rejected</SelectItem>
+                            <SelectItem value="CHECKED_IN">Checked In</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     ))}
                   </div>
@@ -277,4 +300,4 @@ const YourEventsView = () => {
   );
 };
 
-export default YourEventsView;
+export default ManageEvent;

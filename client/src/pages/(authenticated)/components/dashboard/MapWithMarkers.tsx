@@ -10,23 +10,41 @@ import { Link } from 'react-router-dom';
 
 // Custom icons
 
-const eventIcon = L.icon({
-  iconUrl: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png',
-  iconSize: [30, 30],
-  iconAnchor: [15, 30],
-  popupAnchor: [0, -30],
-});
+const eventIcon = (color = 'red') =>
+  L.divIcon({
+    className: 'custom-event-marker',
+    html: `
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="${color}" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+      </svg>
+    `,
+    iconSize: [30, 30], // Adjust size
+    iconAnchor: [15, 30], // Center anchor
+    popupAnchor: [0, -30], // Popup position
+  });
 
 const userIcon = (imagePath: string) =>
-  L.icon({
-    iconUrl: `${imagePath && imagePath.trim() !== '' ? `${import.meta.env.VITE_BACKEND_URL}${imagePath}` : DefaultProfile}`,
+  L.divIcon({
+    className: 'custom-user-marker',
+    html: `
+      <div style="
+        width: 40px; 
+        height: 40px; 
+        border-radius: 50%; 
+        overflow: hidden; 
+        border: 2px solid white;
+        box-shadow: 0 0 5px rgba(0,0,0,0.5);
+      ">
+        <img src="${imagePath && imagePath.trim() !== '' ? `${import.meta.env.VITE_BACKEND_URL}${imagePath}` : DefaultProfile}" 
+          style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" 
+        />
+      </div>
+    `,
     iconSize: [40, 40],
     iconAnchor: [20, 40],
     popupAnchor: [0, -40],
   });
-
 const MapWithMarkers = () => {
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const { user } = useSession();
   const DEFAULT_CENTER = useUserLocation();
   const { data } = useGetAllEventsWithoutPagination();
@@ -35,38 +53,28 @@ const MapWithMarkers = () => {
   const centerPosition =
     DEFAULT_CENTER && DEFAULT_CENTER.length === 2 ? { lat: DEFAULT_CENTER[0], lon: DEFAULT_CENTER[1] } : { lat: 6.5, lon: 125.3 };
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocation([position.coords.latitude, position.coords.longitude]);
-      },
-      (error) => {
-        console.error('Error getting user location:', error);
-      },
-    );
-  }, []);
-
   return (
-    <MapContainer center={[centerPosition.lat, centerPosition.lon]} zoom={16} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+    <MapContainer center={DEFAULT_CENTER || [0, 0]} zoom={16} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
       {/* User Location Marker */}
-      {userLocation && user?.profilePicture && (
-        <Marker position={userLocation} icon={userIcon(user.profilePicture)}>
+      {centerPosition && user?.profilePicture && (
+        <Marker position={DEFAULT_CENTER || [0, 0]} icon={userIcon(user.profilePicture)}>
           <Popup>You are here</Popup>
         </Marker>
       )}
 
-      {/* Event Markers with Labels */}
       {events.map((event) => {
         const [lat, lon] = event?.markedLocation.split(',').map(Number);
         return (
-          <Marker key={event.id} position={[lat, lon]} icon={eventIcon}>
+          <Marker key={event.id} position={[lat, lon]} icon={eventIcon('blue')}>
             <Popup>
-              <Link to={`/event/${event.id}`}>{event.eventName}</Link>
+              <strong>{event.eventName}</strong>
+              <br />
+              {event.markedLocation}
             </Popup>
           </Marker>
         );

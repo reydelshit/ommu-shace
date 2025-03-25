@@ -4,6 +4,7 @@ import {
   createEventServiceFrontEnd,
   deleteEventService,
   getSpecificEventService,
+  updateAttendanceStatusService,
   updateEventServiceFrontEnd,
 } from '@/api/serviceEvent';
 import { EventResponseAll, EventsWithAttendees } from '@/types/events';
@@ -77,6 +78,14 @@ export const useAttendEvent = () => {
     mutationFn: async ({ eventId, userId }: { eventId: string; userId: string }) => {
       const { data } = await attendEventService(eventId, userId);
       return data;
+    },
+  });
+};
+
+export const useUpdateAttendanceStatus = () => {
+  return useMutation({
+    mutationFn: async ({ attendanceId, status }: { attendanceId: string; status: string }) => {
+      return updateAttendanceStatusService(attendanceId, status);
     },
   });
 };

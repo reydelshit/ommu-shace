@@ -19,4 +19,10 @@ router.delete('/delete/:id', eventController.deleteEvent);
 
 router.post('/:eventId/attend', eventController.attendEvent);
 
+// update status of attendee
+router.put(
+  '/update-status/:attendanceId',
+  eventController.updateAttendeeStatus,
+);
+
 export default router;

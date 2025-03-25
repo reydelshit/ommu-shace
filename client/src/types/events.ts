@@ -28,6 +28,7 @@ export type AttendeeType = {
   user?: {
     fullname: string;
     profilePicture: string;
+    email: string;
     id: string;
   };
 };

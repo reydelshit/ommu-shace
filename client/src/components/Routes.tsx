@@ -4,11 +4,11 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 
 import EventFormContainer from '@/components/EventFormContainer';
 import Dashboard from '@/pages/(authenticated)/Dashboard';
+import ManageEvent from '@/pages/(authenticated)/ManageEvent';
 import Profile from '@/pages/(authenticated)/Profile';
 import Settings from '@/pages/(authenticated)/Settings';
 import ViewEvent from '@/pages/(authenticated)/ViewEvent';
 import YourEvents from '@/pages/(authenticated)/YourEvents';
-import YourEventsView from '@/pages/(authenticated)/YourEventsView';
 import LandingPage from '@/pages/LandingPage';
 import { GRID_LAYOUTS, useLayoutStore } from '@/store/useLayoutStore';
 
@@ -28,7 +28,7 @@ const RoutesContainer = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/settings" element={<Settings />} />
           <Route path="/your-event" element={<YourEvents GRID_LAYOUT={GRID_LAYOUTS[layout]} />} />
-          <Route path="/your-event/:eventId" element={<YourEventsView />} />
+          <Route path="/manage-event/:eventId" element={<ManageEvent />} />
         </Route>
 
         <Route

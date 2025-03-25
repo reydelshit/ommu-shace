@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { randomColor } from '@/utils/randomColor';
 import { DefaultProfile } from '@/utils/defaultImages';
+import { getAttendanceButtonColor } from '@/utils/getAttendanceButtonColor';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -53,13 +54,6 @@ const ViewEvent = () => {
       },
     );
   };
-
-  const attendees = [
-    { name: 'Liz Sanchez', avatar: '/api/placeholder/32/32' },
-    { name: 'Khim Castle', avatar: '/api/placeholder/32/32' },
-    { name: 'User 3', avatar: '/api/placeholder/32/32' },
-    { name: 'User 4', avatar: '/api/placeholder/32/32' },
-  ];
 
   console.log('Event data:', eventData);
 
@@ -291,21 +285,20 @@ const ViewEvent = () => {
               </DialogContent>
             </Dialog>
           ) : (
-            // Use normal button for others
             <Button
               onClick={!isUserAttending ? handleAttendEvent : undefined}
               disabled={isEventFull || isUserCreator}
-              className={`px-6 cursor-pointer py-2 ${
-                userAttendanceStatus === 'PENDING'
-                  ? 'bg-yellow-400 hover:bg-yellow-500'
-                  : userAttendanceStatus === 'REJECTED'
-                  ? 'bg-red-400 hover:bg-red-500'
-                  : 'btn-primary'
-              } text-white rounded-full font-medium transition duration-200 btn ${isUserAttending || isEventFull ? 'btn-disabled' : 'btn-primary'}`}
+              className={`px-6 cursor-pointer py-2 ${getAttendanceButtonColor(userAttendanceStatus ?? '')} 
+              text-white rounded-full font-medium transition duration-200 
+              btn ${isUserAttending || isEventFull ? 'btn-disabled' : 'btn-primary'}`}
             >
               {isUserAttending
                 ? userAttendanceStatus === 'PENDING'
                   ? 'Pending Approval'
+                  : userAttendanceStatus === 'APPROVED'
+                  ? 'Approved'
+                  : userAttendanceStatus === 'CHECKED_IN'
+                  ? 'Checked In'
                   : userAttendanceStatus === 'REJECTED'
                   ? 'Rejected'
                   : 'Unknown Status'

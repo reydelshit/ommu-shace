@@ -47,7 +47,7 @@ const Header = () => {
                       ? `${import.meta.env.VITE_BACKEND_URL}${user.profilePicture}`
                       : DefaultProfile
                   }
-                  alt="Emma Roberts"
+                  alt="profile"
                   className="object-cover"
                 />
               </Avatar>
