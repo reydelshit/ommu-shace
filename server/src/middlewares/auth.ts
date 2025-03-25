@@ -33,17 +33,25 @@ export const authenticateToken = async (
     }
 
     try {
+      // const user = await prisma.user.findUnique({
+      //   where: { id: decodedUser.userId },
+      //   select: {
+      //     id: true,
+      //     email: true,
+      //     username: true,
+      //     fullname: true,
+      //     phoneNumber: true,
+      //     address: true,
+      //     birthday: true,
+      //     createdAt: true,
+      //   },
+      // });
+
       const user = await prisma.user.findUnique({
         where: { id: decodedUser.userId },
-        select: {
-          id: true,
-          email: true,
-          username: true,
-          fullname: true,
-          phoneNumber: true,
-          address: true,
-          birthday: true,
-          createdAt: true,
+        include: {
+          events: true,
+          attendances: true,
         },
       });
 

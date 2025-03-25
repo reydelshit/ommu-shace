@@ -1,22 +1,10 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { badges } from '@/lib/badges';
 import { EventType } from '@/types/events';
+import { randomColor } from '@/utils/randomColor';
 import { LatLngTuple } from 'leaflet';
 import { Calendar, MapPin, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-export const randomColors = [
-  'bg-blue-500',
-  'bg-green-600',
-  'bg-yellow-500',
-  'bg-purple-500',
-  'bg-pink-500',
-  'bg-indigo-500',
-  'bg-red-500',
-  'bg-teal-500',
-];
-
-export const randomColor = randomColors[Math.floor(Math.random() * randomColors.length)];
 
 const YourEventsViewCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; event: EventType }) => {
   const formatDate = (dateString: string) => {
@@ -52,16 +40,13 @@ const YourEventsViewCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngT
     <Link className="h-full" to={`/your-event/${event.id}`}>
       <div className="rounded-xl h-full overflow-hidden shadow-md -z-20 cursor-pointer hover:shadow-lg hover:scale-105 transition-transform">
         <div
-          className={`p-4 shadow-2xl text-white relative h-52 ${event.bannerPath && event.bannerPath !== 'null' ? 'bg-brown-text' : randomColor}`}
-          style={
-            event.bannerPath && event.bannerPath !== 'null'
-              ? {
-                  backgroundImage: `url(${import.meta.env.VITE_BACKEND_URL}${event.bannerPath})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }
-              : {}
-          }
+          className="p-4 shadow-2xl text-white relative h-52"
+          style={{
+            background:
+              event.bannerPath && event.bannerPath !== 'null'
+                ? `url(${import.meta.env.VITE_BACKEND_URL}${event.bannerPath}) center/cover no-repeat`
+                : `linear-gradient(135deg, ${randomColor}, #6A5ACD)`,
+          }}
         >
           <div className="relative z-0">
             <h2 className="text-xl font-bold mb-3">{event.eventName}</h2>

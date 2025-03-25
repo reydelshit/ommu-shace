@@ -10,6 +10,7 @@ import YourEvents from '@/pages/(authenticated)/YourEvents';
 import LandingPage from '@/pages/LandingPage';
 import YourEventsView from '@/pages/(authenticated)/YourEventsView';
 import { GRID_LAYOUTS, useLayoutStore } from '@/store/useLayoutStore';
+import Settings from '@/pages/(authenticated)/Settings';
 
 const RoutesContainer = () => {
   const { layout } = useLayoutStore();
@@ -26,6 +27,7 @@ const RoutesContainer = () => {
           <Route path="/event/:eventId" element={<ViewEvent />} />
 
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/settings" element={<Settings />} />
           <Route path="/your-event" element={<YourEvents GRID_LAYOUT={GRID_LAYOUTS[layout]} />} />
           <Route path="/your-event/:eventId" element={<YourEventsView />} />
         </Route>

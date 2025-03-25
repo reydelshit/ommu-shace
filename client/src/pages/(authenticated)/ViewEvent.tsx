@@ -1,4 +1,3 @@
-import { randomColor } from '@/components/tabs/events/EventCard';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAttendEvent, useGetSpecificEvent } from '@/hooks/useEvent';
@@ -12,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { randomColor } from '@/utils/randomColor';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -81,7 +81,6 @@ const ViewEvent = () => {
   return (
     <div className="w-full flex flex-col items-center min-h-screen pb-12 relative">
       <div className="w-[95%] mx-auto bg-white rounded-lg overflow-hidden shadow-lg my-8 flex flex-col">
-        {/* Banner as cover photo */}
         <div className="w-full h-80 bg-gray-200 relative">
           {eventData?.bannerPath && eventData?.bannerPath !== 'null' ? (
             <img
@@ -90,7 +89,12 @@ const ViewEvent = () => {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className={`w-full h-full ${randomColor}`}></div>
+            <div
+              className="w-full h-full"
+              style={{
+                background: `linear-gradient(135deg, ${randomColor}, #6A5ACD)`,
+              }}
+            ></div>
           )}
         </div>
 

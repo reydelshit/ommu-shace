@@ -110,27 +110,30 @@ export const eventController = {
   ): Promise<void> => {
     try {
       const { cursor, pageSize = 2 } = req.body;
-      const events = await prisma.event.findMany({
-        orderBy: { createdAt: 'desc' },
-        take: pageSize,
-        ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
-        include: {
-          user: { select: { fullname: true } },
-          attendees: {
-            include: {
-              user: {
-                select: { id: true, fullname: true, profilePicture: true },
+      const events =
+        (await prisma.event.findMany({
+          orderBy: { createdAt: 'desc' },
+          take: pageSize,
+          ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
+          include: {
+            user: { select: { fullname: true } },
+            attendees: {
+              include: {
+                user: {
+                  select: { id: true, fullname: true, profilePicture: true },
+                },
               },
             },
           },
-        },
-      });
+        })) || []; // Ensuring events is always an array
 
-      res.status(200).json({
-        success: true,
-        events,
-        nextCursor: events.length > 0 ? events[events.length - 1].id : null,
-      });
+      const nextCursor =
+        events.length > 0 ? events[events.length - 1].id : null;
+
+      console.log('Fetched Events:', events);
+      console.log('Next Cursor:', nextCursor);
+
+      res.status(200).json({ success: true, events, nextCursor });
     } catch (error: any) {
       console.error('Error in getAllEvents:', error);
       res.status(500).json({ success: false, message: error.message });

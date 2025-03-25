@@ -185,7 +185,7 @@ function EventFormContainer() {
                   id="eventName"
                   name="eventName"
                   placeholder="Enter event name"
-                  className="mt-1"
+                  className="mt-1 bg-gray-100"
                   value={formData.eventName}
                   onChange={handleInputChange}
                 />
@@ -214,23 +214,35 @@ function EventFormContainer() {
             <div className="flex gap-2 justify-between">
               <div className="w-full">
                 <Label>Start Date</Label>
-                <Input name="start_date" className="mt-1" value={formData.start_date} onChange={handleInputChange} type="datetime-local" />
+                <Input
+                  name="start_date"
+                  className="mt-1 bg-gray-100"
+                  value={formData.start_date}
+                  onChange={handleInputChange}
+                  type="datetime-local"
+                />
               </div>
 
               <div className="w-full">
                 <Label>End Date</Label>
-                <Input name="end_date" className="mt-1" value={formData.end_date} onChange={handleInputChange} type="datetime-local" />
+                <Input name="end_date" className="mt-1 bg-gray-100" value={formData.end_date} onChange={handleInputChange} type="datetime-local" />
               </div>
             </div>
 
             <div>
               <Label>Location</Label>
-              <Input name="location" className="mt-1" value={formData.location} onChange={handleInputChange} placeholder="Enter location" />
+              <Input
+                name="location"
+                className="mt-1 bg-gray-100"
+                value={formData.location}
+                onChange={handleInputChange}
+                placeholder="Enter location"
+              />
 
               {formData.location && (
                 <>
                   <Label className="mt-2">Can you mark where is it?</Label>
-                  <div className="mt-1 h-[300px] rounded-lg overflow-hidden border relative z-0">
+                  <div className="mt-1 bg-gray-100 h-[300px] rounded-lg overflow-hidden border relative z-0">
                     <MapContainer center={DEFAULT_CENTER || [0, 0]} zoom={16} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
                       <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -252,7 +264,7 @@ function EventFormContainer() {
                 id="description"
                 name="description"
                 placeholder="Describe your event"
-                className="mt-1 h-[250px] break-words whitespace-pre-wrap w-full"
+                className="mt-1 bg-gray-100 h-[250px] break-words whitespace-pre-wrap w-full"
                 value={formData.description}
                 onChange={handleInputChange}
               />
@@ -261,7 +273,7 @@ function EventFormContainer() {
             <div className="space-y-4 w-[50%]">
               <div>
                 <Label>Event Options</Label>
-                <div className="space-y-2 mt-1">
+                <div className="space-y-2 mt-1 bg-gray-100">
                   <div className="flex items-center space-x-2">
                     <Ticket className="h-4 w-4" />
                     <Input name="tickets" placeholder="Tickets (To develop)" value={formData.tickets} onChange={handleInputChange} disabled />

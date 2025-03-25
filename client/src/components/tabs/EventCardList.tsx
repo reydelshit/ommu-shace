@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import EventCard from './events/EventCard';
 
 const EventCardList = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetAllEvents();
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } = useGetAllEvents();
   const { ref, inView } = useInView();
   const DEFAULT_CENTER = useUserLocation();
 
@@ -17,12 +17,15 @@ const EventCardList = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
   }, [inView, hasNextPage, fetchNextPage]);
 
   const events =
-    data?.pages.flatMap((page, index) => {
-      console.log(`Page ${index + 1}: ${page.events.length} events`);
-      return (page as any).events;
-    }) || [];
+    data?.pages?.flatMap((page) => {
+      if (!page || !Array.isArray(page.events)) {
+        return [];
+      }
+      return page.events;
+    }) ?? [];
 
-  console.log('Total events loaded:', events.length);
+  if (isLoading) return <p>Loading events...</p>;
+  if (isError) return <p>Error loading events</p>;
 
   if (!DEFAULT_CENTER) return <p>Getting user location...</p>;
 
@@ -34,6 +37,8 @@ const EventCardList = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
             <EventCard DEFAULT_CENTER={DEFAULT_CENTER} event={event} />
           </div>
         ))}
+
+        {events.length === 0 && <p>No events found</p>}
 
         <div ref={ref} className="text-center p-4">
           {isFetchingNextPage ? 'Loading more events...' : hasNextPage ? 'Scroll down to load more' : 'No more events'}

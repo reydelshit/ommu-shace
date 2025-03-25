@@ -17,7 +17,7 @@ export const useCreateEvent = () => {
 
 export const useGetAllEventsWithoutPagination = () => {
   return useQuery<EventResponseAll>({
-    queryKey: ['events'],
+    queryKey: ['eventsPagination'],
     queryFn: async () => {
       console.log('Fetching all events...');
       const { data } = await axiosInstance.post<EventResponseAll>('/event');
@@ -35,7 +35,7 @@ export const useGetAllEvents = () => {
         cursor: pageParam,
         pageSize: 2,
       });
-      return data;
+      return data ?? { events: [], nextCursor: null };
     },
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? null,
     initialPageParam: null,

@@ -35,7 +35,7 @@ export type BaseEvent = EventType & {
 // Pagination Response for Events
 export type EventsResponse = {
   events: EventType[];
-  nextCursor?: string;
+  nextCursor: string | null;
 };
 
 // Event with Attendees & User Details

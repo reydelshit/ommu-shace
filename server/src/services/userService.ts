@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -39,4 +39,26 @@ export const getUserByUsername = async (username: string) => {
 
 export const getUserById = async (userId: string) => {
   return prisma.user.findUnique({ where: { id: userId } });
+};
+
+export const updateUser = async (id: string, updateData: Partial<User>) => {
+  return await prisma.user.update({
+    where: { id },
+    data: updateData,
+    // Optionally, exclude sensitive fields from the response
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      fullname: true,
+      phoneNumber: true,
+      profilePicture: true,
+      coverPicture: true,
+      bio: true,
+      interests: true,
+      address: true,
+      birthday: true,
+      // Exclude password and other sensitive fields
+    },
+  });
 };

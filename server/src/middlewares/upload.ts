@@ -1,11 +1,29 @@
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 
-// Configure storage
+// Ensure the upload folder exists
+const ensureDirectory = (dir: string) => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+};
+
+// Configure storage with separate folders
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, '../uploads')); // Save in src/uploads
+    let folder = path.join(__dirname, '../uploads'); // Default folder
+
+    if (file.fieldname === 'profilePicture') {
+      folder = path.join(__dirname, '../uploads/profile');
+    } else if (file.fieldname === 'coverPicture') {
+      folder = path.join(__dirname, '../uploads/cover');
+    }
+
+    ensureDirectory(folder); // Ensure folder exists before saving
+
+    cb(null, folder);
   },
   filename: function (req, file, cb) {
     const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`;

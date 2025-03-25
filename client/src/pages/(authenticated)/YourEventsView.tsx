@@ -13,9 +13,10 @@ import { ChevronLeft, MapPin, Search, UserCheck, Users } from 'lucide-react';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { randomColor } from './components/YourEventsViewCard';
+
 import moment from 'moment';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
+import { randomColor } from '@/utils/randomColor';
 
 const mockGuests = [
   { id: 1, name: 'John Doe', email: 'john@example.com', status: 'Not Checked In' },
@@ -92,7 +93,12 @@ const YourEventsView = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className={`w-full h-full ${randomColor}`}></div>
+                <div
+                  className="w-full h-full"
+                  style={{
+                    background: `linear-gradient(135deg, ${randomColor}, #6A5ACD)`,
+                  }}
+                ></div>
               )}
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/50 to-transparent">
