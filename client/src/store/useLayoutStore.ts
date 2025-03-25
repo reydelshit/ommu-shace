@@ -1,4 +1,3 @@
-// First, create a store file: src/store/useLayoutStore.ts
 import { create } from 'zustand';
 
 export const GRID_LAYOUTS = {
@@ -6,7 +5,6 @@ export const GRID_LAYOUTS = {
   Double: 'grid-cols-2',
   Triple: 'grid-cols-3',
   Quad: 'grid-cols-4',
-  Masonry: 'columns-2 md:columns-3',
   Sidebar: 'grid-cols-[250px_1fr]',
 };
 
@@ -17,7 +15,14 @@ interface LayoutState {
   setLayout: (layout: GridLayout) => void;
 }
 
-export const useLayoutStore = create<LayoutState>((set) => ({
-  layout: 'Single',
-  setLayout: (layout) => set({ layout }),
-}));
+export const useLayoutStore = create<LayoutState>((set) => {
+  const savedLayout = (localStorage.getItem('gridLayout') as GridLayout) || 'Single';
+
+  return {
+    layout: savedLayout,
+    setLayout: (layout) => {
+      localStorage.setItem('gridLayout', layout);
+      set({ layout });
+    },
+  };
+});

@@ -16,8 +16,6 @@ const GridLayoutSelector = () => {
         return <Grid className="w-4 h-4" />;
       case 'Quad':
         return <LayoutGrid className="w-4 h-4" />;
-      case 'Masonry':
-        return <Rows className="w-4 h-4" />;
       case 'Sidebar':
         return <PanelLeft className="w-4 h-4" />;
       default:
@@ -26,7 +24,7 @@ const GridLayoutSelector = () => {
   };
 
   return (
-    <div className="flex justify-end mb-4">
+    <div className="flex justify-end ">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="flex items-center gap-2 bg-white px-4 py-2 cursor-pointer">

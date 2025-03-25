@@ -5,16 +5,15 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import EventFormContainer from '@/components/EventFormContainer';
 import Dashboard from '@/pages/(authenticated)/Dashboard';
 import Profile from '@/pages/(authenticated)/Profile';
+import Settings from '@/pages/(authenticated)/Settings';
 import ViewEvent from '@/pages/(authenticated)/ViewEvent';
 import YourEvents from '@/pages/(authenticated)/YourEvents';
-import LandingPage from '@/pages/LandingPage';
 import YourEventsView from '@/pages/(authenticated)/YourEventsView';
+import LandingPage from '@/pages/LandingPage';
 import { GRID_LAYOUTS, useLayoutStore } from '@/store/useLayoutStore';
-import Settings from '@/pages/(authenticated)/Settings';
 
 const RoutesContainer = () => {
   const { layout } = useLayoutStore();
-
   return (
     <>
       <Routes>

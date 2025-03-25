@@ -27,6 +27,8 @@ const EventCardList = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
   if (isLoading) return <p>Loading events...</p>;
   if (isError) return <p>Error loading events</p>;
 
+  console.log(events);
+
   if (!DEFAULT_CENTER) return <p>Getting user location...</p>;
 
   return (

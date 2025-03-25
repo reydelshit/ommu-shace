@@ -17,7 +17,7 @@ export const useCreateEvent = () => {
 
 export const useGetAllEventsWithoutPagination = () => {
   return useQuery<EventResponseAll>({
-    queryKey: ['eventsPagination'],
+    queryKey: ['eventsWithoutPagination'],
     queryFn: async () => {
       console.log('Fetching all events...');
       const { data } = await axiosInstance.post<EventResponseAll>('/event');

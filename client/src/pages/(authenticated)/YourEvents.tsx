@@ -5,10 +5,12 @@ import { useInView } from 'react-intersection-observer';
 import YourEventsViewCard from './components/YourEventsViewCard';
 import GridLayoutSelector from './components/GridLayoutSelector';
 import { useSession } from '@/hooks/useSession';
+import { GRID_LAYOUTS, useLayoutStore } from '@/store/useLayoutStore';
 // import EventCard from './events/EventCard';
 
 const YourEvents = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetAllEvents();
+  const { layout } = useLayoutStore();
   const { user } = useSession();
 
   const { ref, inView } = useInView();
@@ -37,9 +39,12 @@ const YourEvents = ({ GRID_LAYOUT }: { GRID_LAYOUT: string }) => {
   }, [events, user?.id]);
 
   return (
-    <div className="z-0 my-4">
+    <div className="z-0 my-4 mb-[8rem]">
       <div className="w-[90%] mx-auto">
-        <GridLayoutSelector />
+        <div className="flex items-center justify-between my-4">
+          <h1>All of your events</h1>
+          <GridLayoutSelector />
+        </div>
 
         <div className={`${GRID_LAYOUT} gap-8 full grid mb-10`}>
           {userEvents.map((event) => (

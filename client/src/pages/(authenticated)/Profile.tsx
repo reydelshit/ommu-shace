@@ -5,13 +5,12 @@ import { EventsWithAttendees } from '@/types/events';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import { useMemo } from 'react';
 
+import DefaultCover from '@/assets/defaultCover.avif';
+import { DefaultProfile } from '@/utils/defaultImages';
 import { Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import DefaultCover from '@/assets/defaultCover.avif';
-import { randomColor } from '@/utils/randomColor';
-import { DefaultProfile } from '@/utils/defaultImages';
-import ProfileYourCreatedEvents from './components/profile/ProfileYourCreatedEvents';
 import ProfileJoinedEvents from './components/profile/ProfileJoinedEvents';
+import ProfileYourCreatedEvents from './components/profile/ProfileYourCreatedEvents';
 
 export default function Profile() {
   const { data } = useGetAllEventsWithoutPagination();

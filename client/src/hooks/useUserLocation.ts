@@ -18,10 +18,7 @@ export const useUserLocation = () => {
     if (!location) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const newLocation: LatLngTuple = [
-            position.coords.latitude,
-            position.coords.longitude,
-          ];
+          const newLocation: LatLngTuple = [position.coords.latitude, position.coords.longitude];
           setLocation(newLocation);
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newLocation));
         },

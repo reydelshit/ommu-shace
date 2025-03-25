@@ -1,12 +1,12 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { badges } from '@/lib/badges';
-import { EventType } from '@/types/events';
+import { BaseEvent } from '@/types/events';
 import { randomColor } from '@/utils/randomColor';
 import { LatLngTuple } from 'leaflet';
-import { Calendar, MapPin, Users } from 'lucide-react';
+import { Calendar, MapPin, User2Icon, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; event: EventType }) => {
+const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; event: BaseEvent }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -50,6 +50,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
         >
           <div className="relative z-0">
             <h2 className="text-xl font-bold mb-3">{event.eventName}</h2>
+            <p>{event.user.fullname}</p>
 
             <div className="flex items-center gap-2">
               <button className="bg-white text-black px-3 py-1 rounded-md text-sm font-medium">Join</button>
@@ -85,10 +86,10 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
             </div>
 
             <div className="flex items-center">
-              <div className="flex items-center bg-gray-100 px-2 py-1 rounded-full">
-                <Users size={14} className="text-gray-500 mr-1" />
-                <span className="text-xs font-medium">{event.capacity}</span>
-              </div>
+              <p className="text-xs font-medium mb-4 flex items-center gap-2">
+                <User2Icon className="h-4 w-4" /> {event?.attendees.filter((attend) => attend.status === 'APPROVED').length} / {event?.capacity}{' '}
+                attendees
+              </p>
             </div>
           </div>
 
