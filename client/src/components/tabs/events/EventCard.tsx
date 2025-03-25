@@ -81,7 +81,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
                 <div className="text-xs text-gray-500">
                   {formatDate(event.startDate)} - {formatDate(event.endDate).split(',')[1]}
                 </div>
-                <div className="text-xs mt-1 line-clamp-2 break-words whitespace-pre-wrap w-[80%]">{event.description}</div>
+                <div className="text-xs mt-1 line-clamp-2 break-words whitespace-pre-wrap w-[258px]">{event.description.slice(0, 60)}</div>
               </div>
             </div>
 
