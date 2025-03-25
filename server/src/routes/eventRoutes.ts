@@ -8,6 +8,7 @@ router.post('/', eventController.getAllEvents);
 router.post('/pagination', eventController.getAllEventsPagination);
 router.get('/:eventId', eventController.getSpecificEvent);
 router.post('/create', upload.single('banner'), eventController.createEvent);
+
 router.put(
   '/edit/:eventId ',
   upload.single('banner'),

@@ -82,6 +82,12 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
                 km away
               </span>
             </div>
+
+            {event.isNeedApproval === 'true' && (
+              <div className="absolute top-4 flex right-4 bg-white text-black px-2 py-1 rounded-md text-xs">
+                <Users className="h-4 w-4" /> Approval needed
+              </div>
+            )}
           </div>
         </div>
 

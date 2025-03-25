@@ -36,6 +36,7 @@ const ViewEvent = () => {
       {
         eventId: eventId ?? '',
         userId: user?.id ?? '',
+        attendStatus: eventData?.isNeedApproval === 'true' ? 'PENDING' : 'APPROVED',
       },
       {
         onSuccess: async (data) => {
@@ -233,19 +234,22 @@ const ViewEvent = () => {
           {/* Attendees */}
           <div className="mb-6">
             <div className="flex -space-x-2">
-              {eventData.attendees.slice(0, 6).map((attendee, index) => (
-                <div key={index} className="inline-block">
-                  <img
-                    src={
-                      attendee.user?.profilePicture && attendee.user.profilePicture.trim() !== ''
-                        ? `${import.meta.env.VITE_BACKEND_URL}${attendee.user.profilePicture}`
-                        : DefaultProfile
-                    }
-                    alt={attendee.user?.fullname}
-                    className="w-8 h-8 rounded-full border-2 border-white"
-                  />
-                </div>
-              ))}
+              {eventData.attendees
+                .slice(0, 6)
+                .filter((attendee) => attendee.status === 'APPROVED')
+                .map((attendee, index) => (
+                  <div key={index} className="inline-block">
+                    <img
+                      src={
+                        attendee.user?.profilePicture && attendee.user.profilePicture.trim() !== ''
+                          ? `${import.meta.env.VITE_BACKEND_URL}${attendee.user.profilePicture}`
+                          : DefaultProfile
+                      }
+                      alt={attendee.user?.fullname}
+                      className="w-8 h-8 rounded-full border-2 border-white"
+                    />
+                  </div>
+                ))}
               {eventData.attendees.length > 6 && (
                 <div className="w-8 h-8 rounded-full border-2 border-white bg-gray-200 flex items-center justify-center text-xs text-gray-600">
                   +{eventData.attendees.length - 6}
@@ -257,6 +261,7 @@ const ViewEvent = () => {
             <p className="text-xs text-gray-600 mt-2">
               {eventData.attendees
                 .slice(0, 3)
+                .filter((attendee) => attendee.status === 'APPROVED')
                 .map((attendee) => attendee.user?.fullname)
                 .join(', ')}
               {eventData.attendees.length > 3 && ` and ${eventData.attendees.length - 3} others`}

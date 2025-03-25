@@ -75,8 +75,8 @@ export const useDeleteEvent = () => {
 
 export const useAttendEvent = () => {
   return useMutation({
-    mutationFn: async ({ eventId, userId }: { eventId: string; userId: string }) => {
-      const { data } = await attendEventService(eventId, userId);
+    mutationFn: async ({ eventId, userId, attendStatus }: { eventId: string; userId: string; attendStatus: string }) => {
+      const { data } = await attendEventService(eventId, userId, attendStatus);
       return data;
     },
   });

@@ -33,8 +33,8 @@ export const deleteEventService = async (eventId: string) => {
   return axiosInstance.delete(`/event/delete/${eventId}`);
 };
 
-export const attendEventService = async (eventId: string, userId: string) => {
-  return axiosInstance.post(`/event/${eventId}/attend`, { userId });
+export const attendEventService = async (eventId: string, userId: string, attendStatus: string) => {
+  return axiosInstance.post(`/event/${eventId}/attend`, { userId, attendStatus });
 };
 
 export const updateAttendanceStatusService = async (attendanceId: string, status: string) => {

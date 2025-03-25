@@ -121,7 +121,7 @@ export const eventController = {
           take: pageSize,
           ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
           include: {
-            user: { select: { fullname: true } },
+            user: true,
             attendees: {
               include: {
                 user: {
@@ -157,7 +157,7 @@ export const eventController = {
       const event = await prisma.event.findUnique({
         where: { id: eventId },
         include: {
-          user: { select: { fullname: true } },
+          user: true,
           attendees: {
             include: {
               user: {
@@ -225,7 +225,7 @@ export const eventController = {
   attendEvent: async (req: Request, res: Response): Promise<void> => {
     try {
       const { eventId } = req.params;
-      const { userId } = req.body;
+      const { userId, attendStatus } = req.body;
 
       const event = await prisma.event.findUnique({
         where: { id: eventId },
@@ -249,7 +249,9 @@ export const eventController = {
         return;
       }
 
-      await prisma.eventAttendees.create({ data: { eventId, userId } });
+      await prisma.eventAttendees.create({
+        data: { eventId, userId, status: attendStatus },
+      });
 
       res
         .status(200)
