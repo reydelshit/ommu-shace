@@ -91,7 +91,7 @@ const ViewEvent = () => {
         )}
         <div className="w-full h-80 bg-gray-200 relative">
           {user?.id === eventData?.userId && (
-            <Link to={`/manage-event//${eventId}`}>
+            <Link to={`/manage-event/${eventId}`}>
               <Button className="absolute top-4 flex right-4 px-2 py-1 rounded-md text-xs gap-2">
                 <Settings className="h-4 w-4" /> Manage Event
               </Button>

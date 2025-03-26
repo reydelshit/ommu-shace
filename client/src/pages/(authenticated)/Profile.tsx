@@ -60,10 +60,11 @@ export default function Profile() {
           className="w-full h-full object-cover opacity-60"
         />
 
-        {userBadges.map((image, index) => (
-          <img key={index} src={image} alt="Badge" className="absolute w-16 bottom-4 left-[18rem]" />
-        ))}
-
+        <div className="absolute bottom-4 left-[25%] flex space-x-2">
+          {userBadges.map((image, index) => (
+            <img key={index} src={image} alt="Badge" className={`h-20`} />
+          ))}
+        </div>
         <Link to="/profile/settings" className="absolute top-4 right-4 bg-white/80 p-2 rounded-full hover:bg-white/90 transition-colors">
           <Settings className="w-6 h-6" />
         </Link>
