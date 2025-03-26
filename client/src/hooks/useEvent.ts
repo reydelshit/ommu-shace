@@ -52,7 +52,7 @@ export const useGetSpecificEvent = (eventId: string, userId: string) => {
   }>({
     queryKey: ['events', eventId, userId],
     queryFn: () => getSpecificEventService(eventId, userId),
-    enabled: !!eventId && !!userId,
+    enabled: !!eventId,
     select: (data) => ({
       event: data.event,
       isUserAttending: data.isUserAttending,

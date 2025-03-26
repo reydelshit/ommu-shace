@@ -3,7 +3,11 @@ import { useState } from 'react';
 import LoginForm from './forms/LoginForm';
 import Registration from './forms/Registration';
 
-const FormContainer = ({ setShowLoginModal }: { setShowLoginModal: (value: boolean) => void }) => {
+type FormContainerProps = {
+  setShowLoginModal?: (value: boolean) => void;
+};
+
+const FormContainer = ({ setShowLoginModal }: FormContainerProps) => {
   const [isCreateAccount, setIsCreateAccount] = useState(false);
 
   return (
@@ -13,7 +17,7 @@ const FormContainer = ({ setShowLoginModal }: { setShowLoginModal: (value: boole
       }  text-start`}
     >
       <div className="self-end w-full flex justify-end ">
-        <X onClick={() => setShowLoginModal(false)} className="cursor-pointer " />
+        <X onClick={() => setShowLoginModal && setShowLoginModal(false)} className="cursor-pointer " />
       </div>
       <h1 className="text-xl mb-4">
         Welcome to <span className="font-semibold ">OMMU</span>

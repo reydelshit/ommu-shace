@@ -16,6 +16,7 @@ export type EventType = {
 };
 
 export type UserType = {
+  id: string;
   fullname: string;
   profilePicture: string;
   email: string;

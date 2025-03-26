@@ -181,9 +181,9 @@ export const eventController = {
       res.status(200).json({
         success: true,
         event,
-        isUserAttending: event.attendees.some(
-          (attendee) => attendee.userId === userId,
-        ),
+        isUserAttending: userId
+          ? event.attendees.some((attendee) => attendee.userId === userId)
+          : false,
         isEventFull: event.attendees.length >= event.capacity,
       });
     } catch (error: any) {

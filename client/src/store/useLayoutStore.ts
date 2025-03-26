@@ -16,7 +16,7 @@ interface LayoutState {
 }
 
 export const useLayoutStore = create<LayoutState>((set) => {
-  const savedLayout = (localStorage.getItem('gridLayout') as GridLayout) || 'Single';
+  const savedLayout = (localStorage.getItem('gridLayout') as GridLayout) || 'Double';
 
   return {
     layout: savedLayout,

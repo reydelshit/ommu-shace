@@ -34,7 +34,7 @@ const Dashboard = () => {
                 <div className="flex gap-2">
                   <GridLayoutSelector />
 
-                  <div className="flex items-center space-x-2 text-white">
+                  <div className="flex items-center space-x-2 text-black text-sm font-medium leading-none">
                     <label
                       htmlFor="your-event"
                       className="flex items-center space-x-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -64,7 +64,7 @@ const Dashboard = () => {
           <span className="absolute top-4 right-4 text-white">Press anywhere to close the modal</span>
 
           <div
-            className="relative bg-white shadow-xl rounded-xl w-full max-w-6xl h-[80vh] p-6 mx-4 overflow-hidden"
+            className="relative bg-white rounded-xl w-full max-w-6xl h-[80vh] shadow-2xl mx-4 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Map Component */}

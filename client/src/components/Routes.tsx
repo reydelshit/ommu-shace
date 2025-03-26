@@ -11,6 +11,7 @@ import ViewEvent from '@/pages/(authenticated)/ViewEvent';
 import YourEvents from '@/pages/(authenticated)/YourEvents';
 import LandingPage from '@/pages/LandingPage';
 import { GRID_LAYOUTS, useLayoutStore } from '@/store/useLayoutStore';
+import FormContainer from './FormContainer';
 
 const RoutesContainer = () => {
   const { layout } = useLayoutStore();
@@ -18,18 +19,28 @@ const RoutesContainer = () => {
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-
+        <Route
+          path="/login"
+          element={
+            <div className="w-full h-full flex justify-center items-center">
+              <div className="">
+                <FormContainer />
+              </div>
+            </div>
+          }
+        />
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/create/event" element={<EventFormContainer />} />
-          <Route path="/event/:eventId" element={<ViewEvent />} />
 
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/settings" element={<Settings />} />
           <Route path="/your-event" element={<YourEvents GRID_LAYOUT={GRID_LAYOUTS[layout]} />} />
           <Route path="/manage-event/:eventId" element={<ManageEvent />} />
         </Route>
+
+        <Route path="/event/:eventId" element={<ViewEvent />} />
 
         <Route
           path="/*"

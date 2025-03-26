@@ -1,14 +1,17 @@
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { BaseEvent } from '@/types/events';
+import { DefaultProfile } from '@/utils/defaultImages';
 import { randomColor } from '@/utils/randomColor';
 import { LatLngTuple } from 'leaflet';
 import { Calendar, MapPin, User2Icon, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DefaultProfile } from '@/utils/defaultImages';
 
 const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; event: BaseEvent }) => {
+  const { user } = useSession();
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -40,9 +43,9 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
 
   return (
     <Link className="h-full" to={`/event/${event.id}`}>
-      <div className="rounded-xl h-full overflow-hidden shadow-md -z-20 cursor-pointer hover:shadow-lg hover:scale-105 transition-transform">
+      <div className="rounded-xl h-full overflow-hidden shadow-md z-20 cursor-pointer hover:shadow-lg hover:scale-105 transition-transform ">
         <div
-          className="p-4 shadow-2xl text-white relative h-52"
+          className="p-4 shadow-md text-white relative h-52"
           style={{
             background:
               event.bannerPath && event.bannerPath !== 'null'
@@ -66,7 +69,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
                 />
               </Avatar>
 
-              <p className="bg-green-400 w-fit my-2 rounded-2xl p-2 text-xs">{event.user.fullname}</p>
+              <p className="bg-green-400 w-fit my-2 rounded-2xl p-2 text-xs">{event.user.id === user?.id ? 'You' : event.user.fullname}</p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -82,12 +85,6 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
                 km away
               </span>
             </div>
-
-            {event.isNeedApproval === 'true' && (
-              <div className="absolute top-4 flex right-4 bg-white text-black px-2 py-1 rounded-md text-xs">
-                <Users className="h-4 w-4" /> Approval needed
-              </div>
-            )}
           </div>
         </div>
 

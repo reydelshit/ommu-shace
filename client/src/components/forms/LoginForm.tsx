@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '../ui/input';
 import { useLoginUser } from '@/hooks/useUserAuth';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '../ui/button';
 
@@ -9,6 +9,9 @@ const LoginForm = () => {
   const mutationLogin = useLoginUser();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const location = useLocation();
+
+  const redirectTo = new URLSearchParams(location.search).get('redirect') || '/dashboard';
 
   const [error, setError] = useState('');
   const [signIn, setSignIn] = useState({
@@ -35,7 +38,7 @@ const LoginForm = () => {
 
           await queryClient.invalidateQueries({ queryKey: ['session'] });
 
-          navigate('/dashboard');
+          navigate(redirectTo);
         },
         onError: (error: any) => {
           console.error('Login failed:', error);

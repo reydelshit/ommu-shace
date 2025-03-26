@@ -5,9 +5,9 @@ import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { formatDate } from '@/utils/formatDate';
 import { useQueryClient } from '@tanstack/react-query';
-import { User2Icon } from 'lucide-react';
+import { User2Icon, Users } from 'lucide-react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
@@ -17,6 +17,7 @@ import { randomColor } from '@/utils/randomColor';
 import { useState } from 'react';
 import { QRCodeShare } from './components/QRCodeShare';
 import BackButton from '@/components/BackButton';
+import ShareModal from './components/events/ShareModal';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -28,6 +29,7 @@ const ViewEvent = () => {
   const isUserAttending = data?.isUserAttending ?? false;
   const isEventFull = data?.isEventFull ?? false;
   const isUserCreator = eventData?.userId === user?.id;
+  const navigate = useNavigate();
 
   const attendEventMuration = useAttendEvent();
 
@@ -131,6 +133,11 @@ const ViewEvent = () => {
             </p>
           </div>
 
+          {/* Event Description */}
+          <div className="mb-6 max-w-[800px]">
+            <p className="text-gray-700 break-words whitespace-pre-wrap w-full">{eventData?.description}</p>
+          </div>
+
           {/* Event Details */}
           <div className="grid grid-cols-1 gap-4 mb-6">
             <div className="flex w-full items-center justify-between">
@@ -227,11 +234,6 @@ const ViewEvent = () => {
             )}
           </div>
 
-          {/* Event Description */}
-          <div className="mb-6 max-w-[800px]">
-            <p className="text-gray-700 break-words whitespace-pre-wrap w-full">{eventData?.description}</p>
-          </div>
-
           {/* Attendees */}
           <div className="mb-6">
             <div className="flex -space-x-2">
@@ -269,40 +271,60 @@ const ViewEvent = () => {
             </p>
           </div>
 
-          {userAttendanceStatus === 'APPROVED' || userAttendanceStatus === 'CHECKED_IN' ? (
-            <Button
-              onClick={() => setShowQRCode(true)}
-              className={`px-6 cursor-pointer py-2 text-white rounded-full font-medium transition duration-200  ${getAttendanceButtonColor(
-                userAttendanceStatus ?? '',
-              )} `}
-            >
-              View Ticket
-            </Button>
-          ) : (
-            <Button
-              onClick={!isUserAttending ? handleAttendEvent : undefined}
-              disabled={isEventFull || isUserCreator}
-              className={`px-6 cursor-pointer py-2 ${getAttendanceButtonColor(userAttendanceStatus ?? '')} 
+          {eventData.isNeedApproval === 'true' && (
+            <div className="absolute top-4 flex right-4 bg-white text-black px-2 py-1 rounded-md text-xs">
+              <Users className="h-4 w-4" /> Approval needed
+            </div>
+          )}
+
+          <div className="w-full flex justify-between items-center">
+            <>
+              {userAttendanceStatus === 'APPROVED' || userAttendanceStatus === 'CHECKED_IN' ? (
+                <Button
+                  onClick={() => setShowQRCode(true)}
+                  className={`px-6 cursor-pointer py-2 text-white rounded-full font-medium transition duration-200  ${getAttendanceButtonColor(
+                    userAttendanceStatus ?? '',
+                  )} `}
+                >
+                  View Ticket
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    if (!user) {
+                      navigate(`/login?redirect=/event/${eventId}`); // Redirect to login
+                      return;
+                    }
+                    if (!isUserAttending) {
+                      handleAttendEvent(); // Proceed if logged in
+                    }
+                  }}
+                  disabled={isEventFull || isUserCreator}
+                  className={`px-6 cursor-pointer py-2 ${getAttendanceButtonColor(userAttendanceStatus ?? '')} 
               text-white rounded-full font-medium transition duration-200 
               btn ${isUserAttending || isEventFull ? 'btn-disabled' : 'btn-primary'}`}
-            >
-              {isUserAttending
-                ? userAttendanceStatus === 'PENDING'
-                  ? 'Pending Approval'
-                  : userAttendanceStatus === 'APPROVED'
-                  ? 'Approved'
-                  : userAttendanceStatus === 'CHECKED_IN'
-                  ? 'Checked In'
-                  : userAttendanceStatus === 'REJECTED'
-                  ? 'Rejected'
-                  : 'Unknown Status'
-                : isEventFull
-                ? 'Event is full'
-                : isUserCreator
-                ? 'You are the host'
-                : 'Attend Event'}
-            </Button>
-          )}
+                >
+                  {isUserAttending
+                    ? userAttendanceStatus === 'PENDING'
+                      ? 'Pending Approval'
+                      : userAttendanceStatus === 'APPROVED'
+                      ? 'Approved'
+                      : userAttendanceStatus === 'CHECKED_IN'
+                      ? 'Checked In'
+                      : userAttendanceStatus === 'REJECTED'
+                      ? 'Rejected'
+                      : 'Unknown Status'
+                    : isEventFull
+                    ? 'Event is full'
+                    : isUserCreator
+                    ? 'You are the host'
+                    : 'Attend Event'}
+                </Button>
+              )}
+            </>
+
+            <ShareModal />
+          </div>
         </div>
       </div>
 
