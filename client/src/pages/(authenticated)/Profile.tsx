@@ -11,7 +11,19 @@ import { Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ProfileJoinedEvents from './components/profile/ProfileJoinedEvents';
 import ProfileYourCreatedEvents from './components/profile/ProfileYourCreatedEvents';
-import { join } from 'path';
+import { imageMap, ProjectCategory } from '@/lib/badges';
+
+// const categoryMapping: Record<string, ProjectCategory> = {
+//   'Civic Engagement and Responsibility': ProjectCategory.CIVIC_ENGAGEMENT_RESPONSIBILITY,
+//   'Collaboration and Engagement': ProjectCategory.COLLABORATION_ENGAGEMENT,
+//   'Economic Stability': ProjectCategory.ECONOMIC_STABILITY,
+//   'Education and Empowerment': ProjectCategory.EDUCATION_EMPOWERMENT,
+//   'Health and Well-being': ProjectCategory.HEALTH_WELLBEING,
+//   'Inclusivity and Diversity': ProjectCategory.INCLUSIVITY_DIVERSITY,
+//   'Social Connection and Support': ProjectCategory.SOCIAL_CONNECTION_SUPPORT,
+//   'Sustainability and Environmental Responsibility': ProjectCategory.SUSTAINABILITY_ENVIRONMENT,
+//   'Trust and Transparency': ProjectCategory.TRUST_TRANSPARENCY,
+// };
 
 export default function Profile() {
   const { data } = useGetAllEventsWithoutPagination();
@@ -33,7 +45,11 @@ export default function Profile() {
     return (events as EventsWithAttendees[]).filter((event) => event.userId === user.id);
   }, [events, user?.id]);
 
-  console.log('joinedvebts', joinedEvents);
+  const getUserBadgeImages = (topCategories: { category: string; totalPoints: number }[]) => {
+    return topCategories.map(({ category }) => imageMap[category]);
+  };
+  // Example usage:
+  const userBadges = user ? getUserBadgeImages(user.topCategories) : [];
 
   return (
     <div className="relative w-[95%] h-fit max-w-full mx-auto shadow-lg bg-white rounded-lg overflow-hidden mb-[8rem] h-fit-content pb-8">
@@ -44,10 +60,15 @@ export default function Profile() {
           className="w-full h-full object-cover opacity-60"
         />
 
+        {userBadges.map((image, index) => (
+          <img key={index} src={image} alt="Badge" className="absolute w-16 bottom-4 left-[18rem]" />
+        ))}
+
         <Link to="/profile/settings" className="absolute top-4 right-4 bg-white/80 p-2 rounded-full hover:bg-white/90 transition-colors">
           <Settings className="w-6 h-6" />
         </Link>
       </div>
+
       <div className=" flex items-start px-8">
         <Avatar className=" h-[250px] w-[250px] object-cover -mt-30 bg-white border-white">
           <AvatarImage

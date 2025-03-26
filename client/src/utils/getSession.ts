@@ -17,6 +17,7 @@ export type User = {
   address: string;
   role: string;
   birthday: string;
+  topCategories: { category: string; totalPoints: number }[];
 };
 
 interface SessionData {

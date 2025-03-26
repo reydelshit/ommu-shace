@@ -8,6 +8,18 @@ import SocialConnectionSupport from '@/assets/oconnie/Property 1=Social Connecti
 import SustainabilityEnvironment from '@/assets/oconnie/Property 1=Sustainability and Environmental Responsibility 1.png';
 import TrustTransparency from '@/assets/oconnie/Property 1=Trust and Transparency 1.png';
 
+export enum ProjectCategory {
+  HEALTH_WELLBEING,
+  SUSTAINABILITY_ENVIRONMENT,
+  SOCIAL_CONNECTION_SUPPORT,
+  EDUCATION_EMPOWERMENT,
+  ECONOMIC_STABILITY,
+  TRUST_TRANSPARENCY,
+  COLLABORATION_ENGAGEMENT,
+  CIVIC_ENGAGEMENT_RESPONSIBILITY,
+  INCLUSIVITY_DIVERSITY,
+}
+
 export const badges = [
   {
     name: 'Civic Engagement and Responsibility',
@@ -72,3 +84,15 @@ export const badges = [
       'This badge is awarded to individuals who have demonstrated a commitment to trust and transparency. Recipients of this badge have shown a willingness to be honest, open, and accountable in their interactions with others.',
   },
 ];
+
+export const imageMap: Record<string, string> = {
+  COLLABORATION_ENGAGEMENT: CollaborationEngagement,
+  CIVIC_ENGAGEMENT_RESPONSIBILITY: CivicEngagement,
+  ECONOMIC_STABILITY: EconomicStability,
+  EDUCATION_EMPOWERMENT: EducationEmpowerment,
+  HEALTH_WELLBEING: HealthWelbeeing,
+  INCLUSIVITY_DIVERSITY: InclusitivityDiversity,
+  SOCIAL_CONNECTION_SUPPORT: SocialConnectionSupport,
+  SUSTAINABILITY_ENVIRONMENT: SustainabilityEnvironment,
+  TRUST_TRANSPARENCY: TrustTransparency,
+};

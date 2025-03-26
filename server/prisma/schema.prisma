@@ -27,6 +27,7 @@ model User {
   createdAt      DateTime         @default(now())
   events         Event[]
   attendances    EventAttendees[]
+  points         Points[]
 }
 
 model Event {
@@ -64,4 +65,26 @@ model EventAttendees {
   createdAt DateTime         @default(now())
   event     Event            @relation(fields: [eventId], references: [id])
   user      User             @relation(fields: [userId], references: [id])
+}
+
+enum ProjectCategory {
+  HEALTH_WELLBEING
+  SUSTAINABILITY_ENVIRONMENT
+  SOCIAL_CONNECTION_SUPPORT
+  EDUCATION_EMPOWERMENT
+  ECONOMIC_STABILITY
+  TRUST_TRANSPARENCY
+  COLLABORATION_ENGAGEMENT
+  CIVIC_ENGAGEMENT_RESPONSIBILITY
+  INCLUSIVITY_DIVERSITY
+}
+
+model Points {
+  id        String          @id @default(uuid())
+  userId    String
+  eventId   String
+  points    Int             @default(0)
+  category  ProjectCategory
+  createdAt DateTime        @default(now())
+  user      User            @relation(fields: [userId], references: [id])
 }

@@ -27,7 +27,7 @@ const Registration = ({ eventData }: { eventData: BaseEvent }) => {
     console.log('Updating attendance status register:', attendanceId, status);
 
     updateAttendanceMutation.mutate(
-      { attendanceId, status },
+      { attendanceId, status, tags: eventData.tags, eventId },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['events', eventId, user?.id] });

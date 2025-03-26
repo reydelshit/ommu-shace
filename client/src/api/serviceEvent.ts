@@ -37,7 +37,7 @@ export const attendEventService = async (eventId: string, userId: string, attend
   return axiosInstance.post(`/event/${eventId}/attend`, { userId, attendStatus });
 };
 
-export const updateAttendanceStatusService = async (attendanceId: string, status: string) => {
-  const { data } = await axiosInstance.put(`/event/update-status/${attendanceId}`, { status });
+export const updateAttendanceStatusService = async (attendanceId: string, status: string, tags?: string, eventId?: string) => {
+  const { data } = await axiosInstance.put(`/event/update-status/${attendanceId}`, { status, tags, eventId });
   return data;
 };

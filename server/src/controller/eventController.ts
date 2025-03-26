@@ -1,7 +1,21 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, ProjectCategory } from '@prisma/client';
 import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
+
+const categoryMapping: Record<string, ProjectCategory> = {
+  'Civic Engagement and Responsibility':
+    ProjectCategory.CIVIC_ENGAGEMENT_RESPONSIBILITY,
+  'Collaboration and Engagement': ProjectCategory.COLLABORATION_ENGAGEMENT,
+  'Economic Stability': ProjectCategory.ECONOMIC_STABILITY,
+  'Education and Empowerment': ProjectCategory.EDUCATION_EMPOWERMENT,
+  'Health and Well-being': ProjectCategory.HEALTH_WELLBEING,
+  'Inclusivity and Diversity': ProjectCategory.INCLUSIVITY_DIVERSITY,
+  'Social Connection and Support': ProjectCategory.SOCIAL_CONNECTION_SUPPORT,
+  'Sustainability and Environmental Responsibility':
+    ProjectCategory.SUSTAINABILITY_ENVIRONMENT,
+  'Trust and Transparency': ProjectCategory.TRUST_TRANSPARENCY,
+};
 
 export const eventController = {
   createEvent: async (req: Request, res: Response): Promise<void> => {
@@ -265,7 +279,7 @@ export const eventController = {
   updateAttendeeStatus: async (req: Request, res: Response): Promise<void> => {
     try {
       const { attendanceId } = req.params;
-      const { status } = req.body;
+      const { status, tags, eventId } = req.body;
 
       if (!status) {
         res.status(400).json({ success: false, message: 'Status is required' });
@@ -280,11 +294,45 @@ export const eventController = {
         return;
       }
 
+      // Update attendee status
       const updatedAttendee = await prisma.eventAttendees.update({
-        where: { id: attendee.id },
+        where: { id: attendee.id, eventId: eventId },
         data: { status },
       });
 
+      // console.log('tags:', tags);
+
+      const tagArray = tags
+        ? tags.split(',').map((tag: string) => tag.trim())
+        : [];
+      // Process tags and add Points
+      if (tagArray.length > 0) {
+        const validCategories = tagArray
+          .map((tag: string) => categoryMapping[tag])
+          .filter(
+            (category: ProjectCategory | undefined) => category,
+          ) as ProjectCategory[];
+
+        console.log('Mapped categories:', validCategories);
+
+        if (validCategories.length > 0) {
+          // console.log('Attendee User ID:', attendee.userId);
+          // console.log('Attendee Event ID:', attendee.eventId);
+
+          const pointsData = validCategories.map((category) => ({
+            userId: attendee.userId,
+            eventId: attendee.eventId,
+            points: 10,
+            category,
+          }));
+
+          console.log('Points being inserted:', pointsData);
+
+          await prisma.points.createMany({
+            data: pointsData,
+          });
+        }
+      }
       res.status(200).json({
         success: true,
         message: 'Attendee status updated!',

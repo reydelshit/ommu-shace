@@ -53,4 +53,5 @@ export type EventsWithAttendees = BaseEvent;
 // Combined Response Type with Pagination & Attendees
 export type EventResponseAll = EventsResponse & {
   events: BaseEvent[]; // This does NOT have user or attendees
+  topCategories: Record<string, number>;
 };

@@ -20,7 +20,7 @@ import { useState } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import Registration from './components/manage-event/Registration';
+import Registration from './components/manage-event/RegistrationGuest';
 
 const ManageEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';

@@ -84,8 +84,8 @@ export const useAttendEvent = () => {
 
 export const useUpdateAttendanceStatus = () => {
   return useMutation({
-    mutationFn: async ({ attendanceId, status }: { attendanceId: string; status: string }) => {
-      return updateAttendanceStatusService(attendanceId, status);
+    mutationFn: async ({ attendanceId, status, tags, eventId }: { attendanceId: string; status: string; tags?: string; eventId?: string }) => {
+      return updateAttendanceStatusService(attendanceId, status, tags, eventId);
     },
   });
 };

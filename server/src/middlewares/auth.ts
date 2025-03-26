@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { PrismaClient, ProjectCategory } from '@prisma/client';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 const prisma = new PrismaClient();
@@ -52,6 +52,7 @@ export const authenticateToken = async (
         include: {
           events: true,
           attendances: true,
+          points: true,
         },
       });
 
@@ -61,7 +62,21 @@ export const authenticateToken = async (
           .json({ success: false, message: 'User not found' });
       }
 
-      (req as any).user = user;
+      const categoryTotals = user.points.reduce((acc, point) => {
+        acc[point.category] = (acc[point.category] || 0) + point.points;
+        return acc;
+      }, {} as Record<ProjectCategory, number>);
+
+      // decending order
+      const topCategories = Object.entries(categoryTotals)
+        .map(([category, totalPoints]) => ({ category, totalPoints }))
+        .sort((a, b) => b.totalPoints - a.totalPoints)
+        .slice(0, 3); // Get top 3 categories
+
+      (req as any).user = {
+        ...user,
+        topCategories,
+      };
       next();
     } catch (error) {
       return res

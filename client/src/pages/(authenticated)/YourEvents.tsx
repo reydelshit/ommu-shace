@@ -2,6 +2,7 @@ import { useGetAllEvents } from '@/hooks/useEvent';
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { useEffect, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { useSession } from '@/hooks/useSession';
 // import EventCard from './events/EventCard';
@@ -11,6 +12,7 @@ import { formatDate } from '@/utils/formatDate';
 import { randomColor } from '@/utils/randomColor';
 import { CalendarIcon, User2Icon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { badges } from '@/lib/badges';
 
 const YourEvents = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useGetAllEvents();
@@ -60,7 +62,7 @@ const YourEvents = () => {
               {userEvents.map((event) => (
                 <Link to={`/manage-event/${event.id}`} key={event.id} className="block">
                   <div
-                    className="relative flex items-center h-[150px] space-x-4 p-3 rounded-lg transition-transform overflow-hidden hover:scale-105 "
+                    className="relative flex items-center h-[150px] space-x-4 p-3 rounded-lg transition-transform overflow-hidden w-full hover:scale-105 "
                     style={{
                       backgroundImage:
                         event.bannerPath && event.bannerPath !== 'null'
@@ -71,7 +73,7 @@ const YourEvents = () => {
                     }}
                   >
                     {/* Overlay to improve readability */}
-                    <div className="absolute inset-0 bg-black opacity-40"></div>
+                    <div className="absolute inset-0 bg-black opacity-40 w-full"></div>
 
                     <div className="relative z-10 flex items-center space-x-4 w-full">
                       <div className="flex-1 text-white">
@@ -79,6 +81,28 @@ const YourEvents = () => {
                         <div className="text-sm flex items-center gap-2 text-gray-200">
                           <CalendarIcon className="h-3 w-3" />
                           {formatDate(event.startDate)} - {formatDate(event.endDate)}
+                        </div>
+
+                        <div className="flex gap-4 my-4">
+                          {event.tags
+                            .split(',')
+                            .map((tag: string) => badges.find((badge) => badge.name === tag))
+                            .filter(Boolean)
+                            .map(
+                              (badge, index) =>
+                                badge && (
+                                  <TooltipProvider key={index}>
+                                    <Tooltip>
+                                      <TooltipTrigger>
+                                        <img src={badge.image} alt={badge.name} className="w-6 h-6" />
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        <p>{badge.name}</p>
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  </TooltipProvider>
+                                ),
+                            )}
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
