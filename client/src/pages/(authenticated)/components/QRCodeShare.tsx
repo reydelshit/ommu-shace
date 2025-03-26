@@ -1,19 +1,111 @@
-import { EventType } from '@/types/events';
-import { formatDate } from '@/utils/formatDate';
-import { QRCodeCanvas } from 'qrcode.react';
 import OMMULogo from '@/assets/LOGO.png';
 import { Button } from '@/components/ui/button';
+import { AttendeeType, EventsWithAttendees } from '@/types/events';
+import { formatDate } from '@/utils/formatDate';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { QRCodeCanvas } from 'qrcode.react';
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useRef, useState } from 'react';
 
 interface QRCodeShareProps {
   setShowQRCode: (show: boolean) => void;
-  event: EventType;
+  userAttendance?: AttendeeType;
+  userAttendanceId?: string;
+  event: EventsWithAttendees;
 }
 
-export function QRCodeShare({ setShowQRCode, event }: QRCodeShareProps) {
+export function QRCodeShare({ setShowQRCode, userAttendance, userAttendanceId, event }: QRCodeShareProps) {
+  const ticketRef = useRef<HTMLDivElement>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  console.log(event);
+
+  const downloadAsPDF = async () => {
+    if (!ticketRef.current) return;
+
+    setIsDownloading(true);
+
+    try {
+      // Options to improve html2canvas rendering
+      const canvas = await html2canvas(ticketRef.current, {
+        useCORS: true,
+        scale: 2, // Increase scale for better quality
+        logging: false, // Disable logging
+        allowTaint: true, // Allow cross-origin images
+        removeContainer: true,
+        backgroundColor: null, // Transparent background
+        // Explicitly specify color parsing options
+        onclone: (document) => {
+          // Remove any problematic color functions
+          const styleElements = document.querySelectorAll('style');
+          styleElements.forEach((style) => {
+            if (style.innerHTML.includes('oklch')) {
+              style.innerHTML = style.innerHTML.replace(/oklch\([^)]*\)/g, '#000');
+            }
+          });
+        },
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${event.eventName}_ticket.pdf`);
+    } catch (error) {
+      console.error('Error creating PDF:', error);
+      alert('Failed to create PDF. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const downloadAsImage = async () => {
+    if (!ticketRef.current) return;
+
+    setIsDownloading(true);
+
+    try {
+      const canvas = await html2canvas(ticketRef.current, {
+        useCORS: true,
+        scale: 2,
+        logging: false,
+        allowTaint: true,
+        removeContainer: true,
+        backgroundColor: null,
+        onclone: (document) => {
+          // Remove any problematic color functions
+          const styleElements = document.querySelectorAll('style');
+          styleElements.forEach((style) => {
+            if (style.innerHTML.includes('oklch')) {
+              style.innerHTML = style.innerHTML.replace(/oklch\([^)]*\)/g, '#000');
+            }
+          });
+        },
+      });
+
+      const link = document.createElement('a');
+      link.download = `${event.eventName}_ticket.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (error) {
+      console.error('Error creating image:', error);
+      alert('Failed to create image. Please try again.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div onClick={() => setShowQRCode(false)} className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-sm p-4">
       {/* Ticket Card */}
       <div
+        ref={ticketRef}
         onClick={(e) => e.stopPropagation()}
         className="relative z-20 w-full max-w-[450px] bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col"
       >
@@ -48,6 +140,7 @@ export function QRCodeShare({ setShowQRCode, event }: QRCodeShareProps) {
                   eventID: event.id,
                   eventName: event.eventName,
                   userID: event.userId,
+                  attendanceId: userAttendanceId,
                 })}
                 size={228}
                 bgColor={'#ffffff'}
@@ -71,19 +164,20 @@ export function QRCodeShare({ setShowQRCode, event }: QRCodeShareProps) {
 
           {/* Ticket Details */}
           <div className="text-center text-gray-700">
-            <p>
-              <strong>Tickets:</strong> {event.tickets}
-            </p>
-            <p>
-              <strong>Capacity:</strong> {event.capacity}
-            </p>
-            <p>
-              <strong>Approval Required:</strong> {event.isNeedApproval === 'true' ? 'Yes' : 'No'}
-            </p>
+            <h1>{userAttendance?.user?.fullname}</h1>
+            <p>@{userAttendance?.user?.email}</p>
           </div>
 
-          {/* Share Button */}
-          <Button className="mt-6 w-full py-3  transition cursor-pointer">Share Ticket</Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="w-full my-4">Download</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={downloadAsPDF}>Download as PDF</DropdownMenuItem>
+              <DropdownMenuItem onClick={downloadAsImage}>Download as Image</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

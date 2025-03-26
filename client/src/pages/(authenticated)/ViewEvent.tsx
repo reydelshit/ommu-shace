@@ -76,6 +76,7 @@ const ViewEvent = () => {
 
   const userAttendance = eventData.attendees.find((attendee) => attendee.userId === user?.id);
   const userAttendanceStatus = userAttendance ? userAttendance.status : null;
+  const userAttendanceId = userAttendance ? userAttendance.id : null;
 
   return (
     <div className="w-full flex flex-col items-center min-h-screen pb-12 relative">
@@ -268,7 +269,7 @@ const ViewEvent = () => {
             </p>
           </div>
 
-          {userAttendanceStatus === 'APPROVED' ? (
+          {userAttendanceStatus === 'APPROVED' || userAttendanceStatus === 'CHECKED_IN' ? (
             <Button
               onClick={() => setShowQRCode(true)}
               className={`px-6 cursor-pointer py-2 text-white rounded-full font-medium transition duration-200  ${getAttendanceButtonColor(
@@ -305,7 +306,14 @@ const ViewEvent = () => {
         </div>
       </div>
 
-      {showQRCode && <QRCodeShare setShowQRCode={setShowQRCode} event={eventData} />}
+      {showQRCode && (
+        <QRCodeShare
+          setShowQRCode={setShowQRCode}
+          userAttendance={userAttendance}
+          userAttendanceId={userAttendanceId ?? undefined}
+          event={eventData}
+        />
+      )}
     </div>
   );
 };
