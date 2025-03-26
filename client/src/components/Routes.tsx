@@ -10,11 +10,9 @@ import Settings from '@/pages/(authenticated)/Settings';
 import ViewEvent from '@/pages/(authenticated)/ViewEvent';
 import YourEvents from '@/pages/(authenticated)/YourEvents';
 import LandingPage from '@/pages/LandingPage';
-import { GRID_LAYOUTS, useLayoutStore } from '@/store/useLayoutStore';
 import FormContainer from './FormContainer';
 
 const RoutesContainer = () => {
-  const { layout } = useLayoutStore();
   return (
     <>
       <Routes>
@@ -36,7 +34,7 @@ const RoutesContainer = () => {
 
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/settings" element={<Settings />} />
-          <Route path="/your-event" element={<YourEvents GRID_LAYOUT={GRID_LAYOUTS[layout]} />} />
+          <Route path="/your-event" element={<YourEvents />} />
           <Route path="/manage-event/:eventId" element={<ManageEvent />} />
         </Route>
 

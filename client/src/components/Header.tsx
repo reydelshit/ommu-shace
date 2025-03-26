@@ -20,7 +20,7 @@ const Header = () => {
   const { user, logout, session } = useSession();
   const { setShowLoginModal } = useLoginModalStore();
   return (
-    <header className="flex w-full justify-between items-center h-24 sticky top-0 z-50  px-4 bg-white">
+    <header className="flex w-full justify-between items-center h-24 sticky top-0 z-50  px-4 bg-[#FFFAE5]">
       <Link to={session ? '/dashboard' : '/'}>
         <img className="w-12 " src={OmmuLogo} alt="ommu_logo" />
       </Link>

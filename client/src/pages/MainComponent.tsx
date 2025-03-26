@@ -13,7 +13,7 @@ const MainComponent = () => {
   const { session } = useSession();
 
   return (
-    <div className="bg-white w-full flex flex-col items-center ">
+    <div className="bg-[#FFFAE5] w-full flex flex-col items-center ">
       <div className="w-full max-w-[1500px] flex flex-col items-start justify-between min-h-screen relative">
         <Header />
 

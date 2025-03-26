@@ -5,9 +5,9 @@ import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { formatDate } from '@/utils/formatDate';
 import { useQueryClient } from '@tanstack/react-query';
-import { User2Icon, Users } from 'lucide-react';
+import { PencilIcon, Settings, User2Icon, Users } from 'lucide-react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
@@ -84,7 +84,19 @@ const ViewEvent = () => {
     <div className="w-full flex flex-col items-center min-h-screen pb-12 relative">
       <BackButton />
       <div className="w-[95%] mx-auto bg-white rounded-lg overflow-hidden shadow-lg my-8 flex flex-col">
+        {eventData.isNeedApproval === 'true' && (
+          <div className="absolute top-4 flex right-8 bg-white text-black px-2 py-1 rounded-md text-xs gap-2">
+            <Users className="h-4 w-4" /> Approval needed
+          </div>
+        )}
         <div className="w-full h-80 bg-gray-200 relative">
+          {user?.id === eventData?.userId && (
+            <Link to={`/manage-event//${eventId}`}>
+              <Button className="absolute top-4 flex right-4 px-2 py-1 rounded-md text-xs gap-2">
+                <Settings className="h-4 w-4" /> Manage Event
+              </Button>
+            </Link>
+          )}
           {eventData?.bannerPath && eventData?.bannerPath !== 'null' ? (
             <img
               src={`${import.meta.env.VITE_BACKEND_URL}${eventData.bannerPath}`}
@@ -270,12 +282,6 @@ const ViewEvent = () => {
               {eventData.attendees.length > 3 && ` and ${eventData.attendees.length - 3} others`}
             </p>
           </div>
-
-          {eventData.isNeedApproval === 'true' && (
-            <div className="absolute top-4 flex right-4 bg-white text-black px-2 py-1 rounded-md text-xs">
-              <Users className="h-4 w-4" /> Approval needed
-            </div>
-          )}
 
           <div className="w-full flex justify-between items-center">
             <>
