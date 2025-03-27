@@ -24,13 +24,15 @@ const Dashboard = () => {
               <TabsTrigger className="flex-1 data-[state=active]:bg-[#C5DEE0] data-[state=active]:text-black cursor-pointer" value="events">
                 Events
               </TabsTrigger>
-              {/* <TabsTrigger className="flex-1 data-[state=active]:bg-[#FFFDDB] data-[state=active]:text-black cursor-pointer" value="campaign">
+              <TabsTrigger className="flex-1 data-[state=active]:bg-[#FFFDDB] data-[state=active]:text-black cursor-pointer" value="campaign">
                 Campaign
-              </TabsTrigger> */}
+              </TabsTrigger>
             </TabsList>
             <TabsContent className="w-full p-4 mt-[1rem]" value="events">
               <div className="flex items-center justify-between my-4">
-                <Button onClick={() => setShowMapEvents(true)}>Closest Events</Button>
+                <Button className="cursor-pointer rounded-full" onClick={() => setShowMapEvents(true)}>
+                  Closest Events
+                </Button>
                 <div className="flex gap-2">
                   <GridLayoutSelector />
 
@@ -61,15 +63,18 @@ const Dashboard = () => {
 
       <AnimatePresence>
         {showMapEvents && (
-          <div onClick={() => setShowMapEvents(false)} className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm ">
-            <span className="absolute top-4 right-4 text-white">Press anywhere to close the modal</span>
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm ">
+            {/* <span className="absolute top-4 right-4 text-white">Press anywhere to close the modal</span> */}
+            <Button onClick={() => setShowMapEvents(false)} className="z-20 ring-0 rounded-full absolute top-4 right-4 text-white cursor-pointer">
+              Close
+            </Button>
 
             <motion.div
               initial="hidden"
               animate="visible"
               exit="hidden"
               variants={modalVariants}
-              className="absolute  bg-white rounded-xl w-full max-w-6xl h-[80vh] shadow-2xl mx-4 overflow-hidden"
+              className="absolute  bg-white w-full h-full  shadow-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Map Component */}

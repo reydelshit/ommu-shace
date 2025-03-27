@@ -210,7 +210,7 @@ const ViewEvent = () => {
                   <TooltipProvider key={index}>
                     <Tooltip>
                       <TooltipTrigger>
-                        <img src={badge.image} alt={badge.name} className="w-6 h-6" />
+                        <img src={badge.image} alt={badge.name} className="w-12 h-12" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>{badge.name}</p>

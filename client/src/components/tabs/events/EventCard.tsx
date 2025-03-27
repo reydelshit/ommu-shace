@@ -73,9 +73,9 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
           <div className="absolute inset-0 bg-black/20"></div>
 
           {/* Content */}
-          <div className="relative z-10 space-y-4">
+          <div className="relative  space-y-4">
             <div className="flex items-center space-x-2">
-              <Avatar className="h-8 w-8 ring-2 ring-white/70">
+              <Avatar className="h-8 w-8 ring-2 ring-white/70 ">
                 <AvatarImage
                   src={
                     event?.user.profilePicture && event?.user.profilePicture.trim() !== ''
@@ -94,7 +94,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
             <h2 className="text-2xl text-white leading-tight line-clamp-2 font-boldonse">{event.eventName}</h2>
           </div>
 
-          <div className="relative z-10 flex items-center justify-between">
+          <div className="relative  flex items-center justify-between">
             <button className="bg-white hover:bg-white/90 text-black font-medium px-4 py-2 rounded-full text-sm transition-colors">Join Event</button>
 
             <Badge variant="outline" className="bg-white/20 text-white border-white/30">
