@@ -75,7 +75,7 @@ export default function PricingTiers() {
         {tiers.map((tier) => (
           <Card
             key={tier.name}
-            className={`flex flex-col ${tier.popular ? 'border-2 border-blue-500 shadow-lg relative' : 'border border-gray-200'}`}
+            className={`flex flex-col ${tier.popular ? 'border-2 border-blue-500 shadow-lg relative' : 'border border-gray-200 '} overflow-hidden`}
           >
             {tier.popular && (
               <div className="absolute top-0 left-0 right-0 bg-blue-100 text-blue-700 text-center py-1 font-medium text-sm">Recommended</div>
