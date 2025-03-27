@@ -21,7 +21,7 @@ export function Changemakers() {
                 </div>
               )}
             </div>
-            <div className="bg-[#FE2043] text-white p-4 h-full">
+            <div className="bg-[#FF7043] text-white p-4 h-full">
               <h3 className="text-lg font-boldonse">{profile.name}</h3>
               <p className="text-sm">{profile.role}</p>
               {profile.description && <p className="text-xs mt-2 opacity-80 line-clamp-3">{profile.description}</p>}
