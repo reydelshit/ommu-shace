@@ -1,8 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { MoreVertical } from 'lucide-react';
-
+import Reydel from '@/assets/profiles/Reydel.jpg';
 export function LabTeams() {
   // Teams with subscription tiers that determine their grid placement
   const teams = [
@@ -80,218 +76,242 @@ export function LabTeams() {
   ];
 
   return (
-    <div className="grid grid-cols-3 auto-rows-auto gap-4">
-      {/* First row */}
-      <Card className={`${teams[0].color} border-none shadow-sm overflow-hidden col-span-1`}>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={teams[0].avatar} alt={teams[0].name} />
-                <AvatarFallback>{teams[0].name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-medium text-sm">{teams[0].name}</h3>
-                <p className="text-xs">{teams[0].role}</p>
-              </div>
-            </div>
-            <div className="bg-gray-200 rounded p-1">
-              <div className="flex flex-col gap-1">
-                <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                  <div className="w-4 h-4 bg-gray-300 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="grid grid-cols-6 grid-rows-4 gap-4 w-full min-h-screen p-4">
+      {/* Large Card - Top Left (Spans 4 columns, 3 rows) */}
+      <div
+        className="
+          col-span-4 row-span-3 
+          bg-blue-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+          shadow-lg
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-4xl text-white font-bold">Design Disruption</h3>
+          <p className="text-sm font-medium text-white">Emma Rodriguez</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Reimagining User Experience in the Digital Age</p>
+        </div>
+      </div>
 
-      <Card className={`${teams[1].color} border-none shadow-sm overflow-hidden col-span-1`}>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={teams[1].avatar} alt={teams[1].name} />
-                <AvatarFallback>{teams[1].name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-medium text-sm">{teams[1].name}</h3>
-                <p className="text-xs">{teams[1].role}</p>
-              </div>
-            </div>
-            <div className="bg-gray-200 rounded p-1">
-              <div className="flex flex-col gap-1">
-                <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                  <div className="w-4 h-4 bg-gray-300 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Small Card 1 - Top Right (Spans 2 columns, 2 rows) */}
+      <div
+        className="
+          col-span-2 row-span-2
+          bg-green-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">AI Frontiers</h3>
+          <p className="text-sm font-medium text-white">Alex Chen</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Machine Learning Beyond Boundaries</p>
+        </div>
+      </div>
 
-      <Card className={`${teams[2].color} border-none shadow-sm overflow-hidden col-span-1`}>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 bg-white rounded-full flex items-center justify-center text-xs font-medium">A</div>
-              <div>
-                <h3 className="font-medium text-sm">{teams[2].name}</h3>
-                <p className="text-xs">{teams[2].role}</p>
-              </div>
-            </div>
-            <div className="bg-gray-200 rounded p-1">
-              <div className="flex flex-col gap-1">
-                <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                  <div className="w-4 h-4 bg-gray-300 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Small Card 2 - Bottom Right 1 (Spans 1 column, 1 row) */}
+      <div
+        className="
+          col-span-1 row-span-1
+          bg-black 
+          text-white
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">Tech Revolution</h3>
+          <p className="text-sm font-medium text-white">Marcus Williams</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Transforming Industries</p>
+        </div>
+      </div>
 
-      {/* Second row */}
-      <Card className={`${teams[3].color} border-none shadow-sm overflow-hidden col-span-2`}>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={teams[3].avatar} alt={teams[3].name} />
-                <AvatarFallback>{teams[3].name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-medium text-sm">{teams[3].name}</h3>
-                <p className="text-xs">{teams[3].role}</p>
-              </div>
-            </div>
-            <MoreVertical className="h-4 w-4" />
-          </div>
+      {/* Small Card 3 - Bottom Right 2 (Spans 1 column, 1 row) */}
+      <div
+        className="
+          col-span-1 row-span-1
+          bg-red-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">Startup Secrets</h3>
+          <p className="text-sm font-medium text-white">Sophia Lee</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Scaling to Global Impact</p>
+        </div>
+      </div>
 
-          <div className="mt-4">
-            <p className="text-sm">{teams[3].content}</p>
-            <p className="text-sm">{teams[3].subContent}</p>
+      {/* Extra Small Card 4 - Bottom Right 3 (Spans 1 column, 1 row) */}
+      <div
+        className="
+          col-span-1 row-span-4
+          bg-purple-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">Innovation Talk</h3>
+          <p className="text-sm font-medium text-white">Jake Thompson</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Breaking Tech Barriers</p>
+        </div>
+      </div>
 
-            <div className="mt-2 bg-gray-200 w-full h-20 flex items-center justify-center rounded">
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[30px] border-b-gray-400 mb-2"></div>
-                <div className="flex gap-2">
-                  <div className="w-8 h-8 bg-gray-400 rounded-sm"></div>
-                  <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
-                </div>
-              </div>
-            </div>
+      {/* Extra Small Card 5 - Bottom Right 4 (Spans 1 column, 1 row) */}
+      <div
+        className="
+          col-span-1 row-span-4
+          bg-yellow-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">Future Trends</h3>
+          <p className="text-sm font-medium text-white">Emily Wang</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Predicting Tomorrow</p>
+        </div>
+      </div>
 
-            <p className="text-xs mt-2">{teams[3].lorem}</p>
-          </div>
-        </CardContent>
+      <div
+        className="
+          col-span-4 row-span-8
+          bg-yellow-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">Future Trends</h3>
+          <p className="text-sm font-medium text-white">Emily Wang</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Predicting Tomorrow</p>
+        </div>
+      </div>
 
-        <CardFooter className="p-4 pt-0 flex justify-end">
-          <Button variant="outline" size="sm" className="rounded-full bg-blue-600 text-white hover:bg-blue-700 border-none">
-            {teams[3].button}
-          </Button>
-        </CardFooter>
-      </Card>
+      <div
+        className="
+          col-span-2 row-span-20
+          bg-yellow-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">Future Trends</h3>
+          <p className="text-sm font-medium text-white">Emily Wang</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Predicting Tomorrow</p>
+        </div>
+      </div>
 
-      <Card className={`${teams[4].color} border-none shadow-sm overflow-hidden col-span-1`}>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={teams[4].avatar} alt={teams[4].name} />
-                <AvatarFallback>{teams[4].name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-medium text-sm">{teams[4].name}</h3>
-                <p className="text-xs">{teams[4].role}</p>
-              </div>
-            </div>
-            <MoreVertical className="h-4 w-4" />
-          </div>
+      <div
+        className="
+          col-span-2 row-span-16
+          bg-yellow-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">Future Trends</h3>
+          <p className="text-sm font-medium text-white">Emily Wang</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Predicting Tomorrow</p>
+        </div>
+      </div>
 
-          <div className="mt-4">
-            <p className="text-sm">{teams[4].content}</p>
-            <p className="text-sm">{teams[4].subContent}</p>
-
-            <div className="mt-2 bg-gray-200 w-full h-20 flex items-center justify-center rounded">
-              <div className="flex flex-col items-center gap-1">
-                <div className="w-0 h-0 border-l-[20px] border-l-transparent border-r-[20px] border-r-transparent border-b-[30px] border-b-gray-400 mb-2"></div>
-                <div className="flex gap-2">
-                  <div className="w-8 h-8 bg-gray-400 rounded-sm"></div>
-                  <div className="w-8 h-8 bg-gray-400 rounded-full"></div>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-xs mt-2">{teams[4].lorem}</p>
-          </div>
-        </CardContent>
-
-        <CardFooter className="p-4 pt-0 flex justify-end">
-          <Button variant="outline" size="sm" className="rounded-full bg-indigo-600 text-white hover:bg-indigo-700 border-none">
-            {teams[4].button}
-          </Button>
-        </CardFooter>
-      </Card>
-
-      {/* Third row */}
-      <Card className={`${teams[5].color} border-none shadow-sm overflow-hidden col-span-2`}>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={teams[5].avatar} alt={teams[5].name} />
-                <AvatarFallback>{teams[5].name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-medium text-sm text-white">{teams[5].name}</h3>
-                <p className="text-xs text-white">{teams[5].role}</p>
-              </div>
-            </div>
-            <div className="bg-gray-200 rounded p-1">
-              <div className="flex flex-col gap-1">
-                <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                  <div className="w-4 h-4 bg-gray-300 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className={`${teams[6].color} border-none shadow-sm overflow-hidden col-span-1`}>
-        <CardContent className="p-4">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-6 w-6">
-                <AvatarImage src={teams[6].avatar} alt={teams[6].name} />
-                <AvatarFallback>{teams[6].name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <h3 className="font-medium text-sm">{teams[6].name}</h3>
-                <p className="text-xs">{teams[6].role}</p>
-              </div>
-            </div>
-            <div className="bg-gray-200 rounded p-1">
-              <div className="flex flex-col gap-1">
-                <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                <div className="flex gap-1">
-                  <div className="w-4 h-4 bg-gray-300 rounded-sm"></div>
-                  <div className="w-4 h-4 bg-gray-300 rounded"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <div
+        className="
+          col-span-2 row-span-16
+          bg-yellow-100 
+          rounded-2xl 
+          relative 
+          overflow-hidden
+         
+          shadow-md
+        "
+        style={{
+          backgroundImage: `url(${Reydel})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+          <h3 className="text-lg font-bold text-white">Future Trends</h3>
+          <p className="text-sm font-medium text-white">Emily Wang</p>
+          <p className="text-xs mt-1 opacity-80 text-white">Predicting Tomorrow</p>
+        </div>
+      </div>
     </div>
   );
 }

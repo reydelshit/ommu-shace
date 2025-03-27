@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import Reydel from '@/assets/profiles/Reydel.jpg';
+import { Quote } from 'lucide-react';
 
 export function DifferenceMakers() {
   const project = {
@@ -25,57 +26,74 @@ export function DifferenceMakers() {
   ];
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6 text-center">See the Difference You're Making</h2>
+    <div className="container mx-auto px-4 py-12">
+      <h2 className="text-2xl font-bold mb-6 text-center font-boldonse">See The Difference You're Making</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="col-span-1 md:col-span-1 bg-white border-none shadow-sm">
-          <CardHeader className="p-4 pb-2">
-            <h3 className="font-medium text-sm">{project.title}</h3>
-            <div className="flex items-center mt-2">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div
+          className="md:col-span-1 bg-white rounded-xl shadow-md p-6 
+        transition-all duration-300 hover:shadow-lg"
+        >
+          <div className="mb-4">
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">{project.title}</h3>
+
+            {/* Team Avatars */}
+            <div className="flex items-center mb-4">
               <div className="flex -space-x-2">
                 {project.avatars.map((avatar, index) => (
-                  <Avatar key={index} className="h-6 w-6 border-2 border-white">
-                    <AvatarImage src={avatar} alt={`Team member ${index + 1}`} />
+                  <Avatar key={index} className="h-8 w-8 border-2 border-white">
+                    <AvatarImage className="object-cover" src={Reydel} alt={`Team member ${index + 1}`} />
                     <AvatarFallback>{index + 1}</AvatarFallback>
                   </Avatar>
                 ))}
               </div>
-              <span className="text-xs ml-2">{project.teamInfo}</span>
+              <span className="text-xs text-gray-500 ml-3">{project.teamInfo}</span>
             </div>
-          </CardHeader>
-          <CardContent className="p-4 pt-2">
-            {project.stats.map((stat, index) => (
-              <p key={index} className="text-xs">
-                {stat}
-              </p>
-            ))}
-            <p className="text-xs font-medium mt-2">Testimonial:</p>
-            <p className="text-xs mt-1">{project.testimonial.quote}</p>
-            <p className="text-xs mt-1">{project.testimonial.author}</p>
-            <p className="text-xs">{project.testimonial.role}</p>
-          </CardContent>
-        </Card>
 
-        <div className="col-span-1 md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Project Stats */}
+            <div className="space-y-2 mb-4">
+              {project.stats.map((stat, index) => (
+                <p key={index} className="text-sm text-gray-600">
+                  {stat}
+                </p>
+              ))}
+            </div>
+
+            {/* Testimonial */}
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-xs italic text-gray-700 mb-2">"{project.testimonial.quote}"</p>
+              <div className="text-xs">
+                <p className="font-semibold text-gray-800">{project.testimonial.author}</p>
+                <p className="text-gray-500">{project.testimonial.role}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quotes Grid */}
+        <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
           {quotes.map((quote) => (
-            <Card key={quote.id} className="bg-white border-none shadow-sm">
-              <CardHeader className="p-4 pb-2">
-                <h3 className="font-medium text-sm">"Quote"</h3>
-              </CardHeader>
-              <CardContent className="p-4 pt-2">
-                <div className="flex items-center">
-                  <Avatar className="h-6 w-6 mr-2">
-                    <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Avatar" />
-                    <AvatarFallback>A</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-xs font-medium">{quote.title}</p>
-                    <p className="text-xs text-gray-500">{quote.description}</p>
-                  </div>
+            <div
+              key={quote.id}
+              className="bg-white rounded-xl shadow-sm p-6 
+                       transition-all duration-300 
+                       hover:shadow-lg hover:-translate-y-2"
+            >
+              <div className="flex items-start mb-4">
+                <Quote className="w-5 h-5 text-black mr-3 flex-shrink-0" />
+                <p className="text-sm text-gray-700 italic">"{quote.title}"</p>
+              </div>
+
+              <div className="flex items-center mt-4">
+                <Avatar className="h-8 w-8 mr-3">
+                  <AvatarImage src={Reydel || '/placeholder.svg?height=40&width=40'} alt="Quote Avatar" />
+                  <AvatarFallback>{quote.title[0].toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm font-semibold text-gray-800">{quote.description}</p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       </div>

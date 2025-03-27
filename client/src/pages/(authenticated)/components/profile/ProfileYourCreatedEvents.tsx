@@ -45,7 +45,7 @@ const ProfileYourCreatedEvents = ({ yourCreatedEvents }: { yourCreatedEvents: Ev
                   </svg>
                   <span className="text-xs text-gray-500">
                     {/* You can add event date here if available */}
-                    Joined Event
+                    Created Event
                   </span>
                 </div>
 

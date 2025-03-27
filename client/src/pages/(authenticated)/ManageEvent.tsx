@@ -18,10 +18,12 @@ import { MapPin, Search, Users } from 'lucide-react';
 import moment from 'moment';
 import { useState } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-import Registration from './components/manage-event/RegistrationGuest';
 import ShareModal from './components/events/ShareModal';
+import Registration from './components/manage-event/RegistrationGuest';
+
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const ManageEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -29,7 +31,6 @@ const ManageEvent = () => {
   const { data, isLoading, isError } = useGetSpecificEvent(eventId ?? '', user?.id ?? '');
   const updateAttendanceMutation = useUpdateAttendanceStatus();
   const queryClient = useQueryClient();
-  const navigation = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -109,7 +110,6 @@ const ManageEvent = () => {
                 )}
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/50 to-transparent">
-                <h2 className="text-white text-xl font-semibold">{eventData.eventName}</h2>
                 <div className="flex items-center space-x-2 text-white text-sm mt-1">
                   <div className="flex flex-wrap gap-2 my-4">
                     {matchedBadges.map(
@@ -118,7 +118,7 @@ const ManageEvent = () => {
                           <TooltipProvider key={index}>
                             <Tooltip>
                               <TooltipTrigger>
-                                <img src={badge.image} alt={badge.name} className="w-6 h-6" />
+                                <img src={badge.image} alt={badge.name} className="w-18 h-18" />
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>{badge.name}</p>
@@ -134,7 +134,7 @@ const ManageEvent = () => {
 
             {/* Date Section */}
             <div className="flex items-center mb-6">
-              <div className="bg-gray-50 p-12 text-center rounded-lg mr-4">
+              <div className="bg-gray-100 w-[10rem] h-[10rem] items-center p-4 flex justify-center rounded-lg mr-4 flex-col">
                 <div className="text-gray-600 uppercase text-sm">{moment(eventData.startDate).format('MMMM')}</div>
                 <div className="text-3xl font-bold">{moment(eventData.startDate).format('DD')}</div>
               </div>
@@ -158,15 +158,12 @@ const ManageEvent = () => {
                   {moment(eventData.startDate).format('h:mm A')} - {moment(eventData.startDate).format('MMMM DD, h:mm A')}
                 </div>
               </div>
-              {/* <Button variant="secondary" size="sm" className="ml-auto">
-              Check in Guests
-            </Button> */}
             </div>
 
             {/* Location Section */}
-            <div className="flex items-center mb-6 w-full">
-              <div className="bg-gray-50 p-16 rounded-lg mr-4">
-                <MapPin className="h-6 w-6" />
+            <div className="flex items-center mb-6 ">
+              <div className="bg-gray-100 w-[11.5rem] h-[10rem] items-center p-4 flex justify-center rounded-lg mr-4">
+                <MapPin className="h-12 w-12" />
               </div>
               <div className="w-full">
                 <div className="font-semibold">{eventData.location}</div>
@@ -199,15 +196,37 @@ const ManageEvent = () => {
             <div className="border-t pt-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Host</h3>
-                <Button variant="outline" size="sm">
-                  + Add Host
-                </Button>
+                <Dialog>
+                  <DialogTrigger>
+                    <Button className="cursor-pointer">+ Add Host</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </div>
               <p className="text-gray-500 text-sm mb-4">Add hosts, special guests, and event managers.</p>
               <div className="bg-gray-50 p-3 rounded-lg">
-                <div className="flex items-center">
-                  <span className="font-semibold mr-2">TeamPH</span>
-                  <span className="text-gray-600">TeamPH@gmail.com</span>
+                <div className="flex items-center gap-4">
+                  <Avatar className=" h-11 w-11  object-cover  bg-white border-white cursor-pointer">
+                    <AvatarImage
+                      src={
+                        eventData?.user && eventData?.user.profilePicture.trim() !== ''
+                          ? `${import.meta.env.VITE_BACKEND_URL}${eventData?.user.profilePicture}`
+                          : DefaultProfile
+                      }
+                      alt="profile"
+                      className="object-cover"
+                    />
+                  </Avatar>
+                  <span className="text-black font-semibold">
+                    {eventData.user?.fullname} ({eventData.user?.email})
+                  </span>
                   <Badge variant="secondary" className="ml-2">
                     Creator
                   </Badge>

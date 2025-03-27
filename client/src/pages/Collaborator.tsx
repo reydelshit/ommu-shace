@@ -8,17 +8,17 @@ const Collaborator = () => {
   const [activeTab, setActiveTab] = useState('xlab');
 
   return (
-    <div className="relative w-[95%] h-fit max-w-full mx-auto  rounded-lg overflow-hidden mb-[8rem] h-fit-content pb-8">
-      <Tabs defaultValue="xlab" className="w-full my-4 h-screen " onValueChange={(value) => setActiveTab(value)}>
+    <div className="relative w-[95%] min-h-screen max-w-full mx-auto  rounded-lg overflow-hidden mb-[8rem] pb-8">
+      <Tabs defaultValue="xlab" className="w-full my-4 min-h-screen " onValueChange={(value) => setActiveTab(value)}>
         <div className="flex items-center justify-between border-b border-gray-200">
-          <TabsList className="h-10 bg-transparent">
-            <TabsTrigger value="xlab" className="rounded-none data-[state=active]:bg-black data-[state=active]:text-white px-4 h-8">
+          <TabsList className="h-10 bg-transparent mb-2">
+            <TabsTrigger value="xlab" className="rounded-2xl cursor-pointer  data-[state=active]:bg-black data-[state=active]:text-white px-4 h-10">
               xLab
             </TabsTrigger>
-            <TabsTrigger value="awards" className="rounded-none data-[state=active]:bg-black data-[state=active]:text-white px-4 h-8">
+            <TabsTrigger value="awards" className="rounded-2xl cursor-pointer  data-[state=active]:bg-black data-[state=active]:text-white px-4 h-10">
               Awards
             </TabsTrigger>
-            <TabsTrigger value="impact" className="rounded-none data-[state=active]:bg-black data-[state=active]:text-white px-4 h-8">
+            <TabsTrigger value="impact" className="rounded-2xl cursor-pointer  data-[state=active]:bg-black data-[state=active]:text-white px-4 h-10">
               Impact
             </TabsTrigger>
           </TabsList>

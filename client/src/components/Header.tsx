@@ -31,18 +31,11 @@ const Header = () => {
 
       <div className="flex gap-4 items-center h-full z-10 ">
         <div className="flex gap-2 ">
-          {/* <span
-            className={`
-             underline w-fit p-4 cursor-pointer `}
-          >
-            {session ? 'For Creators' : 'Become a Patron'}
-          </span> */}
-
           {!session && (
             <Button
               className="rounded-full h-12 w-32 p-4 cursor-pointer"
               onClick={() => {
-                if (path.includes('event')) {
+                if (path !== '/') {
                   navigate('/login?redirect=/dashboard');
                 } else {
                   setShowLoginModal(true);

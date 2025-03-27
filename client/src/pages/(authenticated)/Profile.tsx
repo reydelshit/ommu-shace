@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 
 import DefaultCover from '@/assets/defaultCover.avif';
 import { DefaultProfile } from '@/utils/defaultImages';
-import { Settings } from 'lucide-react';
+import { LocateIcon, MapPin, MarsStroke, Settings } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ProfileJoinedEvents from './components/profile/ProfileJoinedEvents';
 import ProfileYourCreatedEvents from './components/profile/ProfileYourCreatedEvents';
@@ -87,13 +87,16 @@ export default function Profile() {
         <div className="mx-4 flex justify-between w-full items-center">
           <div>
             <h2 className="text-2xl font-semibold mt-2">{user?.fullname}</h2>
-            <p className="text-sm text-gray-500">@{user?.username}</p>
-            <p className="text-sm text-gray-500">
-              Based in
-              <span className="text-black font-bold"> {user?.address}</span>
-            </p>
+            <p className="text-sm text-gray-500 italic">@{user?.username}</p>
+            <div className="flex gap-1">
+              <MapPin className="w-5 h-5 text-gray-500 inline" />
+              <p className="text-sm text-gray-500">
+                Based in
+                <span className="text-black font-bold"> {user?.address}</span>
+              </p>
+            </div>
 
-            <p>{user?.bio}</p>
+            <p className="my-2 italic">{user?.bio}</p>
           </div>
 
           <div className="flex justify-between  p-4 space-x-4">
@@ -121,7 +124,7 @@ export default function Profile() {
       </div>
 
       <div className="px-4 mt-4 w-full">
-        <h1 className="my-4">Projects and Events | Joined Events</h1>
+        <h1 className="my-8 font-semibold italic border-b-4 border-brown-text">Projects and Events | Joined Events</h1>
 
         <Separator />
 
@@ -135,7 +138,7 @@ export default function Profile() {
       </div>
 
       <div className="px-4 mt-4 w-full">
-        <h1 className="my-4">Projects and Events | Created Events</h1>
+        <h1 className="my-8 font-semibold italic border-b-4 border-brown-text">Projects and Events | Created Events</h1>
 
         <Separator />
 
