@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import LoginForm from './forms/LoginForm';
@@ -7,14 +8,40 @@ type FormContainerProps = {
   setShowLoginModal?: (value: boolean) => void;
 };
 
+export const modalVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+    y: '-50%',
+    x: '-50%',
+    top: '50%',
+    left: '50%',
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: '-50%',
+    x: '-50%',
+    top: '50%',
+    left: '50%',
+    transition: {
+      type: 'spring',
+      stiffness: 300,
+      damping: 15,
+    },
+  },
+};
+
 const FormContainer = ({ setShowLoginModal }: FormContainerProps) => {
   const [isCreateAccount, setIsCreateAccount] = useState(false);
 
   return (
-    <div
-      className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-4xl shadow-lg z-20 ${
-        isCreateAccount ? 'w-[800px] h-[450px]' : 'w-[400px] h-[380px]'
-      }  text-start`}
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="hidden"
+      variants={modalVariants}
+      className={`absolute  bg-white p-8 rounded-4xl  shadow-lg z-20 ${isCreateAccount ? 'w-[800px] h-[450px]' : 'w-[400px] h-[380px]'}  text-start`}
     >
       <div className="self-end w-full flex justify-end ">
         <X onClick={() => setShowLoginModal && setShowLoginModal(false)} className="cursor-pointer " />
@@ -38,7 +65,7 @@ const FormContainer = ({ setShowLoginModal }: FormContainerProps) => {
           </span>
         </p>
       )}
-    </div>
+    </motion.div>
   );
 };
 

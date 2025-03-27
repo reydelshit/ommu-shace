@@ -6,6 +6,8 @@ import { GRID_LAYOUTS, useLayoutStore } from '@/store/useLayoutStore';
 import { useState } from 'react';
 import MapWithMarkers from './components/dashboard/MapWithMarkers';
 import GridLayoutSelector from './components/GridLayoutSelector';
+import { modalVariants } from '@/components/FormContainer';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Dashboard = () => {
   const { layout } = useLayoutStore();
@@ -59,21 +61,27 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {showMapEvents && (
-        <div onClick={() => setShowMapEvents(false)} className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm">
-          <span className="absolute top-4 right-4 text-white">Press anywhere to close the modal</span>
+      <AnimatePresence>
+        {showMapEvents && (
+          <div onClick={() => setShowMapEvents(false)} className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm ">
+            <span className="absolute top-4 right-4 text-white">Press anywhere to close the modal</span>
 
-          <div
-            className="relative bg-white rounded-xl w-full max-w-6xl h-[80vh] shadow-2xl mx-4 overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Map Component */}
-            <div className="w-full h-full rounded-lg overflow-hidden border border-gray-200">
-              <MapWithMarkers />
-            </div>
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={modalVariants}
+              className="absolute  bg-white rounded-xl w-full max-w-6xl h-[80vh] shadow-2xl mx-4 overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Map Component */}
+              <div className="w-full h-full rounded-lg overflow-hidden border border-gray-200">
+                <MapWithMarkers />
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };

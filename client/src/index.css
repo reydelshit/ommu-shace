@@ -11,6 +11,17 @@
   --color-brown-text: #aa917f;
 
   --font-display: 'Madimi One', sans-serif;
+
+  --animate-wiggle: wiggle 1s ease-in-out;
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-3deg);
+    }
+    50% {
+      transform: rotate(3deg);
+    }
+  }
   /* --color-tahiti: #3ab7bf;
   --color-bermuda: #78dcca; */
 }

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const Footer = () => {
   return (
     <footer className="flex mt-[10rem] justify-between items-center p-4 bg-transparent border-t-2 border-black text-white absolute bottom-0  w-full">
@@ -8,6 +10,9 @@ const Footer = () => {
           <li className="text-black">Explore</li>
           <li className="text-black">Rewards</li>
           <li className="text-black">Help</li>
+          <Link to="/collab" className="text-black">
+            Community
+          </Link>
         </ul>
       </div>
 

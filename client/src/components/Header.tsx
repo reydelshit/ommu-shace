@@ -27,10 +27,15 @@ const Header = () => {
 
       <div className="flex gap-4 items-center h-full z-10 ">
         <div className="flex gap-2 ">
-          <Button className={`cursor-pointer ${session ? 'bg-yellow-text text-black' : ''}`}>{session ? 'For Creators' : 'Become a Patron'}</Button>
+          <span
+            className={`
+             underline w-fit p-4 cursor-pointer `}
+          >
+            {session ? 'For Creators' : 'Become a Patron'}
+          </span>
 
           {!session && (
-            <Button className="cursor-pointer" onClick={() => setShowLoginModal(true)}>
+            <Button className=" rounded-full h-12 w-32 p-4 cursor-pointer" onClick={() => setShowLoginModal(true)}>
               Login
             </Button>
           )}

@@ -11,7 +11,7 @@ const Sidebar = () => {
   const { session } = useSession();
 
   return (
-    <div className="flex-shrink-0 flex flex-col border-yellow-500 items-center justify-start bg-[#F3F3F3] p-4 rounded-3xl w-[80px] h-[450px] gap-10 text-center z-50 sticky top-48 left-0 shadow-lg">
+    <div className="flex-shrink-0 flex flex-col border-yellow-500 items-center justify-start bg-white p-4 rounded-3xl w-[80px] h-fit py-20 gap-10 text-center z-50 sticky top-48 left-0 shadow-lg">
       <div
         onClick={() => setShowOptions(!showOptions)}
         className="bg-yellow-text  w-full h-12 rounded-full flex items-center justify-center cursor-pointer"
@@ -71,10 +71,13 @@ const Sidebar = () => {
         </div>
       </Link>
 
-      <div className="text-center flex flex-col items-center cursor-pointer">
-        <Users />
-        {/* <span className="block text-[10px]">Community</span> */}
-      </div>
+      <Link to={'/collab'}>
+        <div className="text-center flex flex-col items-center cursor-pointer">
+          <Users />
+
+          {/* <span className="block text-[10px]">Your Events</span> */}
+        </div>
+      </Link>
     </div>
   );
 };

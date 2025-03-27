@@ -1,4 +1,5 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
@@ -41,23 +42,41 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
     return [lat, lon];
   };
 
+  const getEventColor = (name: string) => {
+    const colors = [
+      'from-rose-400 to-orange-300',
+      'from-emerald-400 to-cyan-300',
+      'from-violet-400 to-indigo-300',
+      'from-amber-300 to-yellow-200',
+      'from-pink-400 to-purple-300',
+    ];
+    const index = name.length % colors.length;
+    return colors[index];
+  };
+
+  const eventColor = getEventColor(event.eventName);
+  const isCreator = event.user.id === user?.id;
+  const attendeeCount = event?.attendees.filter((attend) => attend.status === 'APPROVED').length;
+
   return (
-    <Link className="h-full" to={`/event/${event.id}`}>
-      <div className="rounded-xl h-full overflow-hidden shadow-md z-20 cursor-pointer hover:shadow-lg hover:scale-105 transition-transform ">
+    <Link className="block" to={`/event/${event.id}`}>
+      <div className="group shadow-sm relative rounded-2xl overflow-hidden bg-white transition-all duration-300 hover:shadow-lg hover:translate-y-[-4px]">
+        {/* Banner */}
         <div
-          className="p-4 shadow-md text-white relative h-52"
+          className={`relative h-56 bg-gradient-to-r ${eventColor} p-6 flex flex-col justify-between`}
           style={{
-            background:
-              event.bannerPath && event.bannerPath !== 'null'
-                ? `url(${import.meta.env.VITE_BACKEND_URL}${event.bannerPath}) center/cover no-repeat`
-                : `linear-gradient(135deg, ${randomColor}, #6A5ACD)`,
+            backgroundImage: event.bannerPath && event.bannerPath !== 'null' ? `url(${import.meta.env.VITE_BACKEND_URL}${event.bannerPath})` : 'none',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
           }}
         >
-          <div className="relative z-0">
-            <h2 className="text-xl font-bold mb-3">{event.eventName}</h2>
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/20"></div>
 
-            <div className="flex items-center gap-2">
-              <Avatar className=" h-8 w-8  object-cover  bg-white border-white cursor-pointer">
+          {/* Content */}
+          <div className="relative z-10 space-y-4">
+            <div className="flex items-center space-x-2">
+              <Avatar className="h-8 w-8 ring-2 ring-white/70">
                 <AvatarImage
                   src={
                     event?.user.profilePicture && event?.user.profilePicture.trim() !== ''
@@ -68,79 +87,98 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
                   className="object-cover"
                 />
               </Avatar>
-
-              <p className="bg-green-400 w-fit my-2 rounded-2xl p-2 text-xs">{event.user.id === user?.id ? 'You' : event.user.fullname}</p>
+              <Badge variant="secondary" className="font-medium text-xs">
+                {isCreator ? 'You' : event.user.fullname}
+              </Badge>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button className="bg-white text-black px-3 py-1 rounded-md text-sm font-medium">Join</button>
-              <span className="text-xs bg-yellow-text text-black px-2 py-1 rounded-md">
-                {haversineDistance(
-                  { lat: DEFAULT_CENTER[0], lon: DEFAULT_CENTER[1] },
-                  {
-                    lat: parseLatLng(event.markedLocation)[0],
-                    lon: parseLatLng(event.markedLocation)[1],
-                  },
-                ).toFixed(2)}{' '}
-                km away
-              </span>
-            </div>
+            <h2 className="text-2xl font-bold text-white leading-tight line-clamp-2">{event.eventName}</h2>
+          </div>
+
+          <div className="relative z-10 flex items-center justify-between">
+            <button className="bg-white hover:bg-white/90 text-black font-medium px-4 py-2 rounded-full text-sm transition-colors">Join Event</button>
+
+            <Badge variant="outline" className="bg-white/20 text-white border-white/30">
+              {haversineDistance(
+                { lat: DEFAULT_CENTER[0], lon: DEFAULT_CENTER[1] },
+                { lat: parseLatLng(event.markedLocation)[0], lon: parseLatLng(event.markedLocation)[1] },
+              ).toFixed(1)}{' '}
+              km away
+            </Badge>
           </div>
         </div>
 
-        <div className="bg-white w-full h-full p-4">
-          <div className="flex justify-between w-full items-center ">
-            <div className="flex gap-3 w-full">
-              {/* Calendar icon */}
-              <div className="w-10 h-10 rounded-md overflow-hidden bg-gray-100 flex items-center justify-center">
-                <Calendar className="w-[24px] h-[24px] text-gray-600" />
-              </div>
-
-              <div className="w-full">
-                <h3 className="font-medium">Details</h3>
-                <div className="text-xs text-gray-500">
-                  {formatDate(event.startDate)} - {formatDate(event.endDate).split(',')[1]}
-                </div>
-                <div className="text-xs mt-1 line-clamp-2 break-words whitespace-pre-wrap w-[258px]">{event.description.slice(0, 60)}</div>
-              </div>
+        {/* Details */}
+        <div className="p-5 space-y-4">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <Calendar className="w-5 h-5 text-primary" />
             </div>
 
-            <div className="flex flex-col items-end">
-              <p className="text-xs font-medium mb-4 flex items-center gap-2">
-                <User2Icon className="h-4 w-4" /> {event?.attendees.filter((attend) => attend.status === 'APPROVED').length} / {event?.capacity}{' '}
-                attendees
+            <div className="space-y-1">
+              <h3 className="font-medium text-sm text-muted-foreground">When</h3>
+              <p className="text-sm">
+                {formatDate(event.startDate)} - {formatDate(event.endDate).split(',')[1]}
               </p>
             </div>
           </div>
 
-          {/* Location info if available */}
           {event.location && (
-            <div className="mt-3 flex items-center text-xs text-gray-500">
-              <MapPin size={14} className="mr-1" />
-              <span className="truncate">{event.location}</span>
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <MapPin className="w-5 h-5 text-primary" />
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="font-medium text-sm text-muted-foreground">Where</h3>
+                <p className="text-sm truncate max-w-[250px]">{event.location}</p>
+              </div>
             </div>
           )}
 
-          <div className="flex gap-4 my-4">
-            {event.tags
-              .split(',')
-              .map((tag: string) => badges.find((badge) => badge.name === tag))
-              .filter(Boolean)
-              .map(
-                (badge, index) =>
-                  badge && (
-                    <TooltipProvider key={index}>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <img src={badge.image} alt={badge.name} className="w-6 h-6" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{badge.name}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  ),
+          <div className="flex items-center justify-between pt-2">
+            <div className="flex gap-2">
+              {event.tags
+                .split(',')
+                .map((tag) => badges.find((badge) => badge.name === tag))
+                .filter(Boolean)
+                .slice(0, 3)
+                .map(
+                  (badge, index) =>
+                    badge && (
+                      <TooltipProvider key={index}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="w-8 h-8 rounded-full bg-secondary/30 p-1 flex items-center justify-center">
+                              <img src={badge.image || '/placeholder.svg'} alt={badge.name} className="w-full h-full object-contain" />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{badge.name}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ),
+                )}
+
+              {event.tags.split(',').length > 3 && (
+                <div className="w-8 h-8 rounded-full bg-secondary/30 flex items-center justify-center text-xs font-medium">
+                  +{event.tags.split(',').length - 3}
+                </div>
               )}
+            </div>
+
+            <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <User2Icon className="h-4 w-4" />
+              <span>
+                {attendeeCount}/{event?.capacity}
+              </span>
+            </div>
+          </div>
+
+          {/* Description preview */}
+          <div className="pt-1">
+            <p className="text-sm text-muted-foreground line-clamp-2">{event.description}</p>
           </div>
         </div>
       </div>

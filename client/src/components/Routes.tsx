@@ -11,12 +11,17 @@ import ViewEvent from '@/pages/(authenticated)/ViewEvent';
 import YourEvents from '@/pages/(authenticated)/YourEvents';
 import LandingPage from '@/pages/LandingPage';
 import FormContainer from './FormContainer';
+import Collaborator from '@/pages/Collaborator';
+import PricingTiers from '@/pages/Pricing';
 
 const RoutesContainer = () => {
   return (
     <>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/collab" element={<Collaborator />} />
+        <Route path="/pricing" element={<PricingTiers />} />
+
         <Route
           path="/login"
           element={
