@@ -5,7 +5,7 @@ import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { formatDate } from '@/utils/formatDate';
 import { useQueryClient } from '@tanstack/react-query';
-import { PencilIcon, Settings, User2Icon, Users } from 'lucide-react';
+import { Calendar, MapPin, PencilIcon, Settings, User2Icon, Users } from 'lucide-react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { QRCodeShare } from './components/QRCodeShare';
 import BackButton from '@/components/BackButton';
 import ShareModal from './components/events/ShareModal';
+import { Badge } from '@/components/ui/badge';
 
 const ViewEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -79,6 +80,7 @@ const ViewEvent = () => {
   const userAttendance = eventData.attendees.find((attendee) => attendee.userId === user?.id);
   const userAttendanceStatus = userAttendance ? userAttendance.status : null;
   const userAttendanceId = userAttendance ? userAttendance.id : null;
+  const isCreator = eventData.user.id === user?.id;
 
   return (
     <div className="w-full flex flex-col items-center min-h-screen pb-12 relative">
@@ -118,24 +120,23 @@ const ViewEvent = () => {
           <div className="flex justify-between items-start">
             <div className="flex items-start mb-6">
               <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900">{eventData?.eventName}</h1>
-                <p className="text-sm text-gray-600 mt-1 ">
-                  Hosted by{' '}
-                  <span className="flex items-center gap-2 ml-2">
-                    <Avatar className=" h-6 w-6  object-cover  bg-white border-white cursor-pointer">
-                      <AvatarImage
-                        src={
-                          eventData?.user.profilePicture && eventData?.user.profilePicture.trim() !== ''
-                            ? `${import.meta.env.VITE_BACKEND_URL}${eventData?.user.profilePicture}`
-                            : DefaultProfile
-                        }
-                        alt="profile"
-                        className="object-cover"
-                      />
-                    </Avatar>
-                    {eventData?.user.fullname}
-                  </span>
-                </p>
+                <h1 className="text-2xl font-boldonse text-gray-900 my-4">{eventData?.eventName}</h1>
+                <div className="flex items-center space-x-2">
+                  <Avatar className="h-8 w-8 ring-2 ring-white/70">
+                    <AvatarImage
+                      src={
+                        eventData?.user.profilePicture && eventData?.user.profilePicture.trim() !== ''
+                          ? `${import.meta.env.VITE_BACKEND_URL}${eventData?.user.profilePicture}`
+                          : DefaultProfile
+                      }
+                      alt="profile"
+                      className="object-cover"
+                    />
+                  </Avatar>
+                  <Badge variant="secondary" className="font-medium text-xs">
+                    {isCreator ? 'You' : eventData.user.fullname}
+                  </Badge>
+                </div>
               </div>
             </div>
 
@@ -147,64 +148,38 @@ const ViewEvent = () => {
 
           {/* Event Description */}
           <div className="mb-6 max-w-[800px]">
-            <p className="text-gray-700 break-words whitespace-pre-wrap w-full">{eventData?.description}</p>
+            <p className=" break-words whitespace-pre-wrap w-full italic">{eventData?.description}</p>
           </div>
 
           {/* Event Details */}
           <div className="grid grid-cols-1 gap-4 mb-6">
             <div className="flex w-full items-center justify-between">
-              <div className="flex items-center w-full">
-                <div className="bg-gray-100 p-2 rounded-lg mr-3">
-                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    ></path>
-                  </svg>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-primary" />
                 </div>
-                <div>
-                  <p className="font-medium">{formatDate(eventData?.startDate)}</p>
-                  <p className="text-sm text-gray-600">Event start</p>
-                </div>
-              </div>
 
-              <div className="flex items-center w-full">
-                <div className="bg-gray-100 p-2 rounded-lg mr-3">
-                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-medium">{formatDate(eventData?.endDate)}</p>
-                  <p className="text-sm text-gray-600">Event ends</p>
+                <div className="space-y-1">
+                  <h3 className="font-medium text-sm text-muted-foreground">When</h3>
+                  <p className="text-sm">
+                    {formatDate(eventData.startDate)} - {formatDate(eventData.endDate).split(',')[1]}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center">
-              <div className="bg-gray-100 p-2 rounded-lg mr-3">
-                <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  ></path>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
+            {eventData.location && (
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <MapPin className="w-5 h-5 text-primary" />
+                </div>
+
+                <div className="space-y-1">
+                  <h3 className="font-medium text-sm text-muted-foreground uppercase">{eventData.location}</h3>
+                  <p className="text-sm  max-w-[250px]">{eventData.markedLocation}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-medium">{eventData?.location}</p>
-                <p className="text-sm text-gray-600">{eventData?.markedLocation}</p>
-              </div>
-            </div>
+            )}
 
             <div className="mt-1 h-[300px] rounded-lg overflow-hidden border relative z-0">
               <MapContainer
@@ -275,11 +250,12 @@ const ViewEvent = () => {
             {/* Display attendee names */}
             <p className="text-xs text-gray-600 mt-2">
               {eventData.attendees
-                .slice(0, 3)
-                .filter((attendee) => attendee.status === 'APPROVED')
-                .map((attendee) => attendee.user?.fullname)
+                ?.filter((attendee) => attendee.status === 'APPROVED')
+                .slice(0, 3) // Then slice
+                .map((attendee) => (attendee.user?.id === user?.id ? 'You' : attendee.user?.fullname))
                 .join(', ')}
-              {eventData.attendees.length > 3 && ` and ${eventData.attendees.length - 3} others`}
+              {eventData.attendees?.filter((attendee) => attendee.status === 'APPROVED').length > 3 &&
+                ` and ${eventData.attendees.filter((attendee) => attendee.status === 'APPROVED').length - 3} others`}
             </p>
           </div>
 

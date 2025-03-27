@@ -29,22 +29,21 @@ const Sidebar = () => {
                 <p className="text-xs text-gray-600">Create your event or campaign now!</p>
               </div>
             </div>
-
-            {/* Buttons */}
-            <Link className="w-full" to="/dashboard/create/campaign">
-              <Button
-                onClick={() => setShowOptions(false)}
-                className="cursor-pointer w-full bg-[#C5DEE0] text-black font-medium py-2 rounded-md text-sm hover:bg-[#A8C5C8] transition-colors focus:ring-2 focus:ring-[#C5DEE0]/50 focus:outline-none"
-              >
-                Start Campaign
-              </Button>
-            </Link>
             <Link className="w-full" to="/dashboard/create/event">
               <Button
                 onClick={() => setShowOptions(false)}
                 className="cursor-pointer w-full bg-yellow-text text-black font-medium py-2 rounded-md text-sm hover:bg-yellow-500/90 transition-colors focus:ring-2 focus:ring-yellow-text/50 focus:outline-none"
               >
                 Create Event
+              </Button>
+            </Link>
+            <Link className="w-full" to="/dashboard/create/campaign">
+              <Button
+                disabled
+                onClick={() => setShowOptions(false)}
+                className="cursor-pointer w-full bg-[#C5DEE0] text-black font-medium py-2 rounded-md text-sm hover:bg-[#A8C5C8] transition-colors focus:ring-2 focus:ring-[#C5DEE0]/50 focus:outline-none"
+              >
+                Start Campaign
               </Button>
             </Link>
           </div>

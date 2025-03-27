@@ -12,18 +12,7 @@ import { Link } from 'react-router-dom';
 import ProfileJoinedEvents from './components/profile/ProfileJoinedEvents';
 import ProfileYourCreatedEvents from './components/profile/ProfileYourCreatedEvents';
 import { imageMap, ProjectCategory } from '@/lib/badges';
-
-// const categoryMapping: Record<string, ProjectCategory> = {
-//   'Civic Engagement and Responsibility': ProjectCategory.CIVIC_ENGAGEMENT_RESPONSIBILITY,
-//   'Collaboration and Engagement': ProjectCategory.COLLABORATION_ENGAGEMENT,
-//   'Economic Stability': ProjectCategory.ECONOMIC_STABILITY,
-//   'Education and Empowerment': ProjectCategory.EDUCATION_EMPOWERMENT,
-//   'Health and Well-being': ProjectCategory.HEALTH_WELLBEING,
-//   'Inclusivity and Diversity': ProjectCategory.INCLUSIVITY_DIVERSITY,
-//   'Social Connection and Support': ProjectCategory.SOCIAL_CONNECTION_SUPPORT,
-//   'Sustainability and Environmental Responsibility': ProjectCategory.SUSTAINABILITY_ENVIRONMENT,
-//   'Trust and Transparency': ProjectCategory.TRUST_TRANSPARENCY,
-// };
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function Profile() {
   const { data } = useGetAllEventsWithoutPagination();
@@ -46,7 +35,10 @@ export default function Profile() {
   }, [events, user?.id]);
 
   const getUserBadgeImages = (topCategories: { category: string; totalPoints: number }[]) => {
-    return topCategories.map(({ category }) => imageMap[category]);
+    return topCategories.map(({ category, totalPoints }) => ({
+      image: imageMap[category],
+      totalPoints,
+    }));
   };
   // Example usage:
   const userBadges = user ? getUserBadgeImages(user.topCategories) : [];
@@ -60,9 +52,21 @@ export default function Profile() {
           className="w-full h-full object-cover opacity-60"
         />
 
-        <div className="absolute bottom-4 left-[25%] flex space-x-2">
+        <div className="absolute bottom-4 left-[23%] flex space-x-2">
           {userBadges.map((image, index) => (
-            <img key={index} src={image} alt="Badge" className={`h-20`} />
+            <TooltipProvider key={index}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <img src={image.image} alt="Badge" className={`h-20`} />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {image.totalPoints}
+                    {image.totalPoints === 1 ? ' point' : ' points'}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ))}
         </div>
         <Link to="/profile/settings" className="absolute top-4 right-4 bg-white/80 p-2 rounded-full hover:bg-white/90 transition-colors">

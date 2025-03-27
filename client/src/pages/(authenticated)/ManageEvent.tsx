@@ -21,6 +21,7 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import Registration from './components/manage-event/RegistrationGuest';
+import ShareModal from './components/events/ShareModal';
 
 const ManageEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
@@ -70,7 +71,7 @@ const ManageEvent = () => {
       <BackButton />
       <div className="w-[95%] my-4  self-center border-4 border-teal-600 items-center mb-[5rem] min-h-screen relative bg-white p-8 border-none rounded-3xl">
         <div className="flex w-full items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">{eventData.eventName}</h1>
+          <h1 className="text-4xl font-bold font-boldonse">{eventData.eventName}</h1>
 
           <Link to={`/event/${eventId}`}>
             <Button variant={'default'} size="sm">
@@ -164,7 +165,7 @@ const ManageEvent = () => {
 
             {/* Location Section */}
             <div className="flex items-center mb-6 w-full">
-              <div className="bg-gray-50 p-12 rounded-lg mr-4">
+              <div className="bg-gray-50 p-16 rounded-lg mr-4">
                 <MapPin className="h-6 w-6" />
               </div>
               <div className="w-full">
@@ -285,7 +286,9 @@ const ManageEvent = () => {
           </TabsContent>
 
           <TabsContent value="share">
-            <div className="flex items-center justify-center h-[400px] text-gray-500">Share content coming soon...</div>
+            <div className="flex items-center justify-center h-[400px] text-gray-500">
+              <ShareModal />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

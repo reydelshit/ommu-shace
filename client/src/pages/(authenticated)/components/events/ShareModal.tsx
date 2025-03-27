@@ -1,58 +1,106 @@
-import React, { useState } from 'react';
-import { Copy, Link, Twitter, Facebook, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { CheckIcon, CopyIcon, InstagramLogoIcon, LinkedInLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
+import { FacebookIcon } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 const ShareModal = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const shareUrl = window.location.href;
+  const shareUrlLink = window.location.href;
+  const title = 'Check out this cool event';
+
+  const socialShares = [
+    {
+      name: 'Twitter',
+      icon: TwitterLogoIcon,
+      onClick: () => {
+        const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(shareUrlLink)}`;
+        window.open(shareUrl, '_blank');
+      },
+    },
+    {
+      name: 'Facebook',
+      icon: FacebookIcon,
+      onClick: () => {
+        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrlLink)}`;
+        window.open(shareUrl, '_blank');
+      },
+    },
+
+    {
+      name: 'Instagram',
+      icon: InstagramLogoIcon,
+      onClick: () => {
+        const shareUrl = `https://www.instagram.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrlLink)}`;
+        window.open(shareUrl, '_blank');
+      },
+    },
+
+    {
+      name: 'LinkedIn',
+      icon: LinkedInLogoIcon,
+      onClick: () => {
+        const shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrlLink)}`;
+        window.open(shareUrl, '_blank');
+      },
+    },
+  ];
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
-  };
+    navigator.clipboard
+      .writeText(shareUrlLink)
+      .then(() => {
+        setCopied(true);
+        toast.success('Link copied to clipboard', {
+          description: shareUrlLink,
+          duration: 2000,
+        });
 
-  const socialShareLinks = {
-    twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
-    email: `mailto:?body=Check out this link: ${encodeURIComponent(shareUrl)}`,
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {
+        toast.error('Failed to copy link');
+      });
   };
 
   return (
-    <>
-      <Button onClick={() => setIsOpen(true)}>Share</Button>
-
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm" onClick={() => setIsOpen(false)}>
-          <div className="bg-white rounded-lg p-6 w-96 max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-semibold mb-4">Share this page</h2>
-
-            <div className="flex justify-between mb-4">
-              <a href={socialShareLinks.twitter} target="_blank" rel="noopener noreferrer" className="hover:bg-gray-100 p-2 rounded-full">
-                <Twitter className="w-6 h-6 text-blue-400" />
-              </a>
-              <a href={socialShareLinks.facebook} target="_blank" rel="noopener noreferrer" className="hover:bg-gray-100 p-2 rounded-full">
-                <Facebook className="w-6 h-6 text-blue-600" />
-              </a>
-              <a href={socialShareLinks.email} className="hover:bg-gray-100 p-2 rounded-full">
-                <Mail className="w-6 h-6 text-gray-600" />
-              </a>
-            </div>
-
-            <div className="flex items-center border rounded-md p-2">
-              <input type="text" value={shareUrl} readOnly className="flex-grow bg-transparent outline-none mr-2" />
-              <button onClick={handleCopyLink} className="flex items-center bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">
-                {copied ? 'Copied!' : <Copy className="w-4 h-4" />}
-              </button>
-            </div>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <CopyIcon className="mr-2 h-4 w-4" /> Share
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Share Link</DialogTitle>
+          <DialogDescription>Share this link with your friends and colleagues</DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center space-x-2">
+          <div className="grid flex-1 gap-2">
+            <Label htmlFor="link" className="sr-only">
+              Link
+            </Label>
+            <Input id="link" defaultValue={shareUrlLink} readOnly className="h-9" />
           </div>
+          <Button type="submit" size="sm" className="px-3" onClick={handleCopyLink}>
+            {copied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
+            <span className="sr-only">Copy</span>
+          </Button>
         </div>
-      )}
-    </>
+
+        <div className="grid grid-cols-2 gap-2 pt-4">
+          {socialShares.map((platform) => (
+            <Button key={platform.name} variant="outline" onClick={platform.onClick} className="w-full">
+              <platform.icon className="mr-2 h-4 w-4" />
+              {platform.name}
+            </Button>
+          ))}
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
-
 export default ShareModal;

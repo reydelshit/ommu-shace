@@ -1,12 +1,12 @@
-import CivicEngagement from '@/assets/oconnie/Property 1=Civic Engagement and Responsibility 1.png';
-import CollaborationEngagement from '@/assets/oconnie/Property 1=Collaboration and Engagement 1.png';
-import EconomicStability from '@/assets/oconnie/Property 1=Economic Stability 1.png';
-import EducationEmpowerment from '@/assets/oconnie/Property 1=Education and Empowerment 1.png';
-import HealthWelbeeing from '@/assets/oconnie/Property 1=Health and Well-being 1.png';
-import InclusitivityDiversity from '@/assets/oconnie/Property 1=Inclusivity and Diversity 1.png';
-import SocialConnectionSupport from '@/assets/oconnie/Property 1=Social Connection and Support 1.png';
-import SustainabilityEnvironment from '@/assets/oconnie/Property 1=Sustainability and Environmental Responsibility 1.png';
-import TrustTransparency from '@/assets/oconnie/Property 1=Trust and Transparency 1.png';
+import CivicEngagement from '@/assets/BadgeSVGs/Property 1=Civic Engagement and Responsibility 1.svg';
+import CollaborationEngagement from '@/assets/BadgeSVGs/Property 1=Collaboration and Engagement 1.svg';
+import EconomicStability from '@/assets/BadgeSVGs/Property 1=Economic Stability 1.svg';
+import EducationEmpowerment from '@/assets/BadgeSVGs/Property 1=Education and Empowerment 1.svg';
+import HealthWelbeeing from '@/assets/BadgeSVGs/Property 1=Health and Well-being 1.svg';
+import InclusitivityDiversity from '@/assets/BadgeSVGs/Property 1=Inclusivity and Diversity 1.svg';
+import SocialConnectionSupport from '@/assets/BadgeSVGs/Property 1=Social Connection and Support 1.svg';
+import SustainabilityEnvironment from '@/assets/BadgeSVGs/Property 1=Sustainability and Environmental Responsibility 1.svg';
+import TrustTransparency from '@/assets/BadgeSVGs/Property 1=Trust and Transparency 1.svg';
 
 export enum ProjectCategory {
   HEALTH_WELLBEING,

@@ -34,7 +34,7 @@ const EventCardList = ({ showYourEvents, GRID_LAYOUT }: { showYourEvents: boolea
   if (!DEFAULT_CENTER) return <p>Getting user location...</p>;
 
   return (
-    <div className="z-0 my-4">
+    <div className="z-0 my-4 mb-[4rem]  ">
       <div className={`${GRID_LAYOUT} gap-8 full grid mb-10`}>
         {events
           .filter((event) => !showYourEvents || user?.id === event.userId)
@@ -45,10 +45,9 @@ const EventCardList = ({ showYourEvents, GRID_LAYOUT }: { showYourEvents: boolea
           ))}
 
         {events.length === 0 && <p>No events found</p>}
-
-        <div ref={ref} className="text-center p-4">
-          {isFetchingNextPage ? 'Loading more events...' : hasNextPage ? 'Scroll down to load more' : 'No more events'}
-        </div>
+      </div>
+      <div ref={ref} className="text-center p-4">
+        {isFetchingNextPage ? 'Loading more events...' : hasNextPage ? 'Scroll down to load more' : 'No more events'}
       </div>
     </div>
   );

@@ -14,11 +14,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useLoginModalStore } from '@/store/useLoginModalStore';
 import { DefaultProfile } from '@/utils/defaultImages';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const { user, logout, session } = useSession();
   const { setShowLoginModal } = useLoginModalStore();
+
+  const path = useLocation().pathname;
+  const navigate = useNavigate();
+
   return (
     <header className="flex w-full justify-between items-center h-24 sticky top-0 z-50  px-4 bg-[#FFFAE5]">
       <Link to={session ? '/dashboard' : '/'}>
@@ -35,7 +39,16 @@ const Header = () => {
           </span>
 
           {!session && (
-            <Button className=" rounded-full h-12 w-32 p-4 cursor-pointer" onClick={() => setShowLoginModal(true)}>
+            <Button
+              className="rounded-full h-12 w-32 p-4 cursor-pointer"
+              onClick={() => {
+                if (path.includes('event')) {
+                  navigate('/login?redirect=/dashboard');
+                } else {
+                  setShowLoginModal(true);
+                }
+              }}
+            >
               Login
             </Button>
           )}
