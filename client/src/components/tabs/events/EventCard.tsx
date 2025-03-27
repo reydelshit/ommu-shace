@@ -5,9 +5,8 @@ import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { BaseEvent } from '@/types/events';
 import { DefaultProfile } from '@/utils/defaultImages';
-import { randomColor } from '@/utils/randomColor';
 import { LatLngTuple } from 'leaflet';
-import { Calendar, MapPin, User2Icon, Users } from 'lucide-react';
+import { Calendar, MapPin, User2Icon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; event: BaseEvent }) => {
@@ -92,7 +91,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
               </Badge>
             </div>
 
-            <h2 className="text-2xl font-bold text-white leading-tight line-clamp-2">{event.eventName}</h2>
+            <h2 className="text-2xl text-white leading-tight line-clamp-2 font-boldonse">{event.eventName}</h2>
           </div>
 
           <div className="relative z-10 flex items-center justify-between">
@@ -178,7 +177,7 @@ const EventCard = ({ DEFAULT_CENTER, event }: { DEFAULT_CENTER: LatLngTuple; eve
 
           {/* Description preview */}
           <div className="pt-1">
-            <p className="text-sm text-muted-foreground line-clamp-2">{event.description}</p>
+            <p className="text-sm text-accent-foreground line-clamp-2 italic">{event.description}</p>
           </div>
         </div>
       </div>

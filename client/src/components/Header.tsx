@@ -31,12 +31,12 @@ const Header = () => {
 
       <div className="flex gap-4 items-center h-full z-10 ">
         <div className="flex gap-2 ">
-          <span
+          {/* <span
             className={`
              underline w-fit p-4 cursor-pointer `}
           >
             {session ? 'For Creators' : 'Become a Patron'}
-          </span>
+          </span> */}
 
           {!session && (
             <Button
@@ -79,6 +79,9 @@ const Header = () => {
 
               <DropdownMenuItem>
                 <Link to="/dashboard">Dashboard</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link to="/your-event">Your Events</Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem>

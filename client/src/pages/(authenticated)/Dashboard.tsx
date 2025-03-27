@@ -18,15 +18,15 @@ const Dashboard = () => {
     <div className="w-full min-h-screen relative flex">
       {/* tabs */}
       <div className="w-full flex item-center justify-center border-orange-400">
-        <div className="w-[90%] rounded-3xl p-4 flex flex-col items-center gap-4 relative">
+        <div className="w-full rounded-3xl p-4 flex flex-col items-center gap-4 relative">
           <Tabs defaultValue="events" className="w-full rounded-md items-center justify-center flex">
             <TabsList className="w-[350px] bg-white top-28 fixed z-10 rounded-md flex gap-2 shadow-md">
               <TabsTrigger className="flex-1 data-[state=active]:bg-[#C5DEE0] data-[state=active]:text-black cursor-pointer" value="events">
                 Events
               </TabsTrigger>
-              <TabsTrigger className="flex-1 data-[state=active]:bg-[#FFFDDB] data-[state=active]:text-black cursor-pointer" value="campaign">
+              {/* <TabsTrigger className="flex-1 data-[state=active]:bg-[#FFFDDB] data-[state=active]:text-black cursor-pointer" value="campaign">
                 Campaign
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
             <TabsContent className="w-full p-4 mt-[1rem]" value="events">
               <div className="flex items-center justify-between my-4">
@@ -52,9 +52,9 @@ const Dashboard = () => {
               </div>
               <EventCardList showYourEvents={showYourEvents} GRID_LAYOUT={GRID_LAYOUTS[layout]} />
             </TabsContent>
-            <TabsContent className="w-full p-4 mt-[2rem]" value="campaign">
+            {/* <TabsContent className="w-full p-4 mt-[2rem]" value="campaign">
               <div className="text-start">List of all campaigns here</div>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
         </div>
       </div>

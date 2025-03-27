@@ -77,8 +77,9 @@ const YourEvents = () => {
 
                     <div className="relative z-10 flex items-center space-x-4 w-full">
                       <div className="flex-1 text-white">
-                        <div className="font-medium text-lg">{event.eventName}</div>
-                        <div className="text-sm flex items-center gap-2 text-gray-200">
+                        <h2 className="text-2xl text-white leading-tight line-clamp-2 font-boldonse">{event.eventName}</h2>
+
+                        <div className="text-sm flex items-center gap-2 text-gray-300">
                           <CalendarIcon className="h-3 w-3" />
                           {formatDate(event.startDate)} - {formatDate(event.endDate)}
                         </div>
@@ -94,7 +95,7 @@ const YourEvents = () => {
                                   <TooltipProvider key={index}>
                                     <Tooltip>
                                       <TooltipTrigger>
-                                        <img src={badge.image} alt={badge.name} className="w-6 h-6" />
+                                        <img src={badge.image} alt={badge.name} className="w-12 h-12" />
                                       </TooltipTrigger>
                                       <TooltipContent>
                                         <p>{badge.name}</p>
@@ -106,7 +107,7 @@ const YourEvents = () => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
-                        <p className="text-xs font-medium mb-4 flex items-center gap-2 text-white">
+                        <p className="text-md font-medium mb-4 flex items-center gap-2 text-white">
                           <User2Icon className="h-4 w-4" />
                           {event?.attendees.filter((attend) => attend.status === 'APPROVED').length} /{event?.capacity} attendees
                         </p>

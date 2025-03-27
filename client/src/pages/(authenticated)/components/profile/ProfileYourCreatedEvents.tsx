@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { EventsWithAttendees } from '@/types/events';
 import { randomColor } from '@/utils/randomColor';
 import { Link } from 'react-router-dom';
@@ -26,7 +27,7 @@ const ProfileYourCreatedEvents = ({ yourCreatedEvents }: { yourCreatedEvents: Ev
 
             {/* Event Details */}
             <div className="p-5 space-y-3">
-              <h2 className="text-xl font-bold text-gray-800 truncate">{event.eventName}</h2>
+              <h2 className="text-2xl text-black leading-tight line-clamp-2 font-boldonse">{event.eventName}</h2>
 
               <p className="text-sm text-gray-600 line-clamp-2 h-12">
                 {event.description.slice(0, 100)}
@@ -48,7 +49,9 @@ const ProfileYourCreatedEvents = ({ yourCreatedEvents }: { yourCreatedEvents: Ev
                   </span>
                 </div>
 
-                <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">View Details</button>
+                <Button variant={'secondary'} className="text-sm font-medium">
+                  View Details
+                </Button>
               </div>
             </div>
           </div>
