@@ -46,9 +46,7 @@ const YourEvents = () => {
   return (
     <div className="z-0 my-4 mb-[8rem]">
       <div className="w-[90%] mx-auto">
-        <div className="flex items-center justify-between my-4">
-          <h1>All of your events</h1>
-        </div>
+        <h2 className="text-2xl font-bold mb-6 text-center font-boldonse">All of Your Events</h2>
 
         <div className={` gap-8 full grid mb-10`}>
           {/* {userEvents.map((event) => (

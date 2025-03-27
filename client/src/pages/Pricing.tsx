@@ -5,73 +5,73 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 export default function PricingTiers() {
   const tiers = [
     {
-      name: 'Basic',
+      name: 'Free',
       description: 'Small Grid Placement',
-      price: 99,
-      features: [
-        'Single grid cell display (1x1)',
-        'Basic profile information',
-        'Monthly analytics report',
-        'Up to 3 team members',
-        'Standard support',
-      ],
+      price: 0, // Free Tier
+      duration: '1 week',
+      features: ['Single grid cell display (1x1)', 'Basic profile information', 'Standard support', 'Up to 5,000 impressions'],
       cta: 'Subscribe Now',
       popular: false,
       gridSize: '1x1',
-      maxImpressions: 'Up to 5,000',
-      revenue: '+5% of generated leads',
+    },
+    {
+      name: 'Basic',
+      description: 'Small Grid Placement',
+      price: 50, // Adjusted price
+      duration: '1 month',
+      features: ['Single grid cell display (1x1)', 'Basic profile information', 'Standard support', 'Up to 8,000 impressions'],
+      cta: 'Subscribe Now',
+      popular: false,
+      gridSize: '1x1',
     },
     {
       name: 'Professional',
       description: 'Medium Grid Placement',
-      price: 249,
+      price: 150, // Adjusted price
+      duration: '2 months',
       features: [
         'Double-width grid cell (2x1)',
         'Enhanced profile with media',
-        'Weekly analytics report',
-        'Up to 8 team members',
         'Priority support',
         'Custom branding options',
         'Everything in Basic plan',
+        'Up to 20,000 impressions',
       ],
       cta: 'Subscribe Now',
       popular: true,
       gridSize: '2x1',
-      maxImpressions: 'Up to 20,000',
-      revenue: '+3% of generated leads',
     },
     {
       name: 'Enterprise',
       description: 'Premium Grid Placement',
-      price: 499,
+      price: 250, // Adjusted price
+      duration: '1 year',
       features: [
         'Large grid cell placement (2x2)',
         'Featured positioning',
-        'Daily analytics report',
-        'Unlimited team members',
         '24/7 dedicated support',
         'Custom integration options',
         'Priority in search results',
         'Everything in Professional plan',
+        'Up to 100,000 impressions',
       ],
       cta: 'Subscribe Now',
       popular: false,
       gridSize: '2x2',
-      maxImpressions: 'Up to 100,000',
-      revenue: '+1% of generated leads',
     },
   ];
 
   return (
     <div className="py-12 px-4 mb-[4rem]">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold mb-2">Elevate Your Presence</h2>
-        <p className="text-gray-500 max-w-2xl mx-auto">
+        <h2 className="text-2xl font-bold mb-4 text-center font-boldonse">Elevate Your Presence</h2>
+
+        <p className="text-gray-500 max-w-2xl mx-auto italic">
           Select the perfect plan to showcase your presence in our community xLab grid. Larger placements offer more visibility and engagement.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mx-auto">
         {tiers.map((tier) => (
           <Card
             key={tier.name}
@@ -93,18 +93,12 @@ export default function PricingTiers() {
               </h3>
               <p className="text-sm text-gray-500 mt-1">{tier.description}</p>
               <div className="mt-4">
-                <span className="text-4xl font-bold">${tier.price}</span>
+                <span className="text-4xl font-bold">₱{tier.price}</span>
                 <span className="text-gray-500 ml-1">/month</span>
               </div>
-              <div className="mt-2 text-sm text-gray-500">{tier.revenue}</div>
             </CardHeader>
 
             <CardContent className="flex-grow">
-              <div className="bg-amber-50 p-3 mb-4 text-center">
-                <p className="font-medium">Grid Size: {tier.gridSize}</p>
-                <p className="text-sm text-gray-600">{tier.maxImpressions}</p>
-              </div>
-
               <ul className="space-y-3">
                 {tier.features.map((feature) => (
                   <li key={feature} className="flex items-start">

@@ -12,11 +12,12 @@ import { useUserLocation } from '@/hooks/useUserLocation';
 import { badges } from '@/lib/badges';
 import type { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { EarthLock, Globe, ImagePlus, ShieldCheck, Ticket, Users } from 'lucide-react';
+import { Component, EarthLock, Globe, Heart, ImagePlus, ShieldCheck, Ticket, Users } from 'lucide-react';
 import { FormEvent, useEffect, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import BackButton from './BackButton';
 
 function LocationPicker({ onLocationSelect }: { onLocationSelect: (lat: number, lng: number) => void }) {
   const map = useMapEvents({
@@ -152,15 +153,12 @@ function EventFormContainer() {
   };
 
   return (
-    <div className="w-full  mx-auto h-[1500px]">
-      <div className="flex items-center mb-8 text-yellow-text">
-        <Button onClick={() => navigate(-1)} variant="ghost" className="mr-2 cursor-pointer">
-          ←
-        </Button>
-        <h1 className="text-2xl font-bold">Create your first event!</h1>
-      </div>
+    <div className="w-full flex flex-col items-center min-h-screen pb-12 relative">
+      <BackButton />
 
-      <form className="px-12" onSubmit={handleSubmit}>
+      <h2 className="text-2xl font-bold font-boldonse my-4 text-start w-[94%]">Create an Event</h2>
+
+      <form className="px-12 w-full" onSubmit={handleSubmit}>
         <div className="bg-white rounded-lg shadow-sm p-6 space-y-6">
           <div className="relative flex items-center justify-center w-full h-[250px] border border-dashed border-gray-300 rounded-lg overflow-hidden">
             <Label
@@ -204,9 +202,19 @@ function EventFormContainer() {
                       <Globe className="h-4 w-4 mr-2" />
                       <span className="text-sm">Public</span>
                     </SelectItem>
-                    <SelectItem value="private">
+                    <SelectItem disabled value="private">
                       <EarthLock className="h-4 w-4 mr-2" />
                       <span className="text-sm">Private</span>
+                    </SelectItem>
+
+                    <SelectItem disabled value="invite">
+                      <Heart className="h-4 w-4 mr-2" />
+                      <span className="text-sm">Invite Only</span>
+                    </SelectItem>
+
+                    <SelectItem disabled value="specific">
+                      <Component className="h-4 w-4 mr-2" />
+                      <span className="text-sm">Specific Group</span>
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -308,7 +316,7 @@ function EventFormContainer() {
               </div>
 
               <div>
-                <Label>Tags</Label>
+                <Label>Categories</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {badges.map((badge, index) => (
                     <Badge
@@ -323,7 +331,7 @@ function EventFormContainer() {
                       <TooltipProvider key={index}>
                         <Tooltip>
                           <TooltipTrigger>
-                            <img src={badge.image} alt={badge.name} className="w-6 h-6" />
+                            <img src={badge.image} alt={badge.name} className="w-12 h-12" />
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>{badge.name}</p>

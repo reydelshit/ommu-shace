@@ -73,25 +73,21 @@ const MapWithMarkers = () => {
       {events.map((event) => {
         const [lat, lon] = event?.markedLocation.split(',').map(Number);
         return (
-          <Marker key={event.id} position={[lat, lon]} icon={eventIcon('blue')}>
+          <Marker key={event.id} position={[lat, lon]} icon={eventIcon('black')}>
             <Popup>
               <div className="w-full overflow-hidden">
-                {/* Event Banner */}
                 {event.bannerPath && (
                   <div className="h-40 bg-gray-100 rounded-2xl overflow-hidden">
                     <img src={`${import.meta.env.VITE_BACKEND_URL}${event.bannerPath}`} alt="Event Banner" className="w-full h-full object-cover" />
                   </div>
                 )}
 
-                {/* Event Content */}
                 <div className="p-4 space-y-4">
-                  {/* Event Title and Description */}
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900 mb-2 truncate">{event.eventName}</h2>
                     <p className="text-gray-600 text-sm line-clamp-2 break-words">{event.description}</p>
                   </div>
 
-                  {/* Event Details */}
                   <div className="space-y-2">
                     <div className="flex items-center text-gray-700 text-sm">
                       <MapPin size={16} className="mr-2 text-gray-500" />
@@ -106,10 +102,8 @@ const MapWithMarkers = () => {
                     </div>
                   </div>
 
-                  {/* Divider */}
                   <div className="border-t border-gray-200 my-3"></div>
 
-                  {/* Attendees and Action */}
                   <div className="flex justify-between items-center">
                     <div className="flex items-center text-gray-600 text-sm">
                       <User2Icon className="h-4 w-4 mr-2 text-gray-500" />

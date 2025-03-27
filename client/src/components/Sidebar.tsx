@@ -1,6 +1,6 @@
 // import RegisterForm from './components/RegisterForm';
 
-import { CirclePlus, Home, Minimize, TicketPercent, User, Users } from 'lucide-react';
+import { CirclePlus, HeartHandshake, Home, Minimize, TicketPercent, User, Users } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -11,10 +11,7 @@ const Sidebar = () => {
   const { session } = useSession();
 
   return (
-    <div
-      onClick={() => setShowOptions(false)}
-      className="flex-shrink-0 flex flex-col border-yellow-500 items-center justify-start bg-white p-4 rounded-3xl w-[80px] h-fit py-20 gap-10 text-center z-50 sticky top-48 left-0 shadow-lg"
-    >
+    <div className="flex-shrink-0 flex flex-col border-yellow-500 items-center justify-start bg-white p-4 rounded-3xl w-[80px] h-fit py-20 gap-10 text-center z-50 sticky top-48 left-0 shadow-lg">
       <div
         onClick={() => setShowOptions(!showOptions)}
         className="bg-yellow-text  w-full h-12 rounded-full flex items-center justify-center cursor-pointer"
@@ -75,7 +72,7 @@ const Sidebar = () => {
 
       <Link to={'/collab'}>
         <div className="text-center flex flex-col items-center cursor-pointer">
-          <Users />
+          <HeartHandshake />
 
           {/* <span className="block text-[10px]">Your Events</span> */}
         </div>
