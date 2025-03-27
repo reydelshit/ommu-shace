@@ -36,9 +36,19 @@ export type AttendeeType = {
   };
 };
 
+type CollaborationType = {
+  id: string;
+  eventId: string;
+  collaboratorId: string;
+  title: string;
+  subtitle: string;
+  email: string;
+};
+
 export type BaseEvent = EventType & {
   attendees: AttendeeType[];
   user: UserType;
+  collaborations: CollaborationType[];
 };
 
 // Pagination Response for Events

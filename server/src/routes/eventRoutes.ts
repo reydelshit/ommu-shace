@@ -26,4 +26,6 @@ router.put(
   eventController.updateAttendeeStatus,
 );
 
+router.post('/collaborations', eventController.addCollaboration);
+
 export default router;

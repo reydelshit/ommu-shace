@@ -7,14 +7,14 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useGetSpecificEvent, useUpdateAttendanceStatus } from '@/hooks/useEvent';
+import { useAddCollaboration, useGetSpecificEvent, useUpdateAttendanceStatus } from '@/hooks/useEvent';
 import { useSession } from '@/hooks/useSession';
 import { badges } from '@/lib/badges';
 import { DefaultProfile } from '@/utils/defaultImages';
 import { getAttendanceButtonColor } from '@/utils/getAttendanceButtonColor';
 import { randomColor } from '@/utils/randomColor';
 import { useQueryClient } from '@tanstack/react-query';
-import { MapPin, Search, Users } from 'lucide-react';
+import { MapPin, Search, Trash, Users } from 'lucide-react';
 import moment from 'moment';
 import { useState } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
@@ -24,13 +24,20 @@ import ShareModal from './components/events/ShareModal';
 import Registration from './components/manage-event/RegistrationGuest';
 
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Collaborator } from '@/lib/collaborator';
 
 const ManageEvent = () => {
   const { eventId } = useParams<{ eventId: string }>() ?? '';
   const { user } = useSession();
+  const queryClient = useQueryClient();
+
   const { data, isLoading, isError } = useGetSpecificEvent(eventId ?? '', user?.id ?? '');
   const updateAttendanceMutation = useUpdateAttendanceStatus();
-  const queryClient = useQueryClient();
+  const addCollabMutation = useAddCollaboration();
+
+  const [selectedCollaborators, setSelectedCollaborators] = useState<
+    { id: string; title: string; email: string; subtitle: string; image?: string }[]
+  >([]);
 
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -66,6 +73,33 @@ const ManageEvent = () => {
       },
     );
   };
+
+  const handleCollab = (collab: any) => {
+    if (!selectedCollaborators.some((c) => c.id === collab.id)) {
+      setSelectedCollaborators([...selectedCollaborators, collab]);
+    }
+  };
+
+  const handleSaveCollab = () => {
+    selectedCollaborators.forEach((collab) => {
+      addCollabMutation.mutate(
+        { eventId: eventId ?? '', collaboratorId: collab.id, title: collab.title, subtitle: collab.subtitle, email: collab.email },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['events', eventId, user?.id] });
+            toast('Collaborator added successfully');
+
+            setSelectedCollaborators([]);
+          },
+          onError: (error) => {
+            console.error('Error adding collaborator:', error);
+          },
+        },
+      );
+    });
+  };
+
+  console.log('eventData', eventData);
 
   return (
     <div className="w-full flex justify-center flex-col items-center">
@@ -197,16 +231,96 @@ const ManageEvent = () => {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold">Host</h3>
                 <Dialog>
-                  <DialogTrigger>
-                    <Button className="cursor-pointer">+ Add Host</Button>
+                  <DialogTrigger asChild>
+                    <Button className="cursor-pointer">+ Add Collaborator</Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="w-[850px]">
                     <DialogHeader>
-                      <DialogTitle>Are you absolutely sure?</DialogTitle>
-                      <DialogDescription>
-                        This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-                      </DialogDescription>
+                      <DialogTitle>Collaborators</DialogTitle>
+                      <DialogDescription>Add hosts, special guests, and event managers to help you manage the event.</DialogDescription>
                     </DialogHeader>
+
+                    <ScrollArea className="h-[300px]">
+                      {' '}
+                      {/* Scrollable area */}
+                      <div className="p-4 space-y-2">
+                        {Collaborator.map((collab) => (
+                          <div key={collab.id} className="flex items-center space-x-4 p-3 hover:bg-white rounded-lg transition-colors">
+                            <Avatar>
+                              <AvatarImage className="object-cover" src={collab.image || DefaultProfile} />
+                              <AvatarFallback>
+                                {collab.title
+                                  .split(' ')
+                                  .map((n) => n[0])
+                                  .join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="flex-1">
+                              <div className="font-medium">{collab.title}</div>
+                              <div className="text-sm text-gray-500">{collab.email}</div>
+                            </div>
+                            <Badge variant="secondary" className="flex items-center space-x-2 px-3 py-1">
+                              <span>{collab.subtitle}</span>
+                              <Button
+                                disabled={selectedCollaborators.some((c) => Number(c.id) === collab.id) || selectedCollaborators.length >= 4}
+                                size="sm"
+                                className="ml-2"
+                                onClick={() => handleCollab(collab)}
+                              >
+                                Collab
+                              </Button>
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+
+                    {selectedCollaborators.length > 0 && (
+                      <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+                        <div className="flex justify-between items-center">
+                          <h3 className="font-semibold mb-2">Selected Collaborators:</h3>
+
+                          <span className="text-md font-semibold">Max 4 collaborators only</span>
+                        </div>
+                        <div className="space-y-2">
+                          {selectedCollaborators.map((collab) => (
+                            <div key={collab.id} className="flex items-center justify-between bg-white p-2 rounded-lg shadow">
+                              <div className="flex items-center space-x-3">
+                                <Avatar>
+                                  <AvatarImage className="object-cover" src={collab.image || DefaultProfile} />
+                                  <AvatarFallback>
+                                    {collab.title
+                                      .split(' ')
+                                      .map((n) => n[0])
+                                      .join('')}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <div className="font-medium">{collab.title}</div>
+                                  <div className="text-sm text-gray-500">{collab.email}</div>
+                                </div>
+                              </div>
+
+                              <div className="flex items-center space-x-2 px-3 py-2">
+                                <span className="text-xs">{collab.subtitle}</span>
+                                <Trash
+                                  className="h-6 w-6 block text-red-500 cursor-pointer"
+                                  onClick={() => setSelectedCollaborators(selectedCollaborators.filter((c) => c.id !== collab.id))}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedCollaborators.length > 0 && (
+                      <div className="flex justify-end mt-4">
+                        <Button onClick={handleSaveCollab} className="cursor-pointer" variant={'default'}>
+                          Save
+                        </Button>
+                      </div>
+                    )}
                   </DialogContent>
                 </Dialog>
               </div>
@@ -224,13 +338,38 @@ const ManageEvent = () => {
                       className="object-cover"
                     />
                   </Avatar>
-                  <span className="text-black font-semibold">
-                    {eventData.user?.fullname} ({eventData.user?.email})
+
+                  <span className="text-black ">
+                    <h2 className="font-semibold"> {eventData.user?.fullname}</h2> <span className="text-sm"> {eventData.user?.email}</span>
                   </span>
+
                   <Badge variant="secondary" className="ml-2">
                     Creator
                   </Badge>
                 </div>
+              </div>
+
+              <div>
+                {eventData.collaborations.map((collab) => {
+                  const collaborator = Collaborator.find((c) => c.id === Number(collab.collaboratorId));
+
+                  return (
+                    <div key={collab.collaboratorId} className="bg-gray-50 p-3 rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <Avatar className="h-11 w-11 object-cover bg-white border-white cursor-pointer">
+                          <AvatarImage src={collaborator?.image || DefaultProfile} alt="profile" className="object-cover" />
+                        </Avatar>
+                        <span className="text-black">
+                          <h2 className="font-semibold">{collab.title}</h2>
+                          <span className="text-sm">{collab.email}</span>
+                        </span>
+                        <Badge variant="secondary" className="ml-2">
+                          {collab.subtitle}
+                        </Badge>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </TabsContent>

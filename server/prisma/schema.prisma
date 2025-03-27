@@ -47,6 +47,7 @@ model Event {
   userId         String
   user           User             @relation(fields: [userId], references: [id])
   attendees      EventAttendees[]
+  collaborations Collaboration[]
   createdAt      DateTime         @default(now())
 }
 
@@ -87,4 +88,15 @@ model Points {
   category  ProjectCategory
   createdAt DateTime        @default(now())
   user      User            @relation(fields: [userId], references: [id])
+}
+
+model Collaboration {
+  id             String   @id @default(uuid())
+  collaboratorId String
+  title          String
+  subtitle       String
+  email          String
+  eventId        String
+  createdAt      DateTime @default(now())
+  event          Event    @relation(fields: [eventId], references: [id])
 }

@@ -89,3 +89,12 @@ export const useUpdateAttendanceStatus = () => {
     },
   });
 };
+
+export const useAddCollaboration = () => {
+  return useMutation({
+    mutationFn: async (collabData: { eventId: string; collaboratorId: string; title: string; subtitle: string; email: string }) => {
+      const { data } = await axiosInstance.post('/event/collaborations', collabData);
+      return data;
+    },
+  });
+};

@@ -98,6 +98,7 @@ export const eventController = {
         orderBy: { createdAt: 'desc' },
         include: {
           user: true,
+          collaborations: true,
           attendees: {
             include: {
               user: {
@@ -172,6 +173,7 @@ export const eventController = {
         where: { id: eventId },
         include: {
           user: true,
+          collaborations: true,
           attendees: {
             include: {
               user: {
@@ -340,6 +342,59 @@ export const eventController = {
       });
     } catch (error: any) {
       console.error('Error in updateAttendeeStatus:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  },
+
+  addCollaboration: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { eventId, collaboratorId, title, subtitle, email } = req.body;
+
+      if (!eventId || !collaboratorId || !title || !subtitle || !email) {
+        res
+          .status(400)
+          .json({ success: false, message: 'Missing required fields' });
+        return;
+      }
+
+      const event = await prisma.event.findUnique({
+        where: { id: eventId },
+      });
+
+      if (!event) {
+        res.status(404).json({ success: false, message: 'Event not found' });
+        return;
+      }
+
+      const existingCollab = await prisma.collaboration.findFirst({
+        where: { eventId, collaboratorId: String(collaboratorId) },
+      });
+
+      if (existingCollab) {
+        res.status(400).json({
+          success: false,
+          message: 'Already a collaborator for this event',
+        });
+        return;
+      }
+
+      const collaboration = await prisma.collaboration.create({
+        data: {
+          eventId,
+          collaboratorId: String(collaboratorId),
+          title,
+          subtitle,
+          email,
+        },
+      });
+
+      res.status(201).json({
+        success: true,
+        message: 'Collaboration added successfully',
+        data: collaboration,
+      });
+    } catch (error: any) {
+      console.error('Error in addCollaboration:', error);
       res.status(500).json({ success: false, message: error.message });
     }
   },
