@@ -86,6 +86,11 @@ function EventFormContainer() {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
+    if (!selectedFile) {
+      setErrorCreateEvent('Please upload image');
+      return;
+    }
+
     const data = new FormData();
     data.append('eventName', formData.eventName);
     data.append('description', formData.description);

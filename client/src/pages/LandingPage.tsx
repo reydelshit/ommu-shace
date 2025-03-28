@@ -101,7 +101,13 @@ const LandingPage = () => {
         </motion.div>
       </div>
 
-      <AnimatePresence>{showLoginModal && <FormContainer setShowLoginModal={setShowLoginModal} />}</AnimatePresence>
+      <AnimatePresence>
+        {showLoginModal && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 backdrop-blur-sm p-4">
+            <FormContainer setShowLoginModal={setShowLoginModal} />
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
