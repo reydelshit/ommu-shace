@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Reydel from '@/assets/profiles/Reydel.jpg';
+import { DefaultProfile } from '@/utils/defaultImages';
 import { Quote } from 'lucide-react';
 
 export function DifferenceMakers() {
@@ -17,14 +17,13 @@ export function DifferenceMakers() {
   };
 
   const quotes = [
-    { id: 1, title: 'Title', description: 'Description' },
-    { id: 2, title: 'Title', description: 'Description' },
-    { id: 3, title: 'Title', description: 'Description' },
-    { id: 4, title: 'Title', description: 'Description' },
-    { id: 5, title: 'Title', description: 'Description' },
-    { id: 6, title: 'Title', description: 'Description' },
+    { id: 1, title: 'John Dela Cruz', description: 'Bringing energy and life to every event I host.' },
+    { id: 2, title: 'Maria Gonzales', description: 'Turning ideas into visually compelling stories.' },
+    { id: 3, title: 'Carlos Ramirez', description: 'Capturing moments that matter, one frame at a time.' },
+    { id: 4, title: 'TechVibe', description: 'Seamless tech solutions for unforgettable events.' },
+    { id: 5, title: 'Project Impact', description: 'Empowering communities through collaborative action.' },
+    { id: 6, title: 'Reydel Ocon', description: 'Driving innovation through technology and collaboration.' },
   ];
-
   return (
     <div className="container mx-auto px-4 ">
       <h2 className="text-2xl font-bold mb-[8rem] text-center font-boldonse">See The Difference You're Making</h2>
@@ -42,7 +41,7 @@ export function DifferenceMakers() {
               <div className="flex -space-x-2">
                 {project.avatars.map((avatar, index) => (
                   <Avatar key={index} className="h-8 w-8 border-2 border-white">
-                    <AvatarImage className="object-cover" src={Reydel} alt={`Team member ${index + 1}`} />
+                    <AvatarImage className="object-cover" src={DefaultProfile} alt={`Team member ${index + 1}`} />
                     <AvatarFallback>{index + 1}</AvatarFallback>
                   </Avatar>
                 ))}
@@ -86,7 +85,7 @@ export function DifferenceMakers() {
 
               <div className="flex items-center mt-4">
                 <Avatar className="h-8 w-8 mr-3">
-                  <AvatarImage src={Reydel || '/placeholder.svg?height=40&width=40'} alt="Quote Avatar" />
+                  <AvatarImage src={DefaultProfile || '/placeholder.svg?height=40&width=40'} alt="Quote Avatar" />
                   <AvatarFallback>{quote.title[0].toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div>

@@ -1,4 +1,11 @@
 import Reydel from '@/assets/profiles/Reydel.jpg';
+import Tala from '@/assets/xlab/tala.jpg';
+import Batombakal from '@/assets/profiles/batumb.jpg';
+import Emi from '@/assets/profiles/emi.jpg';
+import Datu from '@/assets/profiles/datu.jpg';
+
+import teamPh from '@/assets/profiles/teamph.jpg';
+import Women from '@/assets/profiles/women.jpg';
 
 export const profiles = [
   {
@@ -15,7 +22,7 @@ export const profiles = [
     name: 'Joaquin Batumbakal',
     role: 'Entrepreneur',
     description: 'Turning bold ideas into reality through startups and innovation.',
-    avatar: Reydel,
+    avatar: Batombakal,
     color: 'bg-orange-200',
 
     socialLinks: {
@@ -28,7 +35,7 @@ export const profiles = [
     name: 'Tala Quimpo',
     role: 'Activist',
     description: 'Fighting for social justice and equal rights for all.',
-    avatar: Reydel,
+    avatar: Tala,
 
     color: 'bg-pink-200',
   },
@@ -38,7 +45,7 @@ export const profiles = [
     name: 'Datu Reyes',
     role: 'Content Creator',
     description: 'Sharing stories and ideas that inspire and educate the world.',
-    avatar: Reydel,
+    avatar: Datu,
 
     color: 'bg-brown-300',
   },
@@ -47,7 +54,7 @@ export const profiles = [
     name: 'Emilio Francisco',
     role: 'Health Advocate',
     description: 'Promoting wellness and mental health awareness for a better life.',
-    avatar: Reydel,
+    avatar: Emi,
 
     color: 'bg-gray-200',
   },
@@ -60,7 +67,7 @@ export const featuredProfiles = [
     subtitle: 'TeamPH',
     description: 'Join Team Fun!',
     color: 'bg-orange-300',
-    avatar: Reydel,
+    avatar: teamPh,
   },
 
   {
@@ -69,6 +76,6 @@ export const featuredProfiles = [
     subtitle: 'WIW by womenOrg',
     description: 'Get notification about this recurring event',
     color: 'bg-gray-100 border border-black',
-    avatar: Reydel,
+    avatar: Women,
   },
 ];

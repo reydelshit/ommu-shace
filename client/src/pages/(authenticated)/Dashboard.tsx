@@ -8,6 +8,7 @@ import MapWithMarkers from './components/dashboard/MapWithMarkers';
 import GridLayoutSelector from './components/GridLayoutSelector';
 import { modalVariants } from '@/components/FormContainer';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin } from 'lucide-react';
 
 const Dashboard = () => {
   const { layout } = useLayoutStore();
@@ -31,7 +32,7 @@ const Dashboard = () => {
             <TabsContent className="w-full p-4 mt-[1rem]" value="events">
               <div className="flex items-center justify-between my-4">
                 <Button className="cursor-pointer rounded-full" onClick={() => setShowMapEvents(true)}>
-                  Closest Events
+                  <MapPin /> Find Nearby Events
                 </Button>
                 <div className="flex gap-2">
                   <GridLayoutSelector />
